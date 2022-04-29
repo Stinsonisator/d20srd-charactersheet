@@ -134,6 +134,6 @@ _NCrunch*
 
 # IDE
 .vscode/
-
+.idea/
 
 CharacterSheet.WebApi/charactersheet.db

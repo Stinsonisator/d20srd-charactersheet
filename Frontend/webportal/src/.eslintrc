@@ -1,0 +1,49 @@
+{
+	"extends": [
+		"react-app",
+		"plugin:@typescript-eslint/recommended",
+		"prettier",
+		"plugin:prettier/recommended"
+	],
+	"parser": "@typescript-eslint/parser",
+	"plugins": [
+		"prettier",
+		"@typescript-eslint",
+		"import",
+		"simple-import-sort",
+		"react",
+		"typescript-sort-keys"
+	],
+	"root": true,
+	"rules": {
+		"import/first": "error",
+		"import/order": "off",
+		"jsx-quotes": ["warn", "prefer-double"],
+		"no-console": "warn",
+		"object-shorthand": ["error", "always"],
+		"prettier/prettier": "warn",
+		"quotes": ["warn", "single", { "avoidEscape": false }],
+		"react/destructuring-assignment": [
+			1,
+			"always",
+			{
+				"ignoreClassFields": true
+			}
+		],
+		"react/jsx-uses-react": "off",
+		"react/react-in-jsx-scope": "off",
+		"simple-import-sort/exports": "warn",
+		"simple-import-sort/imports": [
+			"warn",
+			{
+				"groups": [
+					["^(react|react-router|react-router-dom|react-dom)$"],
+					["^cldr"],
+					["^@?\\w"],
+					["^\\."]
+				]
+			}
+		],
+		"sort-imports": "off"
+	}
+}

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CharacterSheet.WebApi.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class CharactersController : ControllerBase
 {
     private readonly DatabaseContext _databaseContext;
@@ -24,7 +24,7 @@ public class CharactersController : ControllerBase
         return await _databaseContext.Characters.ToListAsync().ConfigureAwait(false);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:long}")]
     public async Task<Character> Get([FromRoute] long id)
     {
         return await _databaseContext.Characters
@@ -43,7 +43,7 @@ public class CharactersController : ControllerBase
         return character;
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id:long}")]
     public async Task<Character> Put([FromRoute] long id, [FromBody] Character character)
     {
         _databaseContext.Entry(character).State = EntityState.Modified;

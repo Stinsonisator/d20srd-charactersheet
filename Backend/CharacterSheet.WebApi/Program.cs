@@ -23,6 +23,15 @@ builder.Services.AddDbContext<DatabaseContext>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors(c =>  
+{  
+    c.AddPolicy("AllowAll", options =>
+    {
+        options.AllowAnyOrigin();
+        options.AllowAnyHeader();
+        options.AllowAnyMethod();
+    });  
+}); 
 
 var app = builder.Build();
 
@@ -31,9 +40,12 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseCors("AllowAll");
 }
-
-app.UseHttpsRedirection();
+else
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthorization();
 

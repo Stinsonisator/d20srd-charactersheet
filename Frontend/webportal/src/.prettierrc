@@ -1,0 +1,25 @@
+{
+	"parser": "typescript",
+	"semi": true,
+	"trailingComma": "none",
+	"singleQuote": true,
+	"jsxSingleQuote": false,
+	"tabWidth": 4,
+	"useTabs": true,
+	"printWidth": 200,
+	"endOfLine": "auto",
+	"overrides": [
+		{
+			"files": ".prettierrc",
+			"options": { "parser": "json" }
+		},
+		{
+			"files": ["*.scss"],
+			"options": { "parser": "scss" }
+		},
+		{
+			"files": ["*.html"],
+			"options": { "parser": "html" }
+		}
+	]
+}
