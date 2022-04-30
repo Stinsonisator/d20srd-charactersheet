@@ -3,14 +3,27 @@ import { useNavigate } from 'react-router-dom';
 import { Alert, Box, Card, CardActionArea, CardActions, CardContent, CardMedia, CircularProgress, Grid, Icon, IconButton, Typography } from '@mui/material';
 import map from 'lodash/map';
 
+import CharacterWizard from '../components/CharacterWizard';
 import { useGetCharactersQuery } from '../services/api';
+import { globalRender } from '../services/globalRenderSlice';
+import { useAppDispatch } from '../utils/hooks';
 
 export default function CharacterSheet(): JSX.Element {
 	const { data, error, isLoading } = useGetCharactersQuery();
 	const navigate = useNavigate();
+	const reduxDispatch = useAppDispatch();
 
 	function goToCharacterSheet(id: number) {
 		navigate(`./${id}`);
+	}
+
+	function addCharacter(): void {
+		reduxDispatch(
+			globalRender({
+				key: 'test',
+				component: <CharacterWizard renderKey="test" />
+			})
+		);
 	}
 
 	return (
@@ -48,6 +61,15 @@ export default function CharacterSheet(): JSX.Element {
 							</Card>
 						</Grid>
 					))}
+					<Grid item xs={3}>
+						<Card sx={{ minHeight: 250, height: '100%' }}>
+							<CardActionArea sx={{ height: '100%' }} onClick={() => addCharacter()}>
+								<CardContent sx={{ display: 'flex', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+									<Icon sx={{ width: 'auto', height: 'auto', color: 'primary.dark', fontSize: 60 }} className="fa-person-circle-plus" />
+								</CardContent>
+							</CardActionArea>
+						</Card>
+					</Grid>
 				</Grid>
 			)}
 		</>
