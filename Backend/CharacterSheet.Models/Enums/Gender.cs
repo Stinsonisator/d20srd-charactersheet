@@ -1,6 +1,8 @@
 namespace CharacterSheet.Models.Enums;
 
-public enum Class
+public enum Gender
 {
-    BlackBelt
+    M,
+    F,
+    X
 }

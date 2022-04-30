@@ -1,12 +1,24 @@
 import { useParams } from 'react-router-dom';
 
-import { Alert, Box, CircularProgress, TextField, Typography } from '@mui/material';
+import { Alert, Box, CircularProgress, GlobalStyles, TextField, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 
 import { useGetCharacterQuery } from '../../services/api';
-import SectionHeader from './SectionHeader';
 import { AbilityRow } from './AbilityRow';
+import SectionHeader from './SectionHeader';
+
+const globalStyles = (
+	<GlobalStyles
+		styles={(theme) => ({
+			'.MuiInput-input': {
+				'&.Mui-disabled': {
+					WebkitTextFillColor: `${theme.palette.text.primary} !important`
+				}
+			}
+		})}
+	/>
+);
 
 export default function CharacterSheet(): JSX.Element {
 	const { id } = useParams();
@@ -14,6 +26,7 @@ export default function CharacterSheet(): JSX.Element {
 
 	return (
 		<>
+			{globalStyles}
 			{isLoading && (
 				<Box sx={{ display: 'flex', justifyContent: 'center' }}>
 					<CircularProgress />
@@ -28,7 +41,7 @@ export default function CharacterSheet(): JSX.Element {
 								<img src="/dnd-logo.png" alt="D&amp;D Logo" style={{ width: '100%' }} />
 							</Box>
 							<TextField label="Player" disabled />
-							<TextField label="Campaign" disabled />
+							<TextField label="Campaign" value="Morons go princess hunting" disabled />
 							<TextField label="XP" disabled />
 
 							<SectionHeader sx={{ mt: 2 }}>ABILITIES</SectionHeader>

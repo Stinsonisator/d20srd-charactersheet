@@ -15,11 +15,15 @@ namespace CharacterSheet.DataAccess.Migrations
                     Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Class = table.Column<string>(type: "TEXT", nullable: false),
+                    Age = table.Column<short>(type: "INTEGER", nullable: false),
+                    Gender = table.Column<int>(type: "INTEGER", nullable: false),
+                    Race = table.Column<int>(type: "INTEGER", nullable: false),
+                    Size = table.Column<short>(type: "INTEGER", nullable: false),
+                    CharacterClass = table.Column<string>(type: "TEXT", nullable: false),
                     Strength = table.Column<short>(type: "INTEGER", nullable: false),
                     Dexterity = table.Column<short>(type: "INTEGER", nullable: false),
                     Constitution = table.Column<short>(type: "INTEGER", nullable: false),
-                    Intelegence = table.Column<short>(type: "INTEGER", nullable: false),
+                    Intelligence = table.Column<short>(type: "INTEGER", nullable: false),
                     Wisdom = table.Column<short>(type: "INTEGER", nullable: false),
                     Charisma = table.Column<short>(type: "INTEGER", nullable: false)
                 },

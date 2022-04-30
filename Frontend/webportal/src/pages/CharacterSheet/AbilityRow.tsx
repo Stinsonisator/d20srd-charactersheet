@@ -51,7 +51,7 @@ export function AbilityRow({ characterClass, abilityCode, abilityScore }: Props)
 	return (
 		<>
 			<Grid item xs={2}>
-				<Typography>STR</Typography>
+				<Typography>{abilityCode}</Typography>
 			</Grid>
 			<Grid item xs={2}>
 				<Typography>{getFinalScore(characterClass, abilityCode, abilityScore)}</Typography>

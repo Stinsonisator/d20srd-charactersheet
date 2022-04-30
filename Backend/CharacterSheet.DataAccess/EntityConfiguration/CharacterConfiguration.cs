@@ -11,6 +11,6 @@ public class CharacterConfiguration : IEntityTypeConfiguration<Character>
 {
     public void Configure(EntityTypeBuilder<Character> builder)
     {
-        builder.Property(cl => cl.Class).HasConversion(new EnumToStringConverter<Class>());
+        builder.Property(cl => cl.CharacterClass).HasConversion(new EnumToStringConverter<CharacterClass>());
     }
 }

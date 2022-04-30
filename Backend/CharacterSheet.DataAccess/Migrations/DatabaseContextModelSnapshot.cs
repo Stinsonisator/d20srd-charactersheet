@@ -22,12 +22,15 @@ namespace CharacterSheet.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<short>("Charisma")
+                    b.Property<short>("Age")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Class")
+                    b.Property<string>("CharacterClass")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<short>("Charisma")
+                        .HasColumnType("INTEGER");
 
                     b.Property<short>("Constitution")
                         .HasColumnType("INTEGER");
@@ -35,12 +38,21 @@ namespace CharacterSheet.DataAccess.Migrations
                     b.Property<short>("Dexterity")
                         .HasColumnType("INTEGER");
 
-                    b.Property<short>("Intelegence")
+                    b.Property<int>("Gender")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<short>("Intelligence")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Race")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<short>("Size")
+                        .HasColumnType("INTEGER");
 
                     b.Property<short>("Strength")
                         .HasColumnType("INTEGER");
@@ -117,7 +129,7 @@ namespace CharacterSheet.DataAccess.Migrations
             modelBuilder.Entity("CharacterSheet.Models.CharacterData.CharacterLevel", b =>
                 {
                     b.HasOne("CharacterSheet.Models.CharacterData.Character", "Character")
-                        .WithMany("Level")
+                        .WithMany("Levels")
                         .HasForeignKey("CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -146,7 +158,7 @@ namespace CharacterSheet.DataAccess.Migrations
 
             modelBuilder.Entity("CharacterSheet.Models.CharacterData.Character", b =>
                 {
-                    b.Navigation("Level");
+                    b.Navigation("Levels");
 
                     b.Navigation("Skills");
                 });

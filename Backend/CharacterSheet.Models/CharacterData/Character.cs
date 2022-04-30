@@ -10,16 +10,24 @@ public class Character
 
     [Required(AllowEmptyStrings = false)]
     public string Name { get; set; }
+    
+    public short Age { get; set; }
+    
+    public Gender Gender { get; set; }
+    
+    public Race Race { get; set; }
 
-    public Class Class { get; set; }
-
+    public short Size { get; set; }
+    
+    public CharacterClass CharacterClass { get; set; }
+    
     public short Strength { get; set; }
 
     public short Dexterity { get; set; }
 
     public short Constitution { get; set; }
 
-    public short Intelegence { get; set; }
+    public short Intelligence { get; set; }
 
     public short Wisdom { get; set; }
 

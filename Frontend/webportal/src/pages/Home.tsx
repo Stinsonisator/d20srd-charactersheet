@@ -1,5 +1,9 @@
-import { Box } from '@mui/material';
+import { Box, TextField } from '@mui/material';
 
 export default function Home(): JSX.Element {
-	return <Box>test</Box>;
+	return (
+		<Box>
+			<TextField label="test" disabled />
+		</Box>
+	);
 }

@@ -1,6 +1,6 @@
 import { HashRouter, NavLink, Route, Routes } from 'react-router-dom';
 
-import { AppBar, Button, Container, ThemeProvider, Toolbar, Typography } from '@mui/material';
+import { AppBar, Button, Container, GlobalStyles, ThemeProvider, Toolbar, Typography } from '@mui/material';
 import { Provider } from 'react-redux';
 
 import Characters from './pages/Characters';
@@ -9,13 +9,24 @@ import Home from './pages/Home';
 import { store } from './services/store';
 import theme from './services/theme';
 
-import './assets/main.css';
+const globalStyles = (
+	<GlobalStyles
+		styles={(theme) => ({
+			'.MuiButton-root': {
+				'&.active': {
+					color: theme.palette.secondary.main
+				}
+			}
+		})}
+	/>
+);
 
 export default function App(): JSX.Element {
 	return (
 		<HashRouter>
 			<Provider store={store}>
 				<ThemeProvider theme={theme}>
+					{globalStyles}
 					<AppBar position="sticky">
 						<Toolbar>
 							<Typography variant="h6" sx={{ mr: 10 }}>
