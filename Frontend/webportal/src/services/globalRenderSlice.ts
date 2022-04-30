@@ -12,7 +12,7 @@ interface GlobalRenderState {
 const initialState: GlobalRenderState = { components: {} };
 
 const globalRenderSlice = createSlice({
-	name: 'globalRander',
+	name: 'globalRender',
 	initialState,
 	reducers: {
 		globalRender(state, action: PayloadAction<RenderConfig>) {

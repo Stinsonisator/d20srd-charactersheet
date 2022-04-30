@@ -1,7 +1,7 @@
 import React from 'react';
 import { HashRouter, NavLink, Route, Routes } from 'react-router-dom';
 
-import { AppBar, Button, Container, GlobalStyles, ThemeProvider, Toolbar, Tooltip, Typography } from '@mui/material';
+import { AppBar, Button, Container, CssBaseline, GlobalStyles, ThemeProvider, Toolbar, Tooltip, Typography } from '@mui/material';
 import map from 'lodash/map';
 
 import Characters from './pages/Characters';
@@ -15,8 +15,11 @@ const globalStyles = (
 		styles={(theme) => ({
 			'.MuiButton-root': {
 				'&.active': {
-					color: theme.palette.secondary.main
+					color: theme.palette.text.secondary
 				}
+			},
+			body: {
+				backgroundColor: theme.palette.background.default
 			}
 		})}
 	/>

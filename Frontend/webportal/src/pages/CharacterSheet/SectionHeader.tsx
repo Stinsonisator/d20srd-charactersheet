@@ -13,7 +13,7 @@ export default function SectionHeader({ sx, children }: PropsWithChildren<Props>
 		const baseSx = {
 			p: 1,
 			backgroundColor: theme.palette.primary.dark,
-			color: theme.palette.secondary.light,
+			color: theme.palette.text.secondary,
 			display: 'flex',
 			justifyContent: 'center',
 			alignItems: 'center',

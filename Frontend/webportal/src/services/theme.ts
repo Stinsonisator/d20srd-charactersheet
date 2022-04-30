@@ -3,10 +3,17 @@ import { createTheme } from '@mui/material';
 const theme = createTheme({
 	palette: {
 		primary: {
-			main: '#659dbd'
+			main: '#040C0E'
 		},
 		secondary: {
-			main: '#fbeec1'
+			main: '#132226'
+		},
+		text: {
+			primary: '#040C0E',
+			secondary: '#a4978e'
+		},
+		background: {
+			default: '#d6d0cc'
 		}
 	},
 	components: {
@@ -17,7 +24,17 @@ const theme = createTheme({
 		},
 		MuiTextField: {
 			defaultProps: {
-				variant: 'standard',
+				fullWidth: true,
+				variant: 'standard'
+			}
+		},
+		MuiSelect: {
+			defaultProps: {
+				variant: 'standard'
+			}
+		},
+		MuiFormControl: {
+			defaultProps: {
 				fullWidth: true
 			}
 		}

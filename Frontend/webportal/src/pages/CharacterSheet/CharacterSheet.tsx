@@ -62,36 +62,36 @@ export function CharacterSheet(): JSX.Element {
 								<Grid item xs={2}>
 									<Typography sx={{ fontSize: 10 }}>Temp modfier</Typography>
 								</Grid>
-								<AbilityRow characterClass={character.class} abilityCode="STR" abilityScore={character.strength} />
-								<AbilityRow characterClass={character.class} abilityCode="DEX" abilityScore={character.dexterity} />
-								<AbilityRow characterClass={character.class} abilityCode="CON" abilityScore={character.constitution} />
-								<AbilityRow characterClass={character.class} abilityCode="INT" abilityScore={character.intelegence} />
-								<AbilityRow characterClass={character.class} abilityCode="WIS" abilityScore={character.wisdom} />
-								<AbilityRow characterClass={character.class} abilityCode="CHA" abilityScore={character.charisma} />
+								<AbilityRow characterClass={character.characterClass} abilityCode="STR" abilityScore={character.strength} />
+								<AbilityRow characterClass={character.characterClass} abilityCode="DEX" abilityScore={character.dexterity} />
+								<AbilityRow characterClass={character.characterClass} abilityCode="CON" abilityScore={character.constitution} />
+								<AbilityRow characterClass={character.characterClass} abilityCode="INT" abilityScore={character.intelligence} />
+								<AbilityRow characterClass={character.characterClass} abilityCode="WIS" abilityScore={character.wisdom} />
+								<AbilityRow characterClass={character.characterClass} abilityCode="CHA" abilityScore={character.charisma} />
 							</Grid>
 						</Stack>
 					</Grid>
 					<Grid item xs>
 						<Stack>
 							<SectionHeader>CHARACTER</SectionHeader>
-							<Grid container columnSpacing={2} sx={{ borderBottom: 2 }}>
+							<Grid container columnSpacing={2} sx={{ borderBottom: 1, pb: 2 }}>
 								<Grid item xs={8}>
 									<TextField label="Name" value={character.name} disabled />
 								</Grid>
 								<Grid item xs={2}>
-									<TextField label="Age" disabled />
+									<TextField label="Age" value={character.age} disabled />
 								</Grid>
 								<Grid item xs={2}>
-									<TextField label="Gender" disabled />
+									<TextField label="Gender" value={character.gender} disabled />
 								</Grid>
 								<Grid item xs={7}>
-									<TextField label="Race" disabled />
+									<TextField label="Race" value={character.race} disabled />
 								</Grid>
 								<Grid item xs={3}>
 									<TextField label="Size" disabled />
 								</Grid>
 								<Grid item xs={2}>
-									<TextField label="SIze modifier" disabled />
+									<TextField label="Size modifier" disabled />
 								</Grid>
 							</Grid>
 						</Stack>
