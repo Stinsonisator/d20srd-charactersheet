@@ -10,7 +10,10 @@ export interface Character {
 	age: number;
 	gender: Gender;
 	race: Race;
-	size: number;
+	size: {
+		feet: number;
+		inch: number;
+	};
 	characterClass: CharacterClass;
 	strength: number;
 	dexterity: number;

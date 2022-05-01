@@ -88,7 +88,7 @@ export function CharacterSheet(): JSX.Element {
 									<TextField label="Race" value={character.race} disabled />
 								</Grid>
 								<Grid item xs={3}>
-									<TextField label="Size" disabled />
+									<TextField label="Size" value={`${character.size.feet}ft ${character.size.inch}in`} disabled />
 								</Grid>
 								<Grid item xs={2}>
 									<TextField label="Size modifier" disabled />

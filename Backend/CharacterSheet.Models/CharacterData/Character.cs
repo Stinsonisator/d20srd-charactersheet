@@ -17,7 +17,9 @@ public class Character
     
     public Race Race { get; set; }
 
-    public short Size { get; set; }
+    public CreatureSize Size { get; set; }
+    
+    public string Image { get; set; }
     
     public CharacterClass CharacterClass { get; set; }
     

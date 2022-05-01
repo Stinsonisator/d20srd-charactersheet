@@ -69,7 +69,10 @@ export default function CharacterWizard({ renderKey }: Props): JSX.Element {
 					age: 21,
 					gender: 'm',
 					race: 'human',
-					size: 70,
+					size: {
+						feet: 0,
+						inch: 0
+					},
 					characterClass: 'blackBelt',
 					strength: 8,
 					dexterity: 8,
@@ -88,12 +91,12 @@ export default function CharacterWizard({ renderKey }: Props): JSX.Element {
 				}}
 			>
 				<Form>
-					<DialogTitle sx={(theme) => ({ backgroundColor: theme.palette.primary.main })}>
+					<DialogTitle sx={(theme) => ({ backgroundColor: theme.palette.primary.main, color: theme.palette.text.secondary })}>
 						<Box display="flex" alignItems="center">
 							<Box flexGrow={1}>Add new character</Box>
 							<Box>
 								<IconButton onClick={handleClose}>
-									<Icon className="fa-times" sx={{ fontSize: 16 }} />
+									<Icon className="fa-times" sx={{ fontSize: 16, color: 'text.secondary' }} />
 								</IconButton>
 							</Box>
 						</Box>

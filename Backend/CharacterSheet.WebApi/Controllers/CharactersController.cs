@@ -40,6 +40,7 @@ public class CharactersController : ControllerBase
     public async Task<Character> Post([FromBody] Character character)
     {
         _databaseContext.Entry(character).State = EntityState.Added;
+        _databaseContext.Entry(character.Size).State = EntityState.Added;
         await _databaseContext.SaveChangesAsync().ConfigureAwait(false);
         return character;
     }

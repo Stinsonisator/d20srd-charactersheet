@@ -2,6 +2,7 @@
 using CharacterSheet.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CharacterSheet.DataAccess.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20220501044744_CharacterImage")]
+    partial class CharacterImage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.4");
@@ -53,6 +55,9 @@ namespace CharacterSheet.DataAccess.Migrations
 
                     b.Property<int>("Race")
                         .HasColumnType("INTEGER");
+
+                    b.Property<float>("Size")
+                        .HasColumnType("REAL");
 
                     b.Property<short>("Strength")
                         .HasColumnType("INTEGER");
@@ -124,30 +129,6 @@ namespace CharacterSheet.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Skills");
-                });
-
-            modelBuilder.Entity("CharacterSheet.Models.CharacterData.Character", b =>
-                {
-                    b.OwnsOne("CharacterSheet.Models.CharacterData.CreatureSize", "Size", b1 =>
-                        {
-                            b1.Property<long>("CharacterId")
-                                .HasColumnType("INTEGER");
-
-                            b1.Property<short>("Feet")
-                                .HasColumnType("INTEGER");
-
-                            b1.Property<float>("Inch")
-                                .HasColumnType("REAL");
-
-                            b1.HasKey("CharacterId");
-
-                            b1.ToTable("Characters");
-
-                            b1.WithOwner()
-                                .HasForeignKey("CharacterId");
-                        });
-
-                    b.Navigation("Size");
                 });
 
             modelBuilder.Entity("CharacterSheet.Models.CharacterData.CharacterLevel", b =>

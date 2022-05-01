@@ -67,7 +67,7 @@ export default function Attributes(): JSX.Element {
 					<MenuItem value="x">X</MenuItem>
 				</TextField>
 			</Grid>
-			<Grid item xs={7}>
+			<Grid item xs={3}>
 				<TextField
 					id="race"
 					name="race"
@@ -85,7 +85,7 @@ export default function Attributes(): JSX.Element {
 					<MenuItem value="halfling">Halfling</MenuItem>
 				</TextField>
 			</Grid>
-			<Grid item xs>
+			<Grid item xs={5}>
 				<TextField
 					id="characterClass"
 					name="characterClass"
@@ -100,6 +100,36 @@ export default function Attributes(): JSX.Element {
 				>
 					<MenuItem value="blackBelt">Black Belt</MenuItem>
 				</TextField>
+			</Grid>
+			<Grid item xs={2}>
+				<TextField
+					id="size.feet"
+					name="size.feet"
+					label="Size (ft)"
+					type="number"
+					inputProps={{ min: 0 }}
+					value={values.size.feet}
+					onChange={handleChange}
+					onBlur={handleBlur}
+					error={touched.size?.feet && Boolean(errors.size?.feet)}
+					helperText={touched.size?.feet && errors.size?.feet}
+					required
+				/>
+			</Grid>
+			<Grid item xs={2}>
+				<TextField
+					id="size.inch"
+					name="size.inch"
+					label="Size (in)"
+					type="number"
+					inputProps={{ min: 0 }}
+					value={values.size.inch}
+					onChange={handleChange}
+					onBlur={handleBlur}
+					error={touched.size?.inch && Boolean(errors.size?.inch)}
+					helperText={touched.size?.inch && errors.size?.inch}
+					required
+				/>
 			</Grid>
 		</Grid>
 	);
