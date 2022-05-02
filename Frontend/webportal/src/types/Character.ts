@@ -22,3 +22,5 @@ export interface Character {
 	wisdom: number;
 	charisma: number;
 }
+
+export type Abilities = Pick<Character, 'strength' | 'dexterity' | 'constitution' | 'intelligence' | 'wisdom' | 'charisma'>;

@@ -1,9 +1,11 @@
 import { useEffect, useRef } from 'react';
 
-import { Grid, MenuItem, TextField } from '@mui/material';
+import { Grid, MenuItem, TextField, Typography } from '@mui/material';
 import { useFormikContext } from 'formik';
 
 import { Character } from '../../types/Character';
+import { getTotalPointBuy } from '../../utils';
+import { AbilityRow } from './AbilityRow';
 
 export default function Attributes(): JSX.Element {
 	const { values, touched, errors, handleChange, handleBlur } = useFormikContext<Character>();
@@ -31,7 +33,6 @@ export default function Attributes(): JSX.Element {
 					error={touched.name && Boolean(errors.name)}
 					helperText={touched.name && errors.name}
 					required
-					autoFocus
 				/>
 			</Grid>
 			<Grid item xs={2}>
@@ -130,6 +131,19 @@ export default function Attributes(): JSX.Element {
 					helperText={touched.size?.inch && errors.size?.inch}
 					required
 				/>
+			</Grid>
+			<AbilityRow ability="strength" />
+			<AbilityRow ability="dexterity" />
+			<AbilityRow ability="constitution" />
+			<AbilityRow ability="intelligence" />
+			<AbilityRow ability="wisdom" />
+			<AbilityRow ability="charisma" />
+			<Grid item xs={2}>
+				<Typography>Total point buy</Typography>
+			</Grid>
+			<Grid item xs={10} />
+			<Grid item xs={2}>
+				<Typography>{getTotalPointBuy(values)}</Typography>
 			</Grid>
 		</Grid>
 	);
