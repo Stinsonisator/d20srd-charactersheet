@@ -4,6 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,20 +21,21 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     });
 
-builder.Services.AddDbContext<DatabaseContext>();
+builder.Services.AddDbContext<DatabaseContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("CharacterSheet")));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddSwaggerGen();
-builder.Services.AddCors(c =>  
-{  
+builder.Services.AddCors(c =>
+{
     c.AddPolicy("AllowAll", options =>
     {
         options.AllowAnyOrigin();
         options.AllowAnyHeader();
         options.AllowAnyMethod();
-    });  
-}); 
+    });
+});
 
 var app = builder.Build();
 

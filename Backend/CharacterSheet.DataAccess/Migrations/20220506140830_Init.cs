@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -12,20 +13,22 @@ namespace CharacterSheet.DataAccess.Migrations
                 name: "Characters",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Age = table.Column<short>(type: "INTEGER", nullable: false),
-                    Gender = table.Column<int>(type: "INTEGER", nullable: false),
-                    Race = table.Column<int>(type: "INTEGER", nullable: false),
-                    Size = table.Column<short>(type: "INTEGER", nullable: false),
-                    CharacterClass = table.Column<string>(type: "TEXT", nullable: false),
-                    Strength = table.Column<short>(type: "INTEGER", nullable: false),
-                    Dexterity = table.Column<short>(type: "INTEGER", nullable: false),
-                    Constitution = table.Column<short>(type: "INTEGER", nullable: false),
-                    Intelligence = table.Column<short>(type: "INTEGER", nullable: false),
-                    Wisdom = table.Column<short>(type: "INTEGER", nullable: false),
-                    Charisma = table.Column<short>(type: "INTEGER", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Age = table.Column<short>(type: "smallint", nullable: false),
+                    Gender = table.Column<int>(type: "integer", nullable: false),
+                    Race = table.Column<int>(type: "integer", nullable: false),
+                    Size_Feet = table.Column<short>(type: "smallint", nullable: true),
+                    Size_Inch = table.Column<float>(type: "real", nullable: true),
+                    Image = table.Column<string>(type: "text", nullable: true),
+                    CharacterClass = table.Column<string>(type: "text", nullable: false),
+                    Strength = table.Column<short>(type: "smallint", nullable: false),
+                    Dexterity = table.Column<short>(type: "smallint", nullable: false),
+                    Constitution = table.Column<short>(type: "smallint", nullable: false),
+                    Intelligence = table.Column<short>(type: "smallint", nullable: false),
+                    Wisdom = table.Column<short>(type: "smallint", nullable: false),
+                    Charisma = table.Column<short>(type: "smallint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -36,11 +39,11 @@ namespace CharacterSheet.DataAccess.Migrations
                 name: "Skills",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
-                    KeyAbility = table.Column<string>(type: "TEXT", nullable: false),
-                    TrainedOnly = table.Column<bool>(type: "INTEGER", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    KeyAbility = table.Column<string>(type: "text", nullable: false),
+                    TrainedOnly = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -51,10 +54,10 @@ namespace CharacterSheet.DataAccess.Migrations
                 name: "CharacterLevels",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    CharacterId = table.Column<long>(type: "INTEGER", nullable: false),
-                    Hp = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CharacterId = table.Column<long>(type: "bigint", nullable: false),
+                    Hp = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -71,10 +74,10 @@ namespace CharacterSheet.DataAccess.Migrations
                 name: "CharacterSkills",
                 columns: table => new
                 {
-                    CharacterId = table.Column<long>(type: "INTEGER", nullable: false),
-                    SkillId = table.Column<long>(type: "INTEGER", nullable: false),
-                    Points = table.Column<short>(type: "INTEGER", nullable: false),
-                    CountAsClassSkill = table.Column<bool>(type: "INTEGER", nullable: false)
+                    CharacterId = table.Column<long>(type: "bigint", nullable: false),
+                    SkillId = table.Column<long>(type: "bigint", nullable: false),
+                    Points = table.Column<short>(type: "smallint", nullable: false),
+                    CountAsClassSkill = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {

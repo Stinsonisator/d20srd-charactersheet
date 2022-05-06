@@ -8,19 +8,11 @@ namespace CharacterSheet.DataAccess;
 
 public class DatabaseContext : DbContext
 {
-    private string _dbPath;
-
     public DatabaseContext(DbContextOptions<DatabaseContext> options)
         : base(options)
     {
-        Environment.SpecialFolder folder = Environment.SpecialFolder.LocalApplicationData;
-        string path = Environment.GetFolderPath(folder);
-        _dbPath = "charactersheet.db";
     }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder options)
-        => options.UseSqlite($"Data Source={_dbPath}");
-
+    
     public DbSet<Skill> Skills { get; set; }
 
     public DbSet<Character> Characters { get; set; }
