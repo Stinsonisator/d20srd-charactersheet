@@ -1,5 +1,3 @@
-import forOwn from 'lodash/forOwn';
-
 import { Ability, AbilityCode } from '../types';
 import { Abilities, CharacterClass } from '../types/Character';
 

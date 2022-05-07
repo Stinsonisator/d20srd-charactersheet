@@ -11,9 +11,6 @@ const theme = createTheme({
 		text: {
 			primary: '#040C0E',
 			secondary: '#a4978e'
-		},
-		background: {
-			default: '#d6d0cc'
 		}
 	},
 	components: {

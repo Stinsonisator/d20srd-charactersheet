@@ -1,25 +1,33 @@
 import React from 'react';
 import { HashRouter, NavLink, Route, Routes } from 'react-router-dom';
 
-import { AppBar, Button, Container, CssBaseline, GlobalStyles, ThemeProvider, Toolbar, Tooltip, Typography } from '@mui/material';
+import { AppBar, Button, Container, GlobalStyles, ThemeProvider, Toolbar, Tooltip, Typography } from '@mui/material';
 import map from 'lodash/map';
 
 import Characters from './pages/Characters';
 import CharacterSheet from './pages/CharacterSheet';
 import Home from './pages/Home';
+import MasterData from './pages/MasterData';
+import Skills from './pages/Skills';
 import theme from './services/theme';
 import { useAppSelector } from './utils/hooks';
 
 const globalStyles = (
 	<GlobalStyles
 		styles={(theme) => ({
-			'.MuiButton-root': {
-				'&.active': {
-					color: theme.palette.text.secondary
+			'.MuiToolbar-root': {
+				'.MuiButton-root': {
+					color: theme.palette.text.secondary,
+					'&.active': {
+						color: 'white'
+					}
 				}
 			},
+			'.MuiDataGrid-columnHeaders': {
+				backgroundColor: 'white'
+			},
 			body: {
-				backgroundColor: theme.palette.background.default
+				backgroundColor: '#d6d0cc'
 			}
 		})}
 	/>
@@ -45,6 +53,9 @@ export default function App(): JSX.Element {
 						<Button component={NavLink} to="/characters" color="inherit">
 							Characters
 						</Button>
+						<Button component={NavLink} to="/masterdata" color="inherit">
+							Masterdata
+						</Button>
 					</Toolbar>
 				</AppBar>
 				{map(globalComponents, (component, key) => (
@@ -55,6 +66,8 @@ export default function App(): JSX.Element {
 						<Route path="/" element={<Home />} />
 						<Route path="/characters" element={<Characters />} />
 						<Route path="/characters/:id" element={<CharacterSheet />} />
+						<Route path="/masterdata" element={<MasterData />} />
+						<Route path="/masterdata/skills" element={<Skills />} />
 					</Routes>
 				</Container>
 			</ThemeProvider>

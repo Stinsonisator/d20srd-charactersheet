@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using CharacterSheet.Models.CharacterData;
 using CharacterSheet.DataAccess;
@@ -65,6 +64,6 @@ public class CharactersController : ControllerBase
         _databaseContext.Characters.Remove(character);
         await _databaseContext.SaveChangesAsync();
 
-        return this.Ok();
+        return Ok();
     }
 }
