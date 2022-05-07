@@ -1,9 +1,10 @@
-import { Grid, TextField, Typography } from '@mui/material';
+import { FormControl, FormControlLabel, FormLabel, Grid, InputLabel, TextField, Typography } from '@mui/material';
 import { useFormikContext } from 'formik';
 
 import { Ability } from '../../types';
 import { Character } from '../../types/Character';
 import { displayModifier, getAbilityCode, getAbilityModifier, getFinalScore } from '../../utils';
+import ReadOnlyField from '../ReadOnlyField';
 
 interface Props {
 	ability: Ability;
@@ -33,16 +34,16 @@ export function AbilityRow({ ability }: Props): JSX.Element {
 					/>
 				</Typography>
 			</Grid>
-			<Grid item xs={2}>
-				<TextField label="Modifier" value={displayModifier(getAbilityModifier(values[ability]))} />
+			<Grid item xs={1}>
+				<ReadOnlyField label="Modifier" value={displayModifier(getAbilityModifier(values[ability]))} />
+			</Grid>
+			<Grid item xs={1}>
+				<ReadOnlyField label="Final score" value={finalScore.toString()} />
 			</Grid>
 			<Grid item xs={2}>
-				<TextField label="Final score" value={finalScore} />
+				<ReadOnlyField label="Final modifier" value={displayModifier(getAbilityModifier(finalScore))} />
 			</Grid>
-			<Grid item xs={2}>
-				<TextField label="final modifier" value={displayModifier(getAbilityModifier(finalScore))} />
-			</Grid>
-			<Grid item xs={4} />
+			<Grid item xs={6} />
 		</>
 	);
 }
