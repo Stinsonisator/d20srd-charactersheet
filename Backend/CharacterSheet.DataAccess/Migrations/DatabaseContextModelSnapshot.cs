@@ -58,8 +58,9 @@ namespace CharacterSheet.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Race")
-                        .HasColumnType("integer");
+                    b.Property<string>("Race")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<short>("Strength")
                         .HasColumnType("smallint");
@@ -129,7 +130,7 @@ namespace CharacterSheet.DataAccess.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<bool>("TrainedOnly")
+                    b.Property<bool>("Untrained")
                         .HasColumnType("boolean");
 
                     b.HasKey("Id");

@@ -10,5 +10,5 @@ public class Skill
 
 	public Ability KeyAbility { get; set; }
 
-    public bool TrainedOnly { get; set; }
+    public bool Untrained { get; set; }
 }

@@ -25,9 +25,6 @@ const globalStyles = (
 			},
 			'.MuiDataGrid-columnHeaders': {
 				backgroundColor: 'white'
-			},
-			body: {
-				backgroundColor: '#d6d0cc'
 			}
 		})}
 	/>

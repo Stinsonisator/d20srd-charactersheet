@@ -62,12 +62,12 @@ export function CharacterSheet(): JSX.Element {
 								<Grid item xs={2}>
 									<Typography sx={{ fontSize: 10 }}>Temp modfier</Typography>
 								</Grid>
-								<AbilityRow characterClass={character.characterClass} abilityCode="STR" abilityScore={character.strength} />
-								<AbilityRow characterClass={character.characterClass} abilityCode="DEX" abilityScore={character.dexterity} />
-								<AbilityRow characterClass={character.characterClass} abilityCode="CON" abilityScore={character.constitution} />
-								<AbilityRow characterClass={character.characterClass} abilityCode="INT" abilityScore={character.intelligence} />
-								<AbilityRow characterClass={character.characterClass} abilityCode="WIS" abilityScore={character.wisdom} />
-								<AbilityRow characterClass={character.characterClass} abilityCode="CHA" abilityScore={character.charisma} />
+								<AbilityRow characterClass={character.characterClass} abilityCode="str" abilityScore={character.strength} />
+								<AbilityRow characterClass={character.characterClass} abilityCode="dex" abilityScore={character.dexterity} />
+								<AbilityRow characterClass={character.characterClass} abilityCode="con" abilityScore={character.constitution} />
+								<AbilityRow characterClass={character.characterClass} abilityCode="int" abilityScore={character.intelligence} />
+								<AbilityRow characterClass={character.characterClass} abilityCode="wis" abilityScore={character.wisdom} />
+								<AbilityRow characterClass={character.characterClass} abilityCode="cha" abilityScore={character.charisma} />
 							</Grid>
 						</Stack>
 					</Grid>

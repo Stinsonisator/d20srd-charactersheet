@@ -50,8 +50,17 @@ export const characterSheetApi = createApi({
 				body: skill
 			}),
 			invalidatesTags: [{ type: 'Skills', id: 'LIST' }]
+		}),
+		updateSkill: builder.mutation<Skill, Skill>({
+			query: (skill) => ({
+				url: `skills/${skill.id}`,
+				method: 'PUT',
+				body: skill
+			}),
+			invalidatesTags: (_result, _error, arg) => [{ type: 'Skills', id: arg.id }]
 		})
 	})
 });
 
-export const { useGetCharactersQuery, useGetCharacterQuery, useAddCharacterMutation, useDeleteCharacterMutation, useGetSkillsQuery, useAddSkillMutation } = characterSheetApi;
+export const { useGetCharactersQuery, useGetCharacterQuery, useAddCharacterMutation, useDeleteCharacterMutation, useGetSkillsQuery, useGetSkillQuery, useAddSkillMutation, useUpdateSkillMutation } =
+	characterSheetApi;

@@ -1,11 +1,12 @@
 import { Grid, Typography } from '@mui/material';
 
+import { AbilityCode } from '../../types';
 import { CharacterClass } from '../../types/Character';
 import { displayModifier, getAbilityModifier, getFinalScore } from '../../utils';
 
 interface Props {
 	characterClass: CharacterClass;
-	abilityCode: 'STR' | 'DEX' | 'CON' | 'INT' | 'WIS' | 'CHA';
+	abilityCode: AbilityCode;
 	abilityScore: number;
 }
 

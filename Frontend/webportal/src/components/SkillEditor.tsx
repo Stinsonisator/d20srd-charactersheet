@@ -1,15 +1,32 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Icon, IconButton, Stack, TextField } from '@mui/material';
+import {
+	Box,
+	Button,
+	CircularProgress,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogContentText,
+	DialogTitle,
+	FormControlLabel,
+	Icon,
+	IconButton,
+	MenuItem,
+	Stack,
+	Switch,
+	TextField
+} from '@mui/material';
 import { Form, Formik, FormikErrors } from 'formik';
 
-import { useAddSkillMutation } from '../services/api';
+import { useAddSkillMutation, useGetSkillQuery, useUpdateSkillMutation } from '../services/api';
 import { globalDerender } from '../services/globalRenderSlice';
 import { Skill } from '../types/Skill';
 import { useAppDispatch } from '../utils/hooks';
 
 interface Props {
 	renderKey: string;
+	entityId?: number;
 }
 
 function validate(values: Skill): FormikErrors<Skill> {
@@ -25,8 +42,10 @@ function validate(values: Skill): FormikErrors<Skill> {
 	return errors;
 }
 
-export default function SkillEditor({ renderKey }: Props): JSX.Element {
-	const [addSkill, result] = useAddSkillMutation();
+export default function SkillEditor({ renderKey, entityId }: Props): JSX.Element {
+	const [addSkill, addResult] = useAddSkillMutation();
+	const [updateSkill, updateResult] = useUpdateSkillMutation();
+	const { isLoading, data: loadResult } = useGetSkillQuery(entityId ?? 0, { skip: Boolean(!entityId) });
 	const reduxDispatch = useAppDispatch();
 	const firstField = useRef<HTMLInputElement>();
 
@@ -39,24 +58,31 @@ export default function SkillEditor({ renderKey }: Props): JSX.Element {
 	}, [reduxDispatch, renderKey]);
 
 	useEffect(() => {
-		if (!result.isLoading && result.isSuccess) {
+		if ((!addResult.isLoading && addResult.isSuccess) || (!updateResult.isLoading && updateResult.isSuccess)) {
 			handleClose();
 		}
-	}, [handleClose, result.isLoading, result.isSuccess]);
+	}, [handleClose, addResult.isLoading, addResult.isSuccess, updateResult.isLoading, updateResult.isSuccess]);
 
 	return (
 		<Dialog onClose={handleClose} open fullWidth maxWidth="lg">
 			<Formik
-				initialValues={{
-					id: 0,
-					name: '',
-					keyAbility: 'STR',
-					trainedOnly: true
-				}}
+				initialValues={
+					loadResult ?? {
+						id: 0,
+						name: '',
+						keyAbility: 'str',
+						untrained: true
+					}
+				}
 				validate={validate}
 				onSubmit={(values: Skill) => {
-					addSkill(values);
+					if (!values.id) {
+						addSkill(values);
+					} else {
+						updateSkill(values);
+					}
 				}}
+				enableReinitialize
 			>
 				{({ values, errors, touched, handleChange, handleBlur }) => (
 					<Form>
@@ -84,8 +110,33 @@ export default function SkillEditor({ renderKey }: Props): JSX.Element {
 										error={touched.name && Boolean(errors.name)}
 										helperText={touched.name && errors.name}
 										required
+										autoFocus
 									/>
-									<div>2</div>
+									<TextField
+										id="keyAbility"
+										name="keyAbility"
+										label="Key ability"
+										select
+										value={values.keyAbility}
+										onChange={handleChange}
+										onBlur={handleBlur}
+										error={touched.keyAbility && Boolean(errors.keyAbility)}
+										helperText={touched.keyAbility && errors.keyAbility}
+										required
+									>
+										<MenuItem value="str">STR</MenuItem>
+										<MenuItem value="dex">DEX</MenuItem>
+										<MenuItem value="con">CON</MenuItem>
+										<MenuItem value="int">INT</MenuItem>
+										<MenuItem value="wis">WIS</MenuItem>
+										<MenuItem value="cha">CHA</MenuItem>
+									</TextField>
+									<FormControlLabel
+										control={<Switch color="primary" id="untrained" name="untrained" checked={values.untrained} onChange={handleChange} />}
+										label="Untrained"
+										labelPlacement="top"
+										sx={{ alignItems: 'flex-start' }}
+									/>
 								</Stack>
 							</DialogContentText>
 						</DialogContent>
@@ -96,7 +147,7 @@ export default function SkillEditor({ renderKey }: Props): JSX.Element {
 							<Button variant="contained" color="primary" type="submit">
 								Save
 							</Button>
-							{result.isLoading && (
+							{(addResult.isLoading || isLoading) && (
 								<CircularProgress
 									size={24}
 									sx={{

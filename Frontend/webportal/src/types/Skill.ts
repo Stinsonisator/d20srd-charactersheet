@@ -4,5 +4,5 @@ export interface Skill {
 	id: number;
 	name: string;
 	keyAbility: AbilityCode;
-	trainedOnly: boolean;
+	untrained: boolean;
 }

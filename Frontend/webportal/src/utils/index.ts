@@ -29,17 +29,17 @@ export function getFinalScore(characterClass: CharacterClass, abilityCode: Abili
 	}
 
 	switch (abilityCode) {
-		case 'STR':
+		case 'str':
 			return abilityScore + strengthBonus;
-		case 'DEX':
+		case 'dex':
 			return abilityScore + dexterityBonus;
-		case 'CON':
+		case 'con':
 			return abilityScore + constitutionBonus;
-		case 'INT':
+		case 'int':
 			return abilityScore + inteligenceBonus;
-		case 'WIS':
+		case 'wis':
 			return abilityScore + wisdomBonus;
-		case 'CHA':
+		case 'cha':
 			return abilityScore + charismaBonus;
 	}
 }
@@ -47,17 +47,17 @@ export function getFinalScore(characterClass: CharacterClass, abilityCode: Abili
 export function getAbilityCode(ability: Ability): AbilityCode {
 	switch (ability) {
 		case 'strength':
-			return 'STR';
+			return 'str';
 		case 'dexterity':
-			return 'DEX';
+			return 'dex';
 		case 'constitution':
-			return 'CON';
+			return 'con';
 		case 'intelligence':
-			return 'INT';
+			return 'int';
 		case 'wisdom':
-			return 'WIS';
+			return 'wis';
 		case 'charisma':
-			return 'CHA';
+			return 'cha';
 	}
 }
 

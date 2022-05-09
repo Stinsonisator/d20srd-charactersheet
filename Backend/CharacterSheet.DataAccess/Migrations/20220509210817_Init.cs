@@ -18,7 +18,7 @@ namespace CharacterSheet.DataAccess.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     Age = table.Column<short>(type: "smallint", nullable: false),
                     Gender = table.Column<int>(type: "integer", nullable: false),
-                    Race = table.Column<int>(type: "integer", nullable: false),
+                    Race = table.Column<string>(type: "text", nullable: false),
                     Size_Feet = table.Column<short>(type: "smallint", nullable: true),
                     Size_Inch = table.Column<float>(type: "real", nullable: true),
                     Image = table.Column<string>(type: "text", nullable: true),
@@ -43,7 +43,7 @@ namespace CharacterSheet.DataAccess.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: true),
                     KeyAbility = table.Column<string>(type: "text", nullable: false),
-                    TrainedOnly = table.Column<bool>(type: "boolean", nullable: false)
+                    Untrained = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -1,5 +1,5 @@
 import { Abilities } from './Character';
 
-export type AbilityCode = 'STR' | 'DEX' | 'CON' | 'INT' | 'WIS' | 'CHA';
+export type AbilityCode = 'str' | 'dex' | 'con' | 'int' | 'wis' | 'cha';
 
 export type Ability = keyof Abilities;
