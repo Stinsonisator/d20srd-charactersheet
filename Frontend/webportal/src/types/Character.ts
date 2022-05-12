@@ -1,3 +1,5 @@
+import { Skill } from './Skill';
+
 export type CharacterClass = 'blackBelt';
 
 export type Gender = 'm' | 'v' | 'x';
@@ -21,6 +23,16 @@ export interface Character {
 	intelligence: number;
 	wisdom: number;
 	charisma: number;
+	skills: CharacterSkill[];
+}
+
+export interface CharacterSkill {
+	characterId: number;
+	character: Character;
+	skillId: number;
+	skill: Skill;
+	points: number;
+	countAsClassSkill: boolean;
 }
 
 export type Abilities = Pick<Character, 'strength' | 'dexterity' | 'constitution' | 'intelligence' | 'wisdom' | 'charisma'>;

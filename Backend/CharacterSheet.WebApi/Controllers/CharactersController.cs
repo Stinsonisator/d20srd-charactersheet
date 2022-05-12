@@ -40,6 +40,10 @@ public class CharactersController : ControllerBase
     {
         _databaseContext.Entry(character).State = EntityState.Added;
         _databaseContext.Entry(character.Size).State = EntityState.Added;
+        foreach (CharacterSkill skill in character.Skills)
+        {
+            _databaseContext.Entry(skill).State = EntityState.Added;
+        }
         await _databaseContext.SaveChangesAsync().ConfigureAwait(false);
         return character;
     }

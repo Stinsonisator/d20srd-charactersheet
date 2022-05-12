@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Icon, IconButton, Step, StepLabel, Stepper } from '@mui/material';
 import { Form, Formik, FormikErrors } from 'formik';
+import filter from 'lodash/filter';
 import map from 'lodash/map';
 
 import { useAddCharacterMutation } from '../../services/api';
@@ -9,6 +10,7 @@ import { globalDerender } from '../../services/globalRenderSlice';
 import { Character } from '../../types/Character';
 import { useAppDispatch } from '../../utils/hooks';
 import Attributes from './Attributes';
+import Skills from './Skills';
 
 interface Props {
 	renderKey: string;
@@ -16,7 +18,7 @@ interface Props {
 
 const steps = [
 	{ label: 'Attributes', content: <Attributes /> },
-	{ label: 'Skills', content: <Box sx={{ m: 2 }}>Skills</Box> },
+	{ label: 'Skills', content: <Skills /> },
 	{ label: 'Feats', content: <Box sx={{ m: 2 }}>Feats</Box> },
 	{ label: 'Equipment', content: <Box sx={{ m: 2 }}>Equipment</Box> }
 ];
@@ -61,7 +63,7 @@ export default function CharacterWizard({ renderKey }: Props): JSX.Element {
 	}, [handleClose, result.isLoading, result.isSuccess]);
 
 	return (
-		<Dialog onClose={handleClose} open fullWidth maxWidth="lg">
+		<Dialog onClose={handleClose} open fullWidth maxWidth="lg" scroll="paper">
 			<Formik
 				initialValues={{
 					id: 0,
@@ -79,12 +81,18 @@ export default function CharacterWizard({ renderKey }: Props): JSX.Element {
 					constitution: 8,
 					intelligence: 8,
 					wisdom: 8,
-					charisma: 8
+					charisma: 8,
+					skills: []
 				}}
 				validate={validate}
 				onSubmit={(values: Character) => {
 					if (activeStep === steps.length - 1) {
-						addCharacter(values);
+						addCharacter({
+							...values,
+							skills: filter(values.skills, (skill) => {
+								return +skill.points > 0;
+							})
+						});
 					} else {
 						setActiveStep(activeStep + 1);
 					}

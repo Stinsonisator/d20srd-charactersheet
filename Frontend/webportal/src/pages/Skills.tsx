@@ -6,12 +6,13 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useDispatch } from 'react-redux';
 
 import SkillEditor from '../components/SkillEditor';
-import { useGetSkillsQuery } from '../services/api';
+import { useDeleteSkillMutation, useGetSkillsQuery } from '../services/api';
 import { globalRender } from '../services/globalRenderSlice';
 import { AppDispatch } from '../services/store';
 
 function Skills() {
 	const { data, isLoading } = useGetSkillsQuery();
+	const [deleteSkill] = useDeleteSkillMutation();
 	const reduxDispatch = useDispatch<AppDispatch>();
 
 	const showEditor = useCallback(
@@ -19,6 +20,13 @@ function Skills() {
 			reduxDispatch(globalRender({ key: 'skillEditor', component: <SkillEditor renderKey="skillEditor" entityId={entityId} /> }));
 		},
 		[reduxDispatch]
+	);
+
+	const performdeleteSkill = useCallback(
+		(entityId: number) => {
+			deleteSkill(entityId);
+		},
+		[deleteSkill]
 	);
 
 	const columns: GridColDef[] = useMemo(
@@ -36,11 +44,14 @@ function Skills() {
 						<IconButton onClick={() => showEditor(params.row.id)}>
 							<Icon className="fa-pen" sx={{ fontSize: 16 }} />
 						</IconButton>
+						<IconButton onClick={() => performdeleteSkill(params.row.id)}>
+							<Icon className="fa-times" sx={{ fontSize: 16 }} />
+						</IconButton>
 					</>
 				)
 			}
 		],
-		[showEditor]
+		[performdeleteSkill, showEditor]
 	);
 
 	return (
@@ -50,7 +61,16 @@ function Skills() {
 					Add
 				</Button>
 			</Box>
-			<DataGrid rows={data ?? []} columns={columns} loading={isLoading} hideFooterPagination />
+			<DataGrid
+				rows={data ?? []}
+				columns={columns}
+				loading={isLoading}
+				hideFooterPagination
+				onRowDoubleClick={(params) => showEditor(params.row.id)}
+				initialState={{
+					sorting: { sortModel: [{ field: 'name', sort: 'asc' }] }
+				}}
+			/>
 		</Stack>
 	);
 }

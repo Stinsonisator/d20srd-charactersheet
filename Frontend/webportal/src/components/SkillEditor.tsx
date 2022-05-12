@@ -1,22 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-import {
-	Box,
-	Button,
-	CircularProgress,
-	Dialog,
-	DialogActions,
-	DialogContent,
-	DialogContentText,
-	DialogTitle,
-	FormControlLabel,
-	Icon,
-	IconButton,
-	MenuItem,
-	Stack,
-	Switch,
-	TextField
-} from '@mui/material';
+import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, Icon, IconButton, MenuItem, Stack, Switch, TextField } from '@mui/material';
 import { Form, Formik, FormikErrors } from 'formik';
 
 import { useAddSkillMutation, useGetSkillQuery, useUpdateSkillMutation } from '../services/api';
@@ -97,48 +81,46 @@ export default function SkillEditor({ renderKey, entityId }: Props): JSX.Element
 							</Box>
 						</DialogTitle>
 						<DialogContent>
-							<DialogContentText sx={{ my: 2 }}>
-								<Stack sx={{ m: 2 }} spacing={2}>
-									<TextField
-										inputRef={firstField}
-										id="name"
-										name="name"
-										label="Name"
-										value={values.name}
-										onChange={handleChange}
-										onBlur={handleBlur}
-										error={touched.name && Boolean(errors.name)}
-										helperText={touched.name && errors.name}
-										required
-										autoFocus
-									/>
-									<TextField
-										id="keyAbility"
-										name="keyAbility"
-										label="Key ability"
-										select
-										value={values.keyAbility}
-										onChange={handleChange}
-										onBlur={handleBlur}
-										error={touched.keyAbility && Boolean(errors.keyAbility)}
-										helperText={touched.keyAbility && errors.keyAbility}
-										required
-									>
-										<MenuItem value="str">STR</MenuItem>
-										<MenuItem value="dex">DEX</MenuItem>
-										<MenuItem value="con">CON</MenuItem>
-										<MenuItem value="int">INT</MenuItem>
-										<MenuItem value="wis">WIS</MenuItem>
-										<MenuItem value="cha">CHA</MenuItem>
-									</TextField>
-									<FormControlLabel
-										control={<Switch color="primary" id="untrained" name="untrained" checked={values.untrained} onChange={handleChange} />}
-										label="Untrained"
-										labelPlacement="top"
-										sx={{ alignItems: 'flex-start' }}
-									/>
-								</Stack>
-							</DialogContentText>
+							<Stack sx={{ m: 2 }} spacing={2}>
+								<TextField
+									inputRef={firstField}
+									id="name"
+									name="name"
+									label="Name"
+									value={values.name}
+									onChange={handleChange}
+									onBlur={handleBlur}
+									error={touched.name && Boolean(errors.name)}
+									helperText={touched.name && errors.name}
+									required
+									autoFocus
+								/>
+								<TextField
+									id="keyAbility"
+									name="keyAbility"
+									label="Key ability"
+									select
+									value={values.keyAbility}
+									onChange={handleChange}
+									onBlur={handleBlur}
+									error={touched.keyAbility && Boolean(errors.keyAbility)}
+									helperText={touched.keyAbility && errors.keyAbility}
+									required
+								>
+									<MenuItem value="str">STR</MenuItem>
+									<MenuItem value="dex">DEX</MenuItem>
+									<MenuItem value="con">CON</MenuItem>
+									<MenuItem value="int">INT</MenuItem>
+									<MenuItem value="wis">WIS</MenuItem>
+									<MenuItem value="cha">CHA</MenuItem>
+								</TextField>
+								<FormControlLabel
+									control={<Switch color="primary" id="untrained" name="untrained" checked={values.untrained} onChange={handleChange} />}
+									label="Untrained"
+									labelPlacement="top"
+									sx={{ alignItems: 'flex-start' }}
+								/>
+							</Stack>
 						</DialogContent>
 						<DialogActions>
 							<Button onClick={handleClose} variant="outlined">
