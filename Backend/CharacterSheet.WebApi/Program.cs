@@ -1,3 +1,4 @@
+using System;
 using CharacterSheet.DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,6 +38,11 @@ builder.Services.AddCors(c =>
     });
 });
 
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -49,7 +55,12 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseHttpsRedirection();
+    app.Urls.Add($"http://*:{Environment.GetEnvironmentVariable("PORT")}");
 }
+
+app.UseResponseCompression();
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.UseAuthorization();
 

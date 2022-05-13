@@ -136,4 +136,5 @@ _NCrunch*
 .vscode/
 .idea/
 
-CharacterSheet.WebApi/charactersheet.db
+CharacterSheet.WebApi/appsettings.Production.json
+CharagerSheet.WebApi/appsettings.Development.json
