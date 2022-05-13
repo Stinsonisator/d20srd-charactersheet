@@ -24,6 +24,7 @@ export interface Character {
 	wisdom: number;
 	charisma: number;
 	skills: CharacterSkill[];
+	levels: CharacterLevel[];
 }
 
 export interface CharacterSkill {
@@ -33,6 +34,13 @@ export interface CharacterSkill {
 	skill: Skill;
 	points: number;
 	countAsClassSkill: boolean;
+}
+
+export interface CharacterLevel {
+	id: number;
+	characterId?: number;
+	character?: Character;
+	hp: number;
 }
 
 export type Abilities = Pick<Character, 'strength' | 'dexterity' | 'constitution' | 'intelligence' | 'wisdom' | 'charisma'>;

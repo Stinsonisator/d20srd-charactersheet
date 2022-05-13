@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Icon, IconButton, Step, StepLabel, Stepper } from '@mui/material';
+import { Backdrop, Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton, Step, StepLabel, Stepper } from '@mui/material';
 import { Form, Formik, FormikErrors } from 'formik';
 import filter from 'lodash/filter';
 import map from 'lodash/map';
@@ -49,7 +49,7 @@ function validate(values: Character): FormikErrors<Character> {
 
 export default function CharacterWizard({ renderKey }: Props): JSX.Element {
 	const [activeStep, setActiveStep] = useState(0);
-	const [addCharacter, result] = useAddCharacterMutation();
+	const [addCharacter, characterAddResult] = useAddCharacterMutation();
 	const reduxDispatch = useAppDispatch();
 
 	const handleClose = useCallback(() => {
@@ -57,106 +57,117 @@ export default function CharacterWizard({ renderKey }: Props): JSX.Element {
 	}, [reduxDispatch, renderKey]);
 
 	useEffect(() => {
-		if (!result.isLoading && result.isSuccess) {
+		if (!characterAddResult.isLoading && characterAddResult.isSuccess) {
 			handleClose();
 		}
-	}, [handleClose, result.isLoading, result.isSuccess]);
+	}, [handleClose, characterAddResult.isLoading, characterAddResult.isSuccess]);
+
+	const save = useCallback(
+		(character: Character) => {
+			let startingHp = 0;
+			switch (character.characterClass) {
+				case 'blackBelt':
+					startingHp = 16;
+					break;
+			}
+			addCharacter({
+				...character,
+				skills: filter(character.skills, (skill) => {
+					return +skill.points > 0;
+				}),
+				levels: [
+					{
+						id: 0,
+						hp: startingHp
+					}
+				]
+			});
+		},
+		[addCharacter]
+	);
 
 	return (
 		<Dialog onClose={handleClose} open fullWidth maxWidth="lg" scroll="paper">
-			<Formik
-				initialValues={{
-					id: 0,
-					name: '',
-					age: 21,
-					gender: 'm',
-					race: 'human',
-					size: {
-						feet: 0,
-						inch: 0
-					},
-					characterClass: 'blackBelt',
-					strength: 8,
-					dexterity: 8,
-					constitution: 8,
-					intelligence: 8,
-					wisdom: 8,
-					charisma: 8,
-					skills: []
-				}}
-				validate={validate}
-				onSubmit={(values: Character) => {
-					if (activeStep === steps.length - 1) {
-						addCharacter({
-							...values,
-							skills: filter(values.skills, (skill) => {
-								return +skill.points > 0;
-							})
-						});
-					} else {
-						setActiveStep(activeStep + 1);
-					}
-				}}
-			>
-				<Form>
-					<DialogTitle sx={(theme) => ({ backgroundColor: theme.palette.primary.main, color: theme.palette.text.secondary })}>
-						<Box display="flex" alignItems="center">
-							<Box flexGrow={1}>Add new character</Box>
-							<Box>
-								<IconButton onClick={handleClose}>
-									<Icon className="fa-times" sx={{ fontSize: 16, color: 'text.secondary' }} />
-								</IconButton>
-							</Box>
-						</Box>
-					</DialogTitle>
-					<DialogContent>
-						<DialogContentText sx={{ my: 2 }}>
-							<Stepper activeStep={activeStep}>
-								{map(steps, (step, index) => (
-									<Step completed={activeStep > index}>
-										<StepLabel>{step.label}</StepLabel>
-									</Step>
-								))}
-							</Stepper>
-							<Box sx={{ m: 2 }}>{steps[activeStep].content}</Box>
-						</DialogContentText>
-					</DialogContent>
-					<DialogActions>
-						<Button onClick={handleClose} variant="outlined">
-							Cancel
+			<DialogTitle sx={(theme) => ({ backgroundColor: theme.palette.primary.main, color: theme.palette.text.secondary })}>
+				<Box display="flex" alignItems="center">
+					<Box flexGrow={1}>Add new character</Box>
+					<Box>
+						<IconButton onClick={handleClose}>
+							<Icon className="fa-times" sx={{ fontSize: 16, color: 'text.secondary' }} />
+						</IconButton>
+					</Box>
+				</Box>
+			</DialogTitle>
+			<DialogContent sx={{ my: 2 }}>
+				<Formik
+					initialValues={{
+						id: 0,
+						name: '',
+						age: 21,
+						gender: 'm',
+						race: 'human',
+						size: {
+							feet: 0,
+							inch: 0
+						},
+						characterClass: 'blackBelt',
+						strength: 8,
+						dexterity: 8,
+						constitution: 8,
+						intelligence: 8,
+						wisdom: 8,
+						charisma: 8,
+						skills: [],
+						levels: []
+					}}
+					validate={validate}
+					onSubmit={(values: Character) => {
+						if (activeStep === steps.length - 1) {
+							save(values);
+						} else {
+							setActiveStep(activeStep + 1);
+						}
+					}}
+				>
+					<Form id="characterWizard">
+						{characterAddResult.isLoading && (
+							<Backdrop sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }} open>
+								<CircularProgress color="inherit" />
+							</Backdrop>
+						)}
+						<Stepper activeStep={activeStep}>
+							{map(steps, (step, index) => (
+								<Step completed={activeStep > index}>
+									<StepLabel>{step.label}</StepLabel>
+								</Step>
+							))}
+						</Stepper>
+						<Box sx={{ m: 2 }}>{steps[activeStep].content}</Box>
+					</Form>
+				</Formik>
+			</DialogContent>
+			<DialogActions>
+				<Button onClick={handleClose} variant="outlined">
+					Cancel
+				</Button>
+				<Box sx={{ flex: '1 1 auto' }} />
+				{activeStep > 0 && (
+					<Button onClick={() => setActiveStep(activeStep - 1)} variant="outlined" sx={{ color: 'secondary.dark', borderColor: 'secondary.dark' }}>
+						Back
+					</Button>
+				)}
+				{activeStep < steps.length - 1 ? (
+					<Button variant="contained" color="secondary" type="submit" form="characterWizard">
+						Next
+					</Button>
+				) : (
+					<Box sx={{ position: 'relative' }}>
+						<Button variant="contained" color="primary" type="submit" form="characterWizard">
+							Finish
 						</Button>
-						<Box sx={{ flex: '1 1 auto' }} />
-						{activeStep > 0 && (
-							<Button onClick={() => setActiveStep(activeStep - 1)} variant="outlined" sx={{ color: 'secondary.dark', borderColor: 'secondary.dark' }}>
-								Back
-							</Button>
-						)}
-						{activeStep < steps.length - 1 ? (
-							<Button variant="contained" color="secondary" type="submit">
-								Next
-							</Button>
-						) : (
-							<Box sx={{ position: 'relative' }}>
-								<Button variant="contained" color="primary" type="submit">
-									Finish
-								</Button>
-								{result.isLoading && (
-									<CircularProgress
-										size={24}
-										sx={{
-											position: 'absolute',
-											top: '50%',
-											left: '50%',
-											marginTop: '-12px',
-											marginLeft: '-12px'
-										}}
-									/>
-								)}
-							</Box>
-						)}
-					</DialogActions>
-				</Form>
-			</Formik>
+					</Box>
+				)}
+			</DialogActions>
 		</Dialog>
 	);
 }

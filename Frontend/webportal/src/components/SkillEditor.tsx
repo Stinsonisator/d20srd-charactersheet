@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, Icon, IconButton, MenuItem, Stack, Switch, TextField } from '@mui/material';
+import { Backdrop, Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, Icon, IconButton, MenuItem, Stack, Switch, TextField } from '@mui/material';
 import { Form, Formik, FormikErrors } from 'formik';
 
 import { useAddSkillMutation, useGetSkillQuery, useUpdateSkillMutation } from '../services/api';
@@ -49,38 +49,43 @@ export default function SkillEditor({ renderKey, entityId }: Props): JSX.Element
 
 	return (
 		<Dialog onClose={handleClose} open fullWidth maxWidth="lg">
-			<Formik
-				initialValues={
-					loadResult ?? {
-						id: 0,
-						name: '',
-						keyAbility: 'str',
-						untrained: true
+			<DialogTitle sx={(theme) => ({ backgroundColor: theme.palette.primary.main, color: theme.palette.text.secondary })}>
+				<Box display="flex" alignItems="center">
+					<Box flexGrow={1}>Add new skill</Box>
+					<Box>
+						<IconButton onClick={handleClose}>
+							<Icon className="fa-times" sx={{ fontSize: 16, color: 'text.secondary' }} />
+						</IconButton>
+					</Box>
+				</Box>
+			</DialogTitle>
+			<DialogContent>
+				<Formik
+					initialValues={
+						loadResult ?? {
+							id: 0,
+							name: '',
+							keyAbility: 'str',
+							untrained: true
+						}
 					}
-				}
-				validate={validate}
-				onSubmit={(values: Skill) => {
-					if (!values.id) {
-						addSkill(values);
-					} else {
-						updateSkill(values);
-					}
-				}}
-				enableReinitialize
-			>
-				{({ values, errors, touched, handleChange, handleBlur }) => (
-					<Form>
-						<DialogTitle sx={(theme) => ({ backgroundColor: theme.palette.primary.main, color: theme.palette.text.secondary })}>
-							<Box display="flex" alignItems="center">
-								<Box flexGrow={1}>Add new skill</Box>
-								<Box>
-									<IconButton onClick={handleClose}>
-										<Icon className="fa-times" sx={{ fontSize: 16, color: 'text.secondary' }} />
-									</IconButton>
-								</Box>
-							</Box>
-						</DialogTitle>
-						<DialogContent>
+					validate={validate}
+					onSubmit={(values: Skill) => {
+						if (!values.id) {
+							addSkill(values);
+						} else {
+							updateSkill(values);
+						}
+					}}
+					enableReinitialize
+				>
+					{({ values, errors, touched, handleChange, handleBlur }) => (
+						<Form id="skillEditor">
+							{(isLoading || addResult.isLoading || updateResult.isLoading) && (
+								<Backdrop sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }} open>
+									<CircularProgress color="inherit" />
+								</Backdrop>
+							)}
 							<Stack sx={{ m: 2 }} spacing={2}>
 								<TextField
 									inputRef={firstField}
@@ -121,30 +126,30 @@ export default function SkillEditor({ renderKey, entityId }: Props): JSX.Element
 									sx={{ alignItems: 'flex-start' }}
 								/>
 							</Stack>
-						</DialogContent>
-						<DialogActions>
-							<Button onClick={handleClose} variant="outlined">
-								Cancel
-							</Button>
-							<Button variant="contained" color="primary" type="submit">
-								Save
-							</Button>
-							{(addResult.isLoading || isLoading) && (
-								<CircularProgress
-									size={24}
-									sx={{
-										position: 'absolute',
-										top: '50%',
-										left: '50%',
-										marginTop: '-12px',
-										marginLeft: '-12px'
-									}}
-								/>
-							)}
-						</DialogActions>
-					</Form>
+						</Form>
+					)}
+				</Formik>
+			</DialogContent>
+			<DialogActions>
+				<Button onClick={handleClose} variant="outlined">
+					Cancel
+				</Button>
+				<Button variant="contained" color="primary" type="submit" form="skillEditor">
+					Save
+				</Button>
+				{(addResult.isLoading || isLoading) && (
+					<CircularProgress
+						size={24}
+						sx={{
+							position: 'absolute',
+							top: '50%',
+							left: '50%',
+							marginTop: '-12px',
+							marginLeft: '-12px'
+						}}
+					/>
 				)}
-			</Formik>
+			</DialogActions>
 		</Dialog>
 	);
 }

@@ -17,7 +17,7 @@ export default function SectionHeader({ sx, children }: PropsWithChildren<Props>
 			display: 'flex',
 			justifyContent: 'center',
 			alignItems: 'center',
-			mb: 1
+			my: 1
 		};
 		if (sx && typeof sx === 'function') {
 			return {

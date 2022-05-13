@@ -50,22 +50,22 @@ function CharacterSkillRow({ character, skill }: Props): JSX.Element {
 	const canUse = skill.skill.untrained || (skill.points ?? 0) > 0;
 	return (
 		<>
-			<Grid item xs={2} sx={{ display: 'flex', alignItems: 'center', opacity: canUse ? 1 : 0.5 }}>
+			<Grid item xs={2} sx={{ display: 'flex', alignItems: 'center', opacity: canUse ? 1 : 0.3 }}>
 				<Typography>{skill.skill.name}</Typography>
 			</Grid>
 			<Grid item xs={2} sx={{ opacity: canUse ? 1 : 0.5 }}>
 				<Checkbox checked={skill.skill.untrained} />
 			</Grid>
-			<Grid item xs={2} sx={{ display: 'flex', alignItems: 'center', opacity: canUse ? 1 : 0.5 }}>
+			<Grid item xs={2} sx={{ display: 'flex', alignItems: 'center', opacity: canUse ? 1 : 0.3 }}>
 				<Typography>{canUse ? displayModifier(abilityModifier + skillModifier) : '/'}</Typography>
 			</Grid>
-			<Grid item xs={1} sx={{ display: 'flex', alignItems: 'center', opacity: canUse ? 1 : 0.5 }}>
+			<Grid item xs={2} sx={{ display: 'flex', alignItems: 'center', opacity: canUse ? 1 : 0.3 }}>
 				<Typography>{displayModifier(abilityModifier)}</Typography>
 			</Grid>
-			<Grid item xs={1} sx={{ opacity: canUse ? 1 : 0.5 }}>
+			<Grid item xs={2} sx={{ opacity: canUse ? 1 : 0.5 }}>
 				<Checkbox checked={skill.countAsClassSkill} />
 			</Grid>
-			<Grid item xs={4} sx={{ display: 'flex', alignItems: 'center', opacity: canUse ? 1 : 0.5 }}>
+			<Grid item xs={2} sx={{ display: 'flex', alignItems: 'center', opacity: canUse ? 1 : 0.3 }}>
 				<Typography>{skill.points}</Typography>
 			</Grid>
 		</>

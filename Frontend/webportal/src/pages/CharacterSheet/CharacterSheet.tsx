@@ -5,12 +5,15 @@ import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import find from 'lodash/find';
 import map from 'lodash/map';
+import orderBy from 'lodash/orderBy';
+import sumBy from 'lodash/sumBy';
 
+import ReadOnlyField from '../../components/ReadOnlyField';
 import { useGetCharacterQuery, useGetSkillsQuery } from '../../services/api';
+import { getAbilityModifier, getFinalScore } from '../../utils';
 import { AbilityRow } from './AbilityRow';
 import CharacterSkillRow from './CharacterSkillRow';
 import SectionHeader from './SectionHeader';
-import orderBy from 'lodash/orderBy';
 
 const globalStyles = (
 	<GlobalStyles
@@ -26,13 +29,13 @@ const globalStyles = (
 
 export function CharacterSheet(): JSX.Element {
 	const { id } = useParams();
-	const { data: character, error: characterError, isLoading: charcterIsLoading } = useGetCharacterQuery(id ? parseInt(id) : -1, { skip: !Boolean(id) });
+	const { data: character, error: characterError, isLoading: characterIsLoading } = useGetCharacterQuery(id ? parseInt(id) : -1, { skip: !Boolean(id) });
 	const { data: skills, error: skillsError, isLoading: areSkillsLoading } = useGetSkillsQuery();
 
 	return (
 		<>
 			{globalStyles}
-			{charcterIsLoading && (
+			{characterIsLoading && (
 				<Box sx={{ display: 'flex', justifyContent: 'center' }}>
 					<CircularProgress />
 				</Box>
@@ -100,12 +103,33 @@ export function CharacterSheet(): JSX.Element {
 									<TextField label="Size modifier" disabled />
 								</Grid>
 							</Grid>
+							<SectionHeader>HP</SectionHeader>
+							<Grid container spacing={2}>
+								<Grid item xs={4}>
+									<ReadOnlyField
+										label="Max HP"
+										value={(
+											sumBy(character.levels, 'hp') +
+											getAbilityModifier(getFinalScore(character.characterClass, 'con', character.constitution)) * character.levels.length
+										).toString()}
+									/>
+								</Grid>
+								<Grid item xs={4}>
+									<TextField type="number" label="Lethal Damage" />
+								</Grid>
+								<Grid item xs={4}>
+									<Typography>
+										<TextField type="number" label="Non lethal Damage" />
+									</Typography>
+								</Grid>
+							</Grid>
 							<SectionHeader>SKILLS</SectionHeader>
 							{areSkillsLoading && (
 								<Box sx={{ display: 'flex', justifyContent: 'center' }}>
 									<CircularProgress />
 								</Box>
 							)}
+							{skillsError && <Alert severity="error">An error happened fetching the skills.</Alert>}
 							{skills && (
 								<Grid container>
 									<Grid item xs={2} sx={{ display: 'flex', alignItems: 'center' }}>
@@ -117,13 +141,13 @@ export function CharacterSheet(): JSX.Element {
 									<Grid item xs={2} sx={{ display: 'flex', alignItems: 'center' }}>
 										<Typography>Total bonus</Typography>
 									</Grid>
-									<Grid item xs={1} sx={{ display: 'flex', alignItems: 'center' }}>
+									<Grid item xs={2} sx={{ display: 'flex', alignItems: 'center' }}>
 										<Typography>Ability bonus</Typography>
 									</Grid>
-									<Grid item xs={1} sx={{ display: 'flex', alignItems: 'center' }}>
+									<Grid item xs={2} sx={{ display: 'flex', alignItems: 'center' }}>
 										<Typography>Class skill</Typography>
 									</Grid>
-									<Grid item xs={4} sx={{ display: 'flex', alignItems: 'center' }}>
+									<Grid item xs={2} sx={{ display: 'flex', alignItems: 'center' }}>
 										<Typography>Ranks</Typography>
 									</Grid>
 									{map(orderBy(skills, 'name'), (skill) => {

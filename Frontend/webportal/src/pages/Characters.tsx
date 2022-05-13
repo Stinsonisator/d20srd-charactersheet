@@ -36,11 +36,11 @@ export default function CharacterSheet(): JSX.Element {
 			)}
 			{error && <Alert severity="error">An error happened fetching the characters.</Alert>}
 			{data && (
-				<Grid container spacing={2}>
+				<Grid container spacing={2} columns={{ xs: 3, md: 6, lg: 12 }}>
 					{map(data, (character) => (
 						<Grid key={`character_${character.id}`} item xs={3}>
 							<Box sx={{ position: 'relative' }}>
-								<Card>
+								<Card sx={{ borderRadius: 3 }}>
 									<CardActionArea onClick={() => goToCharacterSheet(character.id)}>
 										<CardMedia
 											component="img"

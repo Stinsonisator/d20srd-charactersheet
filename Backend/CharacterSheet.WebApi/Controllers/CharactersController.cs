@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using CharacterSheet.Models.CharacterData;
 using CharacterSheet.DataAccess;
@@ -43,6 +44,10 @@ public class CharactersController : ControllerBase
         foreach (CharacterSkill skill in character.Skills)
         {
             _databaseContext.Entry(skill).State = EntityState.Added;
+        }
+        foreach (CharacterLevel level in character.Levels)
+        {
+            _databaseContext.Entry(level).State = EntityState.Added;
         }
         await _databaseContext.SaveChangesAsync().ConfigureAwait(false);
         return character;
