@@ -1,27 +1,26 @@
 import { Grid, Typography } from '@mui/material';
 
-import { AbilityCode } from '../../types';
-import { CharacterClass } from '../../types/Character';
-import { displayModifier, getAbilityModifier, getFinalScore } from '../../utils';
+import { Ability } from '../../types';
+import { Character } from '../../types/Character';
+import { displayModifier, getAbilityCode, getAbilityModifier, getFinalScore } from '../../utils';
 
 interface Props {
-	characterClass: CharacterClass;
-	abilityCode: AbilityCode;
-	abilityScore: number;
+	character: Character;
+	ability: Ability;
 }
 
-export function AbilityRow({ characterClass, abilityCode, abilityScore }: Props): JSX.Element {
+export function AbilityRow({ character, ability }: Props): JSX.Element {
 	return (
 		<>
 			<Grid item xs={2}>
-				<Typography>{abilityCode}</Typography>
+				<Typography>{getAbilityCode(ability)}</Typography>
 			</Grid>
 			<Grid item xs={2}>
-				<Typography>{getFinalScore(characterClass, abilityCode, abilityScore)}</Typography>
+				<Typography>{getFinalScore(character, ability)}</Typography>
 			</Grid>
 			<Grid item xs={2} />
 			<Grid item xs={2}>
-				<Typography>{displayModifier(getAbilityModifier(getFinalScore(characterClass, abilityCode, abilityScore)))}</Typography>
+				<Typography>{displayModifier(getAbilityModifier(getFinalScore(character, ability)))}</Typography>
 			</Grid>
 			<Grid item xs={2} />
 			<Grid item xs={2} />

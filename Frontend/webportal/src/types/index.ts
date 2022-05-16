@@ -1,5 +1,5 @@
-import { Abilities } from './Character';
+import { Character } from './Character';
 
-export type AbilityCode = 'str' | 'dex' | 'con' | 'int' | 'wis' | 'cha';
+export type Abilities = Pick<Character, 'strength' | 'dexterity' | 'constitution' | 'intelligence' | 'wisdom' | 'charisma'>;
 
 export type Ability = keyof Abilities;

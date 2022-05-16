@@ -42,5 +42,3 @@ export interface CharacterLevel {
 	character?: Character;
 	hp: number;
 }
-
-export type Abilities = Pick<Character, 'strength' | 'dexterity' | 'constitution' | 'intelligence' | 'wisdom' | 'charisma'>;

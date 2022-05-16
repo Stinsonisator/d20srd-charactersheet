@@ -1,5 +1,5 @@
-import { Ability, AbilityCode } from '../types';
-import { Abilities, CharacterClass } from '../types/Character';
+import { Abilities, Ability } from '../types';
+import { Character } from '../types/Character';
 
 export function getAbilityModifier(score: number): number {
 	return Math.floor((score - 10) / 2);
@@ -12,39 +12,27 @@ export function displayModifier(modifier: number): string {
 	return `${modifier}`;
 }
 
-export function getFinalScore(characterClass: CharacterClass, abilityCode: AbilityCode, abilityScore: number): number {
-	let strengthBonus = 0;
-	let dexterityBonus = 0;
-	let constitutionBonus = 0;
-	const inteligenceBonus = 0;
-	const wisdomBonus = 0;
-	const charismaBonus = 0;
+export function getFinalScore(character: Character, ability: Ability): number {
+	let bonus = 0;
 
-	switch (characterClass) {
+	switch (character.characterClass) {
 		case 'blackBelt':
-			strengthBonus = 1;
-			dexterityBonus = 1;
-			constitutionBonus = 2;
+			switch (ability) {
+				case 'strength':
+				case 'dexterity':
+					bonus = 1;
+					break;
+				case 'constitution':
+					bonus = 2;
+					break;
+			}
 			break;
 	}
 
-	switch (abilityCode) {
-		case 'str':
-			return abilityScore + strengthBonus;
-		case 'dex':
-			return abilityScore + dexterityBonus;
-		case 'con':
-			return abilityScore + constitutionBonus;
-		case 'int':
-			return abilityScore + inteligenceBonus;
-		case 'wis':
-			return abilityScore + wisdomBonus;
-		case 'cha':
-			return abilityScore + charismaBonus;
-	}
+	return character[ability] + bonus;
 }
 
-export function getAbilityCode(ability: Ability): AbilityCode {
+export function getAbilityCode(ability: Ability): string {
 	switch (ability) {
 		case 'strength':
 			return 'str';

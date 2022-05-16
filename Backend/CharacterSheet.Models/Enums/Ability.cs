@@ -2,10 +2,10 @@ namespace CharacterSheet.Models.Enums;
 
 public enum Ability
 {
-    STR,
-    DEX,
-    CON,
-    INT,
-    WIS,
-    CHA
+    Strength,
+    Dexterity,
+    Constitution,
+    Intelligence,
+    Wisdom,
+    Charisma
 }

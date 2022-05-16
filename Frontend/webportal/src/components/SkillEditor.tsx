@@ -65,7 +65,7 @@ export default function SkillEditor({ renderKey, entityId }: Props): JSX.Element
 						loadResult ?? {
 							id: 0,
 							name: '',
-							keyAbility: 'str',
+							keyAbility: 'strength',
 							untrained: true
 						}
 					}

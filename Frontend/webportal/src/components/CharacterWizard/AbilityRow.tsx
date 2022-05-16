@@ -13,7 +13,7 @@ interface Props {
 export function AbilityRow({ ability }: Props): JSX.Element {
 	const { values, touched, errors, handleChange, handleBlur } = useFormikContext<Character>();
 
-	const finalScore = getFinalScore(values.characterClass, getAbilityCode(ability), values[ability]);
+	const finalScore = getFinalScore(values, ability);
 
 	return (
 		<>

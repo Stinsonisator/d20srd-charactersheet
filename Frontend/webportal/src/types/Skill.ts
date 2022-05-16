@@ -1,8 +1,8 @@
-import { AbilityCode } from '.';
+import { Ability } from '.';
 
 export interface Skill {
 	id: number;
 	name: string;
-	keyAbility: AbilityCode;
+	keyAbility: Ability;
 	untrained: boolean;
 }

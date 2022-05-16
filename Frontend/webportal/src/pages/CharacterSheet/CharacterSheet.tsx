@@ -70,12 +70,12 @@ export function CharacterSheet(): JSX.Element {
 								<Grid item xs={2}>
 									<Typography sx={{ fontSize: 10 }}>Temp modfier</Typography>
 								</Grid>
-								<AbilityRow characterClass={character.characterClass} abilityCode="str" abilityScore={character.strength} />
-								<AbilityRow characterClass={character.characterClass} abilityCode="dex" abilityScore={character.dexterity} />
-								<AbilityRow characterClass={character.characterClass} abilityCode="con" abilityScore={character.constitution} />
-								<AbilityRow characterClass={character.characterClass} abilityCode="int" abilityScore={character.intelligence} />
-								<AbilityRow characterClass={character.characterClass} abilityCode="wis" abilityScore={character.wisdom} />
-								<AbilityRow characterClass={character.characterClass} abilityCode="cha" abilityScore={character.charisma} />
+								<AbilityRow character={character} ability="strength" />
+								<AbilityRow character={character} ability="dexterity" />
+								<AbilityRow character={character} ability="constitution" />
+								<AbilityRow character={character} ability="intelligence" />
+								<AbilityRow character={character} ability="wisdom" />
+								<AbilityRow character={character} ability="charisma" />
 							</Grid>
 							<SectionHeader>FEATS</SectionHeader>
 						</Stack>
@@ -108,10 +108,7 @@ export function CharacterSheet(): JSX.Element {
 								<Grid item xs={4}>
 									<ReadOnlyField
 										label="Max HP"
-										value={(
-											sumBy(character.levels, 'hp') +
-											getAbilityModifier(getFinalScore(character.characterClass, 'con', character.constitution)) * character.levels.length
-										).toString()}
+										value={(sumBy(character.levels, 'hp') + getAbilityModifier(getFinalScore(character, 'constitution')) * character.levels.length).toString()}
 									/>
 								</Grid>
 								<Grid item xs={4}>

@@ -12,30 +12,8 @@ interface Props {
 
 function CharacterSkillRow({ character, skill }: Props): JSX.Element {
 	const abilityModifier = useMemo(() => {
-		let abilityScore: number;
-
-		switch (skill.skill.keyAbility) {
-			case 'str':
-				abilityScore = character.strength;
-				break;
-			case 'dex':
-				abilityScore = character.dexterity;
-				break;
-			case 'con':
-				abilityScore = character.constitution;
-				break;
-			case 'int':
-				abilityScore = character.intelligence;
-				break;
-			case 'wis':
-				abilityScore = character.wisdom;
-				break;
-			case 'cha':
-				abilityScore = character.charisma;
-				break;
-		}
-		return getAbilityModifier(getFinalScore(character.characterClass, skill.skill.keyAbility, abilityScore));
-	}, [character.characterClass, character.charisma, character.constitution, character.dexterity, character.intelligence, character.strength, character.wisdom, skill.skill.keyAbility]);
+		return getAbilityModifier(getFinalScore(character, skill.skill.keyAbility));
+	}, [character, skill.skill.keyAbility]);
 
 	const countAsClassSkill = skill.countAsClassSkill;
 	const points = skill.points;
