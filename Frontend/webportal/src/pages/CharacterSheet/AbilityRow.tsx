@@ -1,6 +1,6 @@
 import { Grid, Typography } from '@mui/material';
 
-import { Ability } from '../../types';
+import { Ability } from '../../types/Ability';
 import { Character } from '../../types/Character';
 import { displayModifier, getAbilityCode, getAbilityModifier, getFinalScore } from '../../utils';
 

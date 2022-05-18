@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { Backdrop, Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton, Step, StepLabel, Stepper } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton, Step, StepLabel, Stepper } from '@mui/material';
 import { Form, Formik, FormikErrors } from 'formik';
 import filter from 'lodash/filter';
 import map from 'lodash/map';
@@ -9,9 +9,9 @@ import { useAddCharacterMutation } from '../../services/api';
 import { globalDerender } from '../../services/globalRenderSlice';
 import { Character } from '../../types/Character';
 import { useAppDispatch } from '../../utils/hooks';
+import Loader from '../Loader';
 import Attributes from './Attributes';
 import Skills from './Skills';
-import Loader from '../Loader';
 
 interface Props {
 	renderKey: string;
@@ -42,7 +42,7 @@ function validate(values: Character): FormikErrors<Character> {
 		errors.race = 'Required';
 	}
 	if (!values.characterClass) {
-		errors.characterClass = 'Required';
+		errors.characterClassId = 'Required';
 	}
 
 	return errors;
@@ -65,12 +65,6 @@ export default function CharacterWizard({ renderKey }: Props): JSX.Element {
 
 	const save = useCallback(
 		(character: Character) => {
-			let startingHp = 0;
-			switch (character.characterClass) {
-				case 'blackBelt':
-					startingHp = 16;
-					break;
-			}
 			addCharacter({
 				...character,
 				skills: filter(character.skills, (skill) => {
@@ -79,7 +73,7 @@ export default function CharacterWizard({ renderKey }: Props): JSX.Element {
 				levels: [
 					{
 						id: 0,
-						hp: startingHp
+						hp: character.characterClass.startingHp
 					}
 				]
 			});
@@ -111,7 +105,7 @@ export default function CharacterWizard({ renderKey }: Props): JSX.Element {
 							feet: 0,
 							inch: 0
 						},
-						characterClass: 'blackBelt',
+						characterClassId: null,
 						strength: 8,
 						dexterity: 8,
 						constitution: 8,

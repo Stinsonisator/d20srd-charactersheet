@@ -1,18 +1,15 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { Box, Button, Checkbox, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, Grid, Icon, IconButton, Stack, TextField } from '@mui/material';
+import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton, Tab, Tabs } from '@mui/material';
 import { Form, Formik, FormikErrors } from 'formik';
-import map from 'lodash/map';
-import orderBy from 'lodash/orderBy';
-import remove from 'lodash/remove';
-import some from 'lodash/some';
 
-import { useAddCharacterClassMutation, useGetCharacterClassQuery, useGetSkillsQuery, useUpdateCharacterClassMutation } from '../services/api';
-import { globalDerender } from '../services/globalRenderSlice';
-import { CharacterClass, CharacterClassSkill } from '../types/CharacterClass';
-import { Skill } from '../types/Skill';
-import { useAppDispatch } from '../utils/hooks';
-import Loader from './Loader';
+import { useAddCharacterClassMutation, useGetCharacterClassQuery, useGetSkillsQuery, useUpdateCharacterClassMutation } from '../../services/api';
+import { globalDerender } from '../../services/globalRenderSlice';
+import { CharacterClass } from '../../types/CharacterClass';
+import { useAppDispatch } from '../../utils/hooks';
+import Loader from '../Loader';
+import General from './General';
+import Traits from './Traits';
 
 interface Props {
 	renderKey: string;
@@ -26,11 +23,16 @@ function validate(values: CharacterClass): FormikErrors<CharacterClass> {
 		errors.name = 'Required';
 	}
 
+	if (!values.startingHp) {
+		errors.startingHp = 'Required';
+	}
+
 	return errors;
 }
 
 export default function CharacterClassEditor({ renderKey, entityId }: Props): JSX.Element {
-	const { data: skillData, isLoading: areSkillsLoading } = useGetSkillsQuery();
+	const [currentTab, setCurrentTab] = useState(0);
+	const { isLoading: areSkillsLoading } = useGetSkillsQuery();
 	const [addCharacterClass, addResult] = useAddCharacterClassMutation();
 	const [updateCharacterClass, updateResult] = useUpdateCharacterClassMutation();
 	const { isLoading, data: loadResult } = useGetCharacterClassQuery(entityId ?? 0, { skip: Boolean(!entityId) });
@@ -51,13 +53,8 @@ export default function CharacterClassEditor({ renderKey, entityId }: Props): JS
 		}
 	}, [handleClose, addResult.isLoading, addResult.isSuccess, updateResult.isLoading, updateResult.isSuccess]);
 
-	function onchangeSkillCheckBox(characterClassSkills: CharacterClassSkill[], skill: Skill): CharacterClassSkill[] {
-		const newCharacterClassSkills = [...characterClassSkills];
-		const removedSkills = remove(newCharacterClassSkills, { skillId: skill.id });
-		if (removedSkills.length <= 0) {
-			newCharacterClassSkills.push({ skillId: skill.id, characterClassId: entityId });
-		}
-		return newCharacterClassSkills;
+	function changeCurrentTab(event: React.SyntheticEvent, newValue: number) {
+		setCurrentTab(newValue);
 	}
 
 	return (
@@ -78,7 +75,9 @@ export default function CharacterClassEditor({ renderKey, entityId }: Props): JS
 						loadResult ?? {
 							id: 0,
 							name: '',
-							classSkills: []
+							startingHp: 0,
+							classSkills: [],
+							traits: []
 						}
 					}
 					validate={validate}
@@ -91,41 +90,21 @@ export default function CharacterClassEditor({ renderKey, entityId }: Props): JS
 					}}
 					enableReinitialize
 				>
-					{({ values, errors, touched, setFieldValue, handleChange, handleBlur }) => (
-						<Form id="characterClassEditor">
-							{(isLoading || areSkillsLoading || addResult.isLoading || updateResult.isLoading) && <Loader />}
-							<Stack sx={{ m: 2 }} spacing={2}>
-								<TextField
-									inputRef={firstField}
-									id="name"
-									name="name"
-									label="Name"
-									value={values.name}
-									onChange={handleChange}
-									onBlur={handleBlur}
-									error={touched.name && Boolean(errors.name)}
-									helperText={touched.name && errors.name}
-									required
-									autoFocus
-								/>
-								<Grid container spacing={2} columns={12}>
-									{map(orderBy(skillData, 'name'), (skill) => (
-										<Grid item xs={3}>
-											<FormControlLabel
-												label={skill.name}
-												control={
-													<Checkbox
-														checked={some(values.classSkills, { skillId: skill.id })}
-														onChange={() => setFieldValue('classSkills', onchangeSkillCheckBox(values.classSkills, skill))}
-													/>
-												}
-											/>
-										</Grid>
-									))}
-								</Grid>
-							</Stack>
-						</Form>
-					)}
+					<Form id="characterClassEditor">
+						{(isLoading || areSkillsLoading || addResult.isLoading || updateResult.isLoading) && <Loader />}
+						<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+							<Tabs value={currentTab} onChange={changeCurrentTab}>
+								<Tab label="General" />
+								<Tab label="Traits" />
+							</Tabs>
+						</Box>
+						{
+							{
+								0: <General />,
+								1: <Traits />
+							}[currentTab]
+						}
+					</Form>
 				</Formik>
 			</DialogContent>
 			<DialogActions>

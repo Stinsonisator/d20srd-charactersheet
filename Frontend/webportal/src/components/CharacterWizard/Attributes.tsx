@@ -2,13 +2,17 @@ import { useEffect, useRef } from 'react';
 
 import { Grid, MenuItem, TextField, Typography } from '@mui/material';
 import { useFormikContext } from 'formik';
+import map from 'lodash/map';
 
+import { useGetCharacterClassesQuery } from '../../services/api';
 import { Character } from '../../types/Character';
+import { CharacterClass } from '../../types/CharacterClass';
 import { getTotalPointBuy } from '../../utils';
 import { AbilityRow } from './AbilityRow';
 
 export default function Attributes(): JSX.Element {
-	const { values, touched, errors, handleChange, handleBlur } = useFormikContext<Character>();
+	const { values, touched, errors, handleChange, handleBlur, setFieldValue } = useFormikContext<Character>();
+	const { data: characterClasses } = useGetCharacterClassesQuery();
 	const firstField = useRef<HTMLInputElement>();
 
 	useEffect(() => {
@@ -88,18 +92,24 @@ export default function Attributes(): JSX.Element {
 			</Grid>
 			<Grid item xs={5}>
 				<TextField
-					id="characterClass"
-					name="characterClass"
 					label="Class"
 					select
 					value={values.characterClass}
-					onChange={handleChange}
+					onChange={(event) => {
+						setFieldValue('characterClassId', (event.target.value as unknown as CharacterClass)?.id);
+						setFieldValue('characterClass', event.target.value);
+					}}
 					onBlur={handleBlur}
-					error={touched.characterClass && Boolean(errors.characterClass)}
-					helperText={touched.characterClass && errors.characterClass}
+					error={touched.characterClass && Boolean(errors.characterClass?.id)}
+					helperText={touched.characterClass && errors.characterClass?.id}
 					required
 				>
-					<MenuItem value="blackBelt">Black Belt</MenuItem>
+					{map(characterClasses, (characterClass) => (
+						// eslint-disable-next-line @typescript-eslint/no-explicit-any
+						<MenuItem key={characterClass.id} value={characterClass as any}>
+							{characterClass.name}
+						</MenuItem>
+					))}
 				</TextField>
 			</Grid>
 			<Grid item xs={2}>

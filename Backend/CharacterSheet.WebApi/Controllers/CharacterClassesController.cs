@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CharacterSheet.DataAccess;
+using CharacterSheet.DataAccess.Extensions;
 using CharacterSheet.Models.MasterData;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,7 @@ public class CharacterClassesController : ControllerBase
     [HttpGet]
     public async Task<IEnumerable<CharacterClass>> Get()
     {
-        return await _databaseContext.CharacterClasses.ToListAsync().ConfigureAwait(false);
+        return await _databaseContext.CharacterClasses.Include(cc => cc.ClassSkills).ToListAsync().ConfigureAwait(false);
     }
 
     [HttpGet("{id:long}")]
@@ -29,7 +30,6 @@ public class CharacterClassesController : ControllerBase
     {
         return await _databaseContext.CharacterClasses
             .Include(cc => cc.ClassSkills)
-            .ThenInclude(ccs => ccs.Skill)
             .FirstOrDefaultAsync(c => c.Id == id)
             .ConfigureAwait(false);
     }
@@ -42,6 +42,10 @@ public class CharacterClassesController : ControllerBase
         {
             _databaseContext.Entry(classSkills).State = EntityState.Added;
         }
+        foreach (CharacterClassTrait classTrait in characterClass.Traits)
+        {
+            _databaseContext.Entry(classTrait).State = EntityState.Added;
+        }
         await _databaseContext.SaveChangesAsync().ConfigureAwait(false);
         return characterClass;
     }
@@ -49,6 +53,8 @@ public class CharacterClassesController : ControllerBase
     [HttpPut("{id:long}")]
     public async Task<CharacterClass> Put([FromRoute] long id, [FromBody] CharacterClass characterClass)
     {
+        await _databaseContext.AddOrRemoveDifference(characterClass, cc => cc.ClassSkills, ccs => ccs.SkillId);
+        await _databaseContext.AddUpdateOrDelete(characterClass.Traits, cct => cct.CharacterClassId == characterClass.Id);
         _databaseContext.Entry(characterClass).State = EntityState.Modified;
         await _databaseContext.SaveChangesAsync().ConfigureAwait(false);
         return characterClass;

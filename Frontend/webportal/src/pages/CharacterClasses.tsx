@@ -32,6 +32,7 @@ function CharacterClasses() {
 	const columns: GridColDef[] = useMemo(
 		() => [
 			{ field: 'name', headerName: 'Name', flex: 1 },
+			{ field: 'startingHp', headerName: 'Starting HP', flex: 1 },
 			{
 				field: 'actions',
 				headerName: 'Actions',

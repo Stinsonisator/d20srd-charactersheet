@@ -1,4 +1,4 @@
-import { Abilities, Ability } from '../types';
+import { Abilities, Ability } from '../types/Ability';
 import { Character } from '../types/Character';
 
 export function getAbilityModifier(score: number): number {
