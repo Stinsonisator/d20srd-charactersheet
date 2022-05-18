@@ -10,6 +10,19 @@ namespace CharacterSheet.DataAccess.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "CharacterClasses",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CharacterClasses", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Characters",
                 columns: table => new
                 {
@@ -22,6 +35,7 @@ namespace CharacterSheet.DataAccess.Migrations
                     Size_Feet = table.Column<short>(type: "smallint", nullable: true),
                     Size_Inch = table.Column<float>(type: "real", nullable: true),
                     Image = table.Column<string>(type: "text", nullable: true),
+                    CharacterClassId = table.Column<long>(type: "bigint", nullable: false),
                     CharacterClass = table.Column<string>(type: "text", nullable: false),
                     Strength = table.Column<short>(type: "smallint", nullable: false),
                     Dexterity = table.Column<short>(type: "smallint", nullable: false),
@@ -71,6 +85,30 @@ namespace CharacterSheet.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CharacterClassSkills",
+                columns: table => new
+                {
+                    CharacterClassId = table.Column<long>(type: "bigint", nullable: false),
+                    SkillId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CharacterClassSkills", x => new { x.CharacterClassId, x.SkillId });
+                    table.ForeignKey(
+                        name: "FK_CharacterClassSkills_CharacterClasses_CharacterClassId",
+                        column: x => x.CharacterClassId,
+                        principalTable: "CharacterClasses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CharacterClassSkills_Skills_SkillId",
+                        column: x => x.SkillId,
+                        principalTable: "Skills",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CharacterSkills",
                 columns: table => new
                 {
@@ -97,6 +135,11 @@ namespace CharacterSheet.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_CharacterClassSkills_SkillId",
+                table: "CharacterClassSkills",
+                column: "SkillId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CharacterLevels_CharacterId",
                 table: "CharacterLevels",
                 column: "CharacterId");
@@ -110,10 +153,16 @@ namespace CharacterSheet.DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "CharacterClassSkills");
+
+            migrationBuilder.DropTable(
                 name: "CharacterLevels");
 
             migrationBuilder.DropTable(
                 name: "CharacterSkills");
+
+            migrationBuilder.DropTable(
+                name: "CharacterClasses");
 
             migrationBuilder.DropTable(
                 name: "Characters");

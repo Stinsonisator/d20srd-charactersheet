@@ -15,6 +15,8 @@ public class DatabaseContext : DbContext
     
     public DbSet<Skill> Skills { get; set; }
 
+    public DbSet<CharacterClass> CharacterClasses { get; set; }
+
     public DbSet<Character> Characters { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -21,6 +21,7 @@ public class Character
     
     public string Image { get; set; }
     
+    public long CharacterClassId { get; set; }
     public CharacterClass CharacterClass { get; set; }
     
     public short Strength { get; set; }

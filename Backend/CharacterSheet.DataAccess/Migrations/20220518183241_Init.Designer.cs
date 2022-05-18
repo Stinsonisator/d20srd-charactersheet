@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CharacterSheet.DataAccess.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20220509210817_Init")]
+    [Migration("20220518183241_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,6 +37,9 @@ namespace CharacterSheet.DataAccess.Migrations
                     b.Property<string>("CharacterClass")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<long>("CharacterClassId")
+                        .HasColumnType("bigint");
 
                     b.Property<short>("Charisma")
                         .HasColumnType("smallint");
@@ -117,6 +120,38 @@ namespace CharacterSheet.DataAccess.Migrations
                     b.ToTable("CharacterSkills", (string)null);
                 });
 
+            modelBuilder.Entity("CharacterSheet.Models.MasterData.CharacterClass", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CharacterClasses");
+                });
+
+            modelBuilder.Entity("CharacterSheet.Models.MasterData.CharacterClassSkill", b =>
+                {
+                    b.Property<long>("CharacterClassId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("SkillId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("CharacterClassId", "SkillId");
+
+                    b.HasIndex("SkillId");
+
+                    b.ToTable("CharacterClassSkills", (string)null);
+                });
+
             modelBuilder.Entity("CharacterSheet.Models.MasterData.Skill", b =>
                 {
                     b.Property<long>("Id")
@@ -194,11 +229,35 @@ namespace CharacterSheet.DataAccess.Migrations
                     b.Navigation("Skill");
                 });
 
+            modelBuilder.Entity("CharacterSheet.Models.MasterData.CharacterClassSkill", b =>
+                {
+                    b.HasOne("CharacterSheet.Models.MasterData.CharacterClass", "CharacterClass")
+                        .WithMany("ClassSkills")
+                        .HasForeignKey("CharacterClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CharacterSheet.Models.MasterData.Skill", "Skill")
+                        .WithMany()
+                        .HasForeignKey("SkillId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CharacterClass");
+
+                    b.Navigation("Skill");
+                });
+
             modelBuilder.Entity("CharacterSheet.Models.CharacterData.Character", b =>
                 {
                     b.Navigation("Levels");
 
                     b.Navigation("Skills");
+                });
+
+            modelBuilder.Entity("CharacterSheet.Models.MasterData.CharacterClass", b =>
+                {
+                    b.Navigation("ClassSkills");
                 });
 #pragma warning restore 612, 618
         }

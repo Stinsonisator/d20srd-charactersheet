@@ -24,6 +24,25 @@ function MasterData() {
 					</Stack>
 				</Link>
 			</Grid>
+			<Grid item xs={2}>
+				<Link to={'/masterdata/characterclasses'} style={{ textDecoration: 'none' }}>
+					<Stack
+						spacing={1}
+						sx={(theme) => ({
+							display: 'flex',
+							justifyContent: 'center',
+							alignItems: 'center',
+							height: 200,
+							backgroundColor: theme.palette.text.secondary,
+							color: theme.palette.text.primary,
+							borderRadius: 3
+						})}
+					>
+						<Icon sx={{ width: 'auto', height: 'auto', color: 'text.primary', fontSize: 70 }} className="fa-hat-wizard" />
+						<Typography>Character classes</Typography>
+					</Stack>
+				</Link>
+			</Grid>
 		</Grid>
 	);
 }

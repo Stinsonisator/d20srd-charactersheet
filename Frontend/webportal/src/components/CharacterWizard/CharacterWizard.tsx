@@ -11,6 +11,7 @@ import { Character } from '../../types/Character';
 import { useAppDispatch } from '../../utils/hooks';
 import Attributes from './Attributes';
 import Skills from './Skills';
+import Loader from '../Loader';
 
 interface Props {
 	renderKey: string;
@@ -130,11 +131,7 @@ export default function CharacterWizard({ renderKey }: Props): JSX.Element {
 					}}
 				>
 					<Form id="characterWizard">
-						{characterAddResult.isLoading && (
-							<Backdrop sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }} open>
-								<CircularProgress color="inherit" />
-							</Backdrop>
-						)}
+						{characterAddResult.isLoading && <Loader />}
 						<Stepper activeStep={activeStep}>
 							{map(steps, (step, index) => (
 								<Step completed={activeStep > index}>

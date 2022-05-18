@@ -4,6 +4,7 @@ import { HashRouter, NavLink, Route, Routes } from 'react-router-dom';
 import { AppBar, Button, Container, GlobalStyles, ThemeProvider, Toolbar, Tooltip, Typography } from '@mui/material';
 import map from 'lodash/map';
 
+import CharacterClasses from './pages/CharacterClasses';
 import Characters from './pages/Characters';
 import CharacterSheet from './pages/CharacterSheet';
 import Home from './pages/Home';
@@ -65,6 +66,7 @@ export default function App(): JSX.Element {
 						<Route path="/characters/:id" element={<CharacterSheet />} />
 						<Route path="/masterdata" element={<MasterData />} />
 						<Route path="/masterdata/skills" element={<Skills />} />
+						<Route path="/masterdata/characterclasses" element={<CharacterClasses />} />
 					</Routes>
 				</Container>
 			</ThemeProvider>

@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 import { Character } from '../types/Character';
+import { CharacterClass } from '../types/CharacterClass';
 import { Skill } from '../types/Skill';
 
 function providesList<R extends { id: string | number }[], T extends string>(resultsWithIds: R | undefined, tagType: T) {
@@ -10,7 +11,7 @@ function providesList<R extends { id: string | number }[], T extends string>(res
 export const characterSheetApi = createApi({
 	reducerPath: 'characterSheetApi',
 	baseQuery: fetchBaseQuery({ baseUrl: '/api/' }),
-	tagTypes: ['Characters', 'Skills'],
+	tagTypes: ['Characters', 'Skills', 'CharacterClasses'],
 	endpoints: (builder) => ({
 		getCharacters: builder.query<Character[], void>({
 			query: () => 'characters',
@@ -68,6 +69,40 @@ export const characterSheetApi = createApi({
 				{ type: 'Skills', id: 'LIST' },
 				{ type: 'Skills', id: arg }
 			]
+		}),
+		getCharacterClasses: builder.query<CharacterClass[], void>({
+			query: () => 'characterclasses',
+			providesTags: (result) => providesList(result, 'CharacterClasses')
+		}),
+		getCharacterClass: builder.query<CharacterClass, number>({
+			query: (id) => `characterclasses/${id}`,
+			providesTags: (_result, _error, id) => [{ type: 'CharacterClasses', id }]
+		}),
+		addCharacterClass: builder.mutation<CharacterClass, CharacterClass>({
+			query: (characterClass) => ({
+				url: 'characterclasses',
+				method: 'POST',
+				body: characterClass
+			}),
+			invalidatesTags: [{ type: 'CharacterClasses', id: 'LIST' }]
+		}),
+		updateCharacterClass: builder.mutation<CharacterClass, CharacterClass>({
+			query: (characterClass) => ({
+				url: `characterclasses/${characterClass.id}`,
+				method: 'PUT',
+				body: characterClass
+			}),
+			invalidatesTags: (_result, _error, arg) => [{ type: 'CharacterClasses', id: arg.id }]
+		}),
+		deleteCharacterClass: builder.mutation<void, number>({
+			query: (id) => ({
+				url: `characterclasses/${id}`,
+				method: 'DELETE'
+			}),
+			invalidatesTags: (_result, _error, arg) => [
+				{ type: 'CharacterClasses', id: 'LIST' },
+				{ type: 'CharacterClasses', id: arg }
+			]
 		})
 	})
 });
@@ -81,5 +116,10 @@ export const {
 	useGetSkillQuery,
 	useAddSkillMutation,
 	useUpdateSkillMutation,
-	useDeleteSkillMutation
+	useDeleteSkillMutation,
+	useGetCharacterClassesQuery,
+	useGetCharacterClassQuery,
+	useAddCharacterClassMutation,
+	useUpdateCharacterClassMutation,
+	useDeleteCharacterClassMutation
 } = characterSheetApi;

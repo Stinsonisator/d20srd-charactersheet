@@ -55,6 +55,7 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.Urls.Add($"http://*:{Environment.GetEnvironmentVariable("PORT")}");
+    app.UseHttpsRedirection();
 }
 
 app.UseResponseCompression();

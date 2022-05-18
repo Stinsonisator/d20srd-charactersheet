@@ -1,6 +1,5 @@
+import { CharacterClass } from './CharacterClass';
 import { Skill } from './Skill';
-
-export type CharacterClass = 'blackBelt';
 
 export type Gender = 'm' | 'v' | 'x';
 
@@ -16,7 +15,8 @@ export interface Character {
 		feet: number;
 		inch: number;
 	};
-	characterClass: CharacterClass;
+	characterClassId: number;
+	characterClass?: CharacterClass;
 	strength: number;
 	dexterity: number;
 	constitution: number;

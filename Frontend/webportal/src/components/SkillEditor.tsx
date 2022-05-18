@@ -7,6 +7,7 @@ import { useAddSkillMutation, useGetSkillQuery, useUpdateSkillMutation } from '.
 import { globalDerender } from '../services/globalRenderSlice';
 import { Skill } from '../types/Skill';
 import { useAppDispatch } from '../utils/hooks';
+import Loader from './Loader';
 
 interface Props {
 	renderKey: string;
@@ -81,11 +82,7 @@ export default function SkillEditor({ renderKey, entityId }: Props): JSX.Element
 				>
 					{({ values, errors, touched, handleChange, handleBlur }) => (
 						<Form id="skillEditor">
-							{(isLoading || addResult.isLoading || updateResult.isLoading) && (
-								<Backdrop sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }} open>
-									<CircularProgress color="inherit" />
-								</Backdrop>
-							)}
+							{(isLoading || addResult.isLoading || updateResult.isLoading) && <Loader />}
 							<Stack sx={{ m: 2 }} spacing={2}>
 								<TextField
 									inputRef={firstField}
@@ -112,12 +109,12 @@ export default function SkillEditor({ renderKey, entityId }: Props): JSX.Element
 									helperText={touched.keyAbility && errors.keyAbility}
 									required
 								>
-									<MenuItem value="str">STR</MenuItem>
-									<MenuItem value="dex">DEX</MenuItem>
-									<MenuItem value="con">CON</MenuItem>
-									<MenuItem value="int">INT</MenuItem>
-									<MenuItem value="wis">WIS</MenuItem>
-									<MenuItem value="cha">CHA</MenuItem>
+									<MenuItem value="strength">STR</MenuItem>
+									<MenuItem value="dexterity">DEX</MenuItem>
+									<MenuItem value="constitution">CON</MenuItem>
+									<MenuItem value="intelligence">INT</MenuItem>
+									<MenuItem value="wisdom">WIS</MenuItem>
+									<MenuItem value="charisma">CHA</MenuItem>
 								</TextField>
 								<FormControlLabel
 									control={<Switch color="primary" id="untrained" name="untrained" checked={values.untrained} onChange={handleChange} />}
