@@ -63,7 +63,7 @@ export default function General(): JSX.Element {
 				/>
 			</Grid>
 			{map(orderBy(skillData, 'name'), (skill) => (
-				<Grid item xs={3}>
+				<Grid key={`skill_${skill.id}`} item xs={3}>
 					<FormControlLabel label={skill.name} control={<Checkbox checked={some(values.classSkills, { skillId: skill.id })} onChange={() => onchangeSkillCheckBox(skill)} />} />
 				</Grid>
 			))}

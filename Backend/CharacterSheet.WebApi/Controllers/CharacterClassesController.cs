@@ -22,7 +22,10 @@ public class CharacterClassesController : ControllerBase
     [HttpGet]
     public async Task<IEnumerable<CharacterClass>> Get()
     {
-        return await _databaseContext.CharacterClasses.Include(cc => cc.ClassSkills).ToListAsync().ConfigureAwait(false);
+        return await _databaseContext.CharacterClasses
+            .Include(cc => cc.ClassSkills)
+            .Include(cc => cc.Traits)
+            .ToListAsync().ConfigureAwait(false);
     }
 
     [HttpGet("{id:long}")]
@@ -30,6 +33,7 @@ public class CharacterClassesController : ControllerBase
     {
         return await _databaseContext.CharacterClasses
             .Include(cc => cc.ClassSkills)
+            .Include(cc => cc.Traits)
             .FirstOrDefaultAsync(c => c.Id == id)
             .ConfigureAwait(false);
     }

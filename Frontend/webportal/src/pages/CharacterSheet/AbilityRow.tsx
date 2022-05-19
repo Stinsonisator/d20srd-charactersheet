@@ -20,7 +20,7 @@ export function AbilityRow({ character, ability }: Props): JSX.Element {
 			</Grid>
 			<Grid item xs={2} />
 			<Grid item xs={2}>
-				<Typography>{displayModifier(getAbilityModifier(getFinalScore(character, ability)))}</Typography>
+				<Typography>{displayModifier(getAbilityModifier(character, ability))}</Typography>
 			</Grid>
 			<Grid item xs={2} />
 			<Grid item xs={2} />

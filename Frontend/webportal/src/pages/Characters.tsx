@@ -53,7 +53,7 @@ export default function CharacterSheet(): JSX.Element {
 												{character.name}
 											</Typography>
 											<Typography variant="body2" color="text.secondary">
-												{character.characterClass}
+												{character.characterClass.name}
 											</Typography>
 										</CardContent>
 									</CardActionArea>

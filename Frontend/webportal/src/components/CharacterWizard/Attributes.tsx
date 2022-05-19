@@ -99,7 +99,6 @@ export default function Attributes(): JSX.Element {
 						setFieldValue('characterClassId', (event.target.value as unknown as CharacterClass)?.id);
 						setFieldValue('characterClass', event.target.value);
 					}}
-					onBlur={handleBlur}
 					error={touched.characterClass && Boolean(errors.characterClass?.id)}
 					helperText={touched.characterClass && errors.characterClass?.id}
 					required

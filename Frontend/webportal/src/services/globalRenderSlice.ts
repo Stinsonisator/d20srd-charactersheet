@@ -15,12 +15,12 @@ const globalRenderSlice = createSlice({
 	name: 'globalRender',
 	initialState,
 	reducers: {
-		globalRender(state, action: PayloadAction<RenderConfig>) {
+		globalRender(state: GlobalRenderState, action: PayloadAction<RenderConfig>) {
 			if (!state.components[action.payload.key]) {
 				state.components[action.payload.key] = action.payload.component;
 			}
 		},
-		globalDerender(state, action: PayloadAction<string>) {
+		globalDerender(state: GlobalRenderState, action: PayloadAction<string>) {
 			if (state.components[action.payload]) {
 				delete state.components[action.payload];
 			}

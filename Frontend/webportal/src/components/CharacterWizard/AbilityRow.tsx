@@ -13,8 +13,6 @@ interface Props {
 export function AbilityRow({ ability }: Props): JSX.Element {
 	const { values, touched, errors, handleChange, handleBlur } = useFormikContext<Character>();
 
-	const finalScore = getFinalScore(values, ability);
-
 	return (
 		<>
 			<Grid item xs={2}>
@@ -34,14 +32,11 @@ export function AbilityRow({ ability }: Props): JSX.Element {
 					/>
 				</Typography>
 			</Grid>
-			<Grid item xs={1}>
-				<ReadOnlyField label="Modifier" value={displayModifier(getAbilityModifier(values[ability]))} />
-			</Grid>
-			<Grid item xs={1}>
-				<ReadOnlyField label="Final score" value={finalScore.toString()} />
+			<Grid item xs={2}>
+				<ReadOnlyField label="Final score" value={getFinalScore(values, ability).toString()} />
 			</Grid>
 			<Grid item xs={2}>
-				<ReadOnlyField label="Final modifier" value={displayModifier(getAbilityModifier(finalScore))} />
+				<ReadOnlyField label="Modifier" value={displayModifier(getAbilityModifier(values, ability))} />
 			</Grid>
 			<Grid item xs={6} />
 		</>

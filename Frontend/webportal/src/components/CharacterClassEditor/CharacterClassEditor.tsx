@@ -10,6 +10,7 @@ import { useAppDispatch } from '../../utils/hooks';
 import Loader from '../Loader';
 import General from './General';
 import Traits from './Traits';
+import map from 'lodash/map';
 
 interface Props {
 	renderKey: string;
@@ -82,10 +83,17 @@ export default function CharacterClassEditor({ renderKey, entityId }: Props): JS
 					}
 					validate={validate}
 					onSubmit={(values: CharacterClass) => {
+						const characterClassToSave: CharacterClass = {
+							...values,
+							traits: map(values.traits, (trait) => ({
+								...trait,
+								id: trait.id < 0 ? 0 : trait.id
+							}))
+						};
 						if (!values.id) {
-							addCharacterClass(values);
+							addCharacterClass(characterClassToSave);
 						} else {
-							updateCharacterClass(values);
+							updateCharacterClass(characterClassToSave);
 						}
 					}}
 					enableReinitialize

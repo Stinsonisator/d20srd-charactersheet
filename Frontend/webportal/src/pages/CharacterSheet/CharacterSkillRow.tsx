@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { Checkbox, Grid, Typography } from '@mui/material';
 
 import { Character, CharacterSkill } from '../../types/Character';
-import { displayModifier, getAbilityModifier, getFinalScore } from '../../utils';
+import { displayModifier, getAbilityModifier } from '../../utils';
 
 interface Props {
 	character: Character;
@@ -12,7 +12,7 @@ interface Props {
 
 function CharacterSkillRow({ character, skill }: Props): JSX.Element {
 	const abilityModifier = useMemo(() => {
-		return getAbilityModifier(getFinalScore(character, skill.skill.keyAbility));
+		return getAbilityModifier(character, skill.skill.keyAbility);
 	}, [character, skill.skill.keyAbility]);
 
 	const countAsClassSkill = skill.countAsClassSkill;

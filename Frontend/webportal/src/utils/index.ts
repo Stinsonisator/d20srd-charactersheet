@@ -1,7 +1,11 @@
+import filter from 'lodash/filter';
+import reduce from 'lodash/reduce';
+
 import { Abilities, Ability } from '../types/Ability';
 import { Character } from '../types/Character';
 
-export function getAbilityModifier(score: number): number {
+export function getAbilityModifier(character: Character, ability: Ability): number {
+	const score = getFinalScore(character, ability);
 	return Math.floor((score - 10) / 2);
 }
 
@@ -13,23 +17,9 @@ export function displayModifier(modifier: number): string {
 }
 
 export function getFinalScore(character: Character, ability: Ability): number {
-	let bonus = 0;
-
-	switch (character.characterClass) {
-		case 'blackBelt':
-			switch (ability) {
-				case 'strength':
-				case 'dexterity':
-					bonus = 1;
-					break;
-				case 'constitution':
-					bonus = 2;
-					break;
-			}
-			break;
-	}
-
-	return character[ability] + bonus;
+	const traits = filter(character.characterClass?.traits, (trait) => trait.level <= (character.levels.length || 1) && 'ability' in trait.rule && trait.rule.ability === ability);
+	const bonus = reduce(traits, (sum, trait) => sum + trait.rule.adjustment, 0);
+	return character[ability] + (bonus ?? 0);
 }
 
 export function getAbilityCode(ability: Ability): string {

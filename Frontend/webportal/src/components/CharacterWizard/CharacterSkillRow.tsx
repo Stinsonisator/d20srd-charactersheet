@@ -2,10 +2,10 @@ import { useMemo } from 'react';
 
 import { Checkbox, Grid, TextField, Typography } from '@mui/material';
 import { useFormikContext } from 'formik';
+import some from 'lodash/some';
 
 import { Character } from '../../types/Character';
-import { displayModifier, getAbilityModifier, getFinalScore } from '../../utils';
-import some from 'lodash/some';
+import { displayModifier, getAbilityModifier } from '../../utils';
 
 interface Props {
 	index: number;
@@ -19,7 +19,7 @@ function CharacterSkillRow({ index }: Props): JSX.Element {
 	const classSkill = useMemo(() => some(values.characterClass.classSkills, { skillId: skill.id }), [skill.id, values.characterClass.classSkills]);
 
 	const abilityModifier = useMemo(() => {
-		return getAbilityModifier(getFinalScore(values, skill.keyAbility));
+		return getAbilityModifier(values, skill.keyAbility);
 	}, [skill.keyAbility, values]);
 
 	const countAsClassSkill = values.skills[index].countAsClassSkill;

@@ -22,13 +22,15 @@ public class CharactersController : ControllerBase
     [HttpGet]
     public async Task<IEnumerable<Character>> Get()
     {
-        return await _databaseContext.Characters.ToListAsync().ConfigureAwait(false);
+        return await _databaseContext.Characters.Include(c => c.CharacterClass).ToListAsync().ConfigureAwait(false);
     }
 
     [HttpGet("{id:long}")]
     public async Task<Character> Get([FromRoute] long id)
     {
         return await _databaseContext.Characters
+            .Include(c => c.CharacterClass)
+            .ThenInclude(cc => cc.Traits)
             .Include(c => c.Skills)
             .ThenInclude(c => c.Skill)
             .Include(c => c.Levels)
