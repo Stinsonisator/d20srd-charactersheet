@@ -31,6 +31,8 @@ public class CharactersController : ControllerBase
         return await _databaseContext.Characters
             .Include(c => c.CharacterClass)
             .ThenInclude(cc => cc.Traits)
+            .Include(c => c.CharacterClass)
+            .ThenInclude(cc => cc.ClassSkills)
             .Include(c => c.Skills)
             .ThenInclude(c => c.Skill)
             .Include(c => c.Levels)
@@ -66,14 +68,14 @@ public class CharactersController : ControllerBase
     [HttpDelete("{id:long}")]
     public async Task<IActionResult> Delete([FromRoute] long id)
     {
-        Character character = await _databaseContext.Characters.FindAsync(id);
+        /*Character character = await _databaseContext.Characters.FindAsync(id);
         if (character == null)
         {
             return NotFound();
         }
 
         _databaseContext.Characters.Remove(character);
-        await _databaseContext.SaveChangesAsync();
+        await _databaseContext.SaveChangesAsync();*/
 
         return Ok();
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System.Text.Json.Nodes;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -15,38 +16,12 @@ namespace CharacterSheet.DataAccess.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false)
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    StartingHp = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CharacterClasses", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Characters",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Age = table.Column<short>(type: "smallint", nullable: false),
-                    Gender = table.Column<int>(type: "integer", nullable: false),
-                    Race = table.Column<string>(type: "text", nullable: false),
-                    Size_Feet = table.Column<short>(type: "smallint", nullable: true),
-                    Size_Inch = table.Column<float>(type: "real", nullable: true),
-                    Image = table.Column<string>(type: "text", nullable: true),
-                    CharacterClassId = table.Column<long>(type: "bigint", nullable: false),
-                    CharacterClass = table.Column<string>(type: "text", nullable: false),
-                    Strength = table.Column<short>(type: "smallint", nullable: false),
-                    Dexterity = table.Column<short>(type: "smallint", nullable: false),
-                    Constitution = table.Column<short>(type: "smallint", nullable: false),
-                    Intelligence = table.Column<short>(type: "smallint", nullable: false),
-                    Wisdom = table.Column<short>(type: "smallint", nullable: false),
-                    Charisma = table.Column<short>(type: "smallint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Characters", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -65,21 +40,55 @@ namespace CharacterSheet.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CharacterLevels",
+                name: "CharacterClassTraits",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CharacterId = table.Column<long>(type: "bigint", nullable: false),
-                    Hp = table.Column<int>(type: "integer", nullable: false)
+                    CharacterClassId = table.Column<long>(type: "bigint", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Level = table.Column<int>(type: "integer", nullable: false),
+                    Rule = table.Column<JsonObject>(type: "jsonb", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CharacterLevels", x => x.Id);
+                    table.PrimaryKey("PK_CharacterClassTraits", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CharacterLevels_Characters_CharacterId",
-                        column: x => x.CharacterId,
-                        principalTable: "Characters",
+                        name: "FK_CharacterClassTraits_CharacterClasses_CharacterClassId",
+                        column: x => x.CharacterClassId,
+                        principalTable: "CharacterClasses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Characters",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Age = table.Column<short>(type: "smallint", nullable: false),
+                    Gender = table.Column<int>(type: "integer", nullable: false),
+                    Race = table.Column<string>(type: "text", nullable: false),
+                    Size_Feet = table.Column<short>(type: "smallint", nullable: true),
+                    Size_Inch = table.Column<float>(type: "real", nullable: true),
+                    Image = table.Column<string>(type: "text", nullable: true),
+                    CharacterClassId = table.Column<long>(type: "bigint", nullable: false),
+                    Strength = table.Column<short>(type: "smallint", nullable: false),
+                    Dexterity = table.Column<short>(type: "smallint", nullable: false),
+                    Constitution = table.Column<short>(type: "smallint", nullable: false),
+                    Intelligence = table.Column<short>(type: "smallint", nullable: false),
+                    Wisdom = table.Column<short>(type: "smallint", nullable: false),
+                    Charisma = table.Column<short>(type: "smallint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Characters", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Characters_CharacterClasses_CharacterClassId",
+                        column: x => x.CharacterClassId,
+                        principalTable: "CharacterClasses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -104,6 +113,26 @@ namespace CharacterSheet.DataAccess.Migrations
                         name: "FK_CharacterClassSkills_Skills_SkillId",
                         column: x => x.SkillId,
                         principalTable: "Skills",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CharacterLevels",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CharacterId = table.Column<long>(type: "bigint", nullable: false),
+                    Hp = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CharacterLevels", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CharacterLevels_Characters_CharacterId",
+                        column: x => x.CharacterId,
+                        principalTable: "Characters",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -140,9 +169,19 @@ namespace CharacterSheet.DataAccess.Migrations
                 column: "SkillId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CharacterClassTraits_CharacterClassId",
+                table: "CharacterClassTraits",
+                column: "CharacterClassId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CharacterLevels_CharacterId",
                 table: "CharacterLevels",
                 column: "CharacterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Characters_CharacterClassId",
+                table: "Characters",
+                column: "CharacterClassId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CharacterSkills_SkillId",
@@ -156,19 +195,22 @@ namespace CharacterSheet.DataAccess.Migrations
                 name: "CharacterClassSkills");
 
             migrationBuilder.DropTable(
+                name: "CharacterClassTraits");
+
+            migrationBuilder.DropTable(
                 name: "CharacterLevels");
 
             migrationBuilder.DropTable(
                 name: "CharacterSkills");
 
             migrationBuilder.DropTable(
-                name: "CharacterClasses");
-
-            migrationBuilder.DropTable(
                 name: "Characters");
 
             migrationBuilder.DropTable(
                 name: "Skills");
+
+            migrationBuilder.DropTable(
+                name: "CharacterClasses");
         }
     }
 }

@@ -1,12 +1,17 @@
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import { useFormikContext } from 'formik';
+import { FormikErrors, FormikTouched, useFormikContext } from 'formik';
 
+import { AbilityAdjustment } from '../../types/BusinessRule';
 import { CharacterClassTrait } from '../../types/CharacterClass';
 
 function AbilityAdjustmentRule() {
 	const { values, touched, errors, handleChange, handleBlur } = useFormikContext<CharacterClassTrait>();
+
+	const rule = values.rule as AbilityAdjustment;
+	const ruleTouched = touched.rule as FormikTouched<AbilityAdjustment>;
+	const ruleErrors = errors.rule as FormikErrors<AbilityAdjustment>;
 
 	return (
 		<>
@@ -16,11 +21,11 @@ function AbilityAdjustmentRule() {
 					name="rule.ability"
 					label="Ability"
 					select
-					value={values.rule.ability}
+					value={rule.ability}
 					onChange={handleChange}
 					onBlur={handleBlur}
-					error={touched.rule?.ability && Boolean(errors.rule?.ability)}
-					helperText={touched.rule?.ability && errors.rule?.ability}
+					error={ruleTouched?.ability && Boolean(ruleErrors?.ability)}
+					helperText={ruleTouched?.ability && ruleErrors?.ability}
 					required
 				>
 					<MenuItem value="strength">STR</MenuItem>
@@ -37,11 +42,11 @@ function AbilityAdjustmentRule() {
 					name="rule.adjustment"
 					label="Adjustment"
 					type="number"
-					value={values.rule.adjustment}
+					value={rule.adjustment}
 					onChange={handleChange}
 					onBlur={handleBlur}
-					error={touched.rule?.adjustment && Boolean(errors.rule?.adjustment)}
-					helperText={touched.rule?.adjustment && errors.rule?.adjustment}
+					error={ruleTouched?.adjustment && Boolean(ruleErrors?.adjustment)}
+					helperText={ruleTouched?.adjustment && ruleErrors?.adjustment}
 					required
 				/>
 			</Grid>

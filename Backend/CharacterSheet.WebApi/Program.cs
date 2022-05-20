@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using CharacterSheet.WebApi.MiddleWare;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -56,6 +58,7 @@ else
 {
     app.Urls.Add($"http://*:{Environment.GetEnvironmentVariable("PORT")}");
     app.UseHttpsRedirection();
+    app.UseRewriter(new RewriteOptions().Add(RedirectRequests.ToHttps));
 }
 
 app.UseResponseCompression();

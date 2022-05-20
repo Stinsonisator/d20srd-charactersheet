@@ -1,41 +1,88 @@
 import filter from 'lodash/filter';
+import find from 'lodash/find';
+import findLast from 'lodash/findLast';
+import orderBy from 'lodash/orderBy';
 import reduce from 'lodash/reduce';
+import some from 'lodash/some';
 
 import { Abilities, Ability } from '../types/Ability';
+import { SavingThrowModifiers } from '../types/BusinessRule';
 import { Character } from '../types/Character';
-
-export function getAbilityModifier(character: Character, ability: Ability): number {
-	const score = getFinalScore(character, ability);
-	return Math.floor((score - 10) / 2);
-}
+import { Skill } from '../types/Skill';
 
 export function displayModifier(modifier: number): string {
 	if (modifier > 0) {
-		return `+ ${modifier}`;
+		return `+${modifier}`;
 	}
 	return `${modifier}`;
 }
 
-export function getFinalScore(character: Character, ability: Ability): number {
-	const traits = filter(character.characterClass?.traits, (trait) => trait.level <= (character.levels.length || 1) && 'ability' in trait.rule && trait.rule.ability === ability);
-	const bonus = reduce(traits, (sum, trait) => sum + trait.rule.adjustment, 0);
+export function getAbilityScore(character: Character, ability: Ability): number {
+	const traits = filter(
+		character.characterClass?.traits,
+		(trait) => trait.level <= (character.levels.length || 1) && 'ability' in trait.rule && trait.rule.ability === ability
+	);
+	const bonus = reduce(traits, (sum, trait) => sum + ('ability' in trait.rule ? trait.rule.adjustment : 0), 0);
 	return character[ability] + (bonus ?? 0);
+}
+
+export function getAbilityModifier(character: Character, ability: Ability): number {
+	const score = getAbilityScore(character, ability);
+	return Math.floor((score - 10) / 2);
+}
+
+export function getSavingThrowModifier(character: Character, savingThrow: keyof SavingThrowModifiers): number {
+	const savingThrowModifiers = findLast(
+		orderBy(character.characterClass?.traits, 'level'),
+		(trait) => trait.level <= (character.levels.length || 1) && 'fortitude' in trait.rule
+	)?.rule as SavingThrowModifiers;
+	let classBonus = 0;
+	if (savingThrowModifiers) {
+		classBonus = savingThrowModifiers[savingThrow];
+	}
+	let ability: Ability = 'constitution';
+	switch (savingThrow) {
+		case 'reflex':
+			ability = 'dexterity';
+			break;
+		case 'will':
+			ability = 'wisdom';
+			break;
+	}
+
+	return classBonus + getAbilityModifier(character, ability);
+}
+
+export function getSkillModifier(character: Character, skill: Skill): number {
+	const characterSkill = find(character.skills, { skillId: skill.id });
+	if (!skill.untrained && (!characterSkill || characterSkill.points <= 0)) {
+		return null;
+	}
+
+	const abilityModifier = getAbilityModifier(character, skill.keyAbility);
+	let skillModifier = 0;
+	if (characterSkill?.countAsClassSkill || some(character.characterClass.classSkills, { skillId: skill.id })) {
+		skillModifier = characterSkill?.points ?? 0;
+	} else {
+		skillModifier = Math.floor((characterSkill?.points ?? 0) / 2);
+	}
+	return abilityModifier + skillModifier;
 }
 
 export function getAbilityCode(ability: Ability): string {
 	switch (ability) {
 		case 'strength':
-			return 'str';
+			return 'STR';
 		case 'dexterity':
-			return 'dex';
+			return 'DEX';
 		case 'constitution':
-			return 'con';
+			return 'CON';
 		case 'intelligence':
-			return 'int';
+			return 'INT';
 		case 'wisdom':
-			return 'wis';
+			return 'WIS';
 		case 'charisma':
-			return 'cha';
+			return 'CHA';
 	}
 }
 

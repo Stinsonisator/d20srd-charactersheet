@@ -22,11 +22,12 @@
 	"proxy": "http://localhost:5000",
 	"allowedHosts": "all",
 	"scripts": {
+		"format": "prettier --config src/.prettierrc --write src/**/*.ts src/**/*.tsx",
+		"lint": "lint",
 		"start": "react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
-		"eject": "react-scripts eject",
-		"lint": "lint"
+		"eject": "react-scripts eject"
 	},
 	"eslintConfig": {
 		"extends": [

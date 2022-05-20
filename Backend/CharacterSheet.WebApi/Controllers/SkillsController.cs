@@ -51,14 +51,14 @@ public class SkillsController : ControllerBase
     [HttpDelete("{id:long}")]
     public async Task<IActionResult> Delete([FromRoute] long id)
     {
-        Skill character = await _databaseContext.Skills.FindAsync(id);
+        /*Skill character = await _databaseContext.Skills.FindAsync(id);
         if (character == null)
         {
             return NotFound();
         }
 
         _databaseContext.Skills.Remove(character);
-        await _databaseContext.SaveChangesAsync();
+        await _databaseContext.SaveChangesAsync();*/
 
         return Ok();
     }

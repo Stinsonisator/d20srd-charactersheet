@@ -17,7 +17,12 @@ function CharacterClasses() {
 
 	const showEditor = useCallback(
 		(entityId?: number) => {
-			reduxDispatch(globalRender({ key: 'characterClassEditor', component: <CharacterClassEditor renderKey="characterClassEditor" entityId={entityId} /> }));
+			reduxDispatch(
+				globalRender({
+					key: 'characterClassEditor',
+					component: <CharacterClassEditor renderKey="characterClassEditor" entityId={entityId} />
+				})
+			);
 		},
 		[reduxDispatch]
 	);

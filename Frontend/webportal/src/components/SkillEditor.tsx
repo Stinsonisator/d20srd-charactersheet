@@ -1,6 +1,21 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, Icon, IconButton, MenuItem, Stack, Switch, TextField } from '@mui/material';
+import {
+	Box,
+	Button,
+	CircularProgress,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogTitle,
+	FormControlLabel,
+	Icon,
+	IconButton,
+	MenuItem,
+	Stack,
+	Switch,
+	TextField
+} from '@mui/material';
 import { Form, Formik, FormikErrors } from 'formik';
 
 import { useAddSkillMutation, useGetSkillQuery, useUpdateSkillMutation } from '../services/api';
@@ -117,7 +132,9 @@ export default function SkillEditor({ renderKey, entityId }: Props): JSX.Element
 									<MenuItem value="charisma">CHA</MenuItem>
 								</TextField>
 								<FormControlLabel
-									control={<Switch color="primary" id="untrained" name="untrained" checked={values.untrained} onChange={handleChange} />}
+									control={
+										<Switch color="primary" id="untrained" name="untrained" checked={values.untrained} onChange={handleChange} />
+									}
 									label="Untrained"
 									labelPlacement="top"
 									sx={{ alignItems: 'flex-start' }}

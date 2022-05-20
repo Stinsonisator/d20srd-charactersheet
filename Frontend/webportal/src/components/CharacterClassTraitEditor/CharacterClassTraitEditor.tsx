@@ -13,8 +13,11 @@ import { Form, Formik, FormikErrors } from 'formik';
 import { useDispatch } from 'react-redux';
 
 import { globalDerender } from '../../services/globalRenderSlice';
+import { AbilityAdjustment } from '../../types/BusinessRule';
 import { CharacterClassTrait } from '../../types/CharacterClass';
 import AbilityAdjustmentRule from './AbilityAdjustmentRule';
+import BaseAttackBonusRule from './BaseAttackBonusRule';
+import SavingThrowModifiersRule from './SavingThrowModifiersRule';
 
 interface Props {
 	renderKey: string;
@@ -34,10 +37,10 @@ function validate(values: CharacterClassTrait): FormikErrors<CharacterClassTrait
 	}
 	if ('ability' in values.rule) {
 		if (!values.rule.ability) {
-			errors.rule.ability = 'Required';
+			(errors.rule as FormikErrors<AbilityAdjustment>).ability = 'Required';
 		}
 		if (!values.rule.adjustment) {
-			errors.rule.ability = 'Required';
+			(errors.rule as FormikErrors<AbilityAdjustment>).ability = 'Required';
 		}
 	}
 
@@ -56,11 +59,13 @@ function CharacterClassTraitEditor({ renderKey, characterClassId, trait, saveTra
 		reduxDispatch(globalDerender(renderKey));
 	}, [reduxDispatch, renderKey]);
 
-	function getTraitType(traitToCheck: CharacterClassTrait): string {
+	function getTraitType(traitToCheck: CharacterClassTrait): 'abilityAdjustment' | 'baseAttackBonus' | 'savingThrowModifiers' {
 		if ('ability' in traitToCheck.rule) {
 			return 'abilityAdjustment';
+		} else if ('baseAttackBonus' in traitToCheck.rule) {
+			return 'baseAttackBonus';
 		}
-		return 'abilityAdjustment';
+		return 'savingThrowModifiers';
 	}
 
 	return (
@@ -142,16 +147,33 @@ function CharacterClassTraitEditor({ renderKey, characterClassId, trait, saveTra
 														ability: 'strength',
 														adjustment: 0
 													});
+													break;
+												case 'baseAttackBonus':
+													setFieldValue('rule', {
+														baseAttackBonus: 0
+													});
+													break;
+												case 'savingThrowModifiers':
+													setFieldValue('rule', {
+														fortitude: 0,
+														reflex: 0,
+														will: 0
+													});
+													break;
 											}
 										}}
 										required
 									>
 										<MenuItem value="abilityAdjustment">Ability adjustment</MenuItem>
+										<MenuItem value="baseAttackBonus">Base attack bonus</MenuItem>
+										<MenuItem value="savingThrowModifiers">Saving throw modifiers</MenuItem>
 									</TextField>
 								</Grid>
 								{
 									{
-										abilityAdjustment: <AbilityAdjustmentRule />
+										abilityAdjustment: <AbilityAdjustmentRule />,
+										baseAttackBonus: <BaseAttackBonusRule />,
+										savingThrowModifiers: <SavingThrowModifiersRule />
 									}[getTraitType(values)]
 								}
 							</Grid>

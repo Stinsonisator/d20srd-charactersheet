@@ -1,6 +1,19 @@
 import { useNavigate } from 'react-router-dom';
 
-import { Alert, Box, Card, CardActionArea, CardActions, CardContent, CardMedia, CircularProgress, Grid, Icon, IconButton, Typography } from '@mui/material';
+import {
+	Alert,
+	Box,
+	Card,
+	CardActionArea,
+	CardActions,
+	CardContent,
+	CardMedia,
+	CircularProgress,
+	Grid,
+	Icon,
+	IconButton,
+	Typography
+} from '@mui/material';
 import map from 'lodash/map';
 
 import CharacterWizard from '../components/CharacterWizard';
@@ -84,7 +97,10 @@ export default function CharacterSheet(): JSX.Element {
 						<Card sx={{ minHeight: 250, height: '100%' }}>
 							<CardActionArea sx={{ height: '100%' }} onClick={() => addCharacter()}>
 								<CardContent sx={{ display: 'flex', justifyContent: 'center' }}>
-									<Icon sx={{ width: 'auto', height: 'auto', color: 'primary.dark', fontSize: 120 }} className="fa-person-circle-plus" />
+									<Icon
+										sx={{ width: 'auto', height: 'auto', color: 'primary.dark', fontSize: 120 }}
+										className="fa-person-circle-plus"
+									/>
 								</CardContent>
 							</CardActionArea>
 						</Card>
