@@ -30,6 +30,9 @@ function validate(values: Character): FormikErrors<Character> {
 	if (!values.name) {
 		errors.name = 'Required';
 	}
+	if (!values.image) {
+		errors.image = 'Required';
+	}
 	if (!values.age) {
 		errors.age = 'Required';
 	} else if (values.age < 21 || values.age > 26) {
@@ -105,6 +108,7 @@ export default function CharacterWizard({ renderKey }: Props): JSX.Element {
 							feet: 0,
 							inch: 0
 						},
+						image: '',
 						characterClassId: null,
 						strength: 8,
 						dexterity: 8,
@@ -112,6 +116,8 @@ export default function CharacterWizard({ renderKey }: Props): JSX.Element {
 						intelligence: 8,
 						wisdom: 8,
 						charisma: 8,
+						lethalDamage: 0,
+						nonlethalDamage: 0,
 						skills: [],
 						levels: []
 					}}
@@ -143,7 +149,11 @@ export default function CharacterWizard({ renderKey }: Props): JSX.Element {
 				</Button>
 				<Box sx={{ flex: '1 1 auto' }} />
 				{activeStep > 0 && (
-					<Button onClick={() => setActiveStep(activeStep - 1)} variant="outlined" sx={{ color: 'secondary.dark', borderColor: 'secondary.dark' }}>
+					<Button
+						onClick={() => setActiveStep(activeStep - 1)}
+						variant="outlined"
+						sx={{ color: 'secondary.dark', borderColor: 'secondary.dark' }}
+					>
 						Back
 					</Button>
 				)}

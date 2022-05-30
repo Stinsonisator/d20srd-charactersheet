@@ -1,8 +1,12 @@
+using System;
 using System.Collections.Generic;
-using System.Threading;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using CharacterSheet.Models.CharacterData;
 using CharacterSheet.DataAccess;
+using CharacterSheet.DataAccess.Extensions;
+using CharacterSheet.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -60,9 +64,62 @@ public class CharactersController : ControllerBase
     [HttpPut("{id:long}")]
     public async Task<Character> Put([FromRoute] long id, [FromBody] Character character)
     {
+        if (character.Skills != null)
+        {
+            _databaseContext.ChangeTracker.AutoDetectChangesEnabled = false;
+            List<CharacterSkill> currentItems = await _databaseContext.Set<CharacterSkill>()
+                .AsNoTracking()
+                .Where(cs => cs.CharacterId == character.Id)
+                .ToListAsync().ConfigureAwait(false);
+
+            IEnumerable<CharacterSkill> newItemsList = character.Skills.ToList();
+            foreach (CharacterSkill entity in currentItems.ExceptCustom(newItemsList, e => e.SkillId))
+            {
+                _databaseContext.Entry(entity).State = EntityState.Deleted;
+            }
+
+            foreach (CharacterSkill entity in newItemsList.ExceptCustom(currentItems, e => e.SkillId))
+            {
+                _databaseContext.Entry(entity).State = EntityState.Added;
+            }
+
+            foreach (CharacterSkill entity in newItemsList.Where(e => _databaseContext.Entry(e).State == EntityState.Detached))
+            {
+                _databaseContext.Entry(entity).State = EntityState.Modified;
+            }
+
+            _databaseContext.ChangeTracker.DetectChanges();
+            _databaseContext.ChangeTracker.AutoDetectChangesEnabled = true;
+        }
+        
         _databaseContext.Entry(character).State = EntityState.Modified;
         await _databaseContext.SaveChangesAsync().ConfigureAwait(false);
         return character;
+    }
+
+    [HttpPatch("{id:long}")]
+    public async Task<CharacterPatchModel> Patch([FromRoute] long id, [FromBody] CharacterPatchModel characterPatchModel)
+    {
+        Character character = new()
+        {
+            Id = id
+        };
+        _databaseContext.Attach(character);
+        
+        foreach (PropertyInfo propertyInfo in characterPatchModel.GetType().GetProperties().Where(p => p.Name != "Id" && p.GetValue(characterPatchModel) != null))
+        {
+            PropertyInfo characterPropInfo = character.GetType().GetProperties().FirstOrDefault(p => p.Name == propertyInfo.Name);
+            if (characterPropInfo == null) continue;
+            
+            Type nonNullableType = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
+            var value = propertyInfo.GetValue(characterPatchModel, null);
+            var safeValue = value == null ? null : Convert.ChangeType(value, nonNullableType);
+            characterPropInfo.SetValue(character, safeValue, null);
+            _databaseContext.Entry(character).Property(propertyInfo.Name).IsModified = true;
+        }
+        
+        await _databaseContext.SaveChangesAsync().ConfigureAwait(false);
+        return characterPatchModel;
     }
 
     [HttpDelete("{id:long}")]

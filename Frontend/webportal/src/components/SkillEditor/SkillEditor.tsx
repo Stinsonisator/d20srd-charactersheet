@@ -1,28 +1,14 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect } from 'react';
 
-import {
-	Box,
-	Button,
-	CircularProgress,
-	Dialog,
-	DialogActions,
-	DialogContent,
-	DialogTitle,
-	FormControlLabel,
-	Icon,
-	IconButton,
-	MenuItem,
-	Stack,
-	Switch,
-	TextField
-} from '@mui/material';
+import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton } from '@mui/material';
 import { Form, Formik, FormikErrors } from 'formik';
 
-import { useAddSkillMutation, useGetSkillQuery, useUpdateSkillMutation } from '../services/api';
-import { globalDerender } from '../services/globalRenderSlice';
-import { Skill } from '../types/Skill';
-import { useAppDispatch } from '../utils/hooks';
-import Loader from './Loader';
+import { useAddSkillMutation, useGetSkillQuery, useUpdateSkillMutation } from '../../services/api';
+import { globalDerender } from '../../services/globalRenderSlice';
+import { Skill } from '../../types/Skill';
+import { useAppDispatch } from '../../utils/hooks';
+import Loader from '../Loader';
+import SkillEditorContent from './SkillEditorContent';
 
 interface Props {
 	renderKey: string;
@@ -47,11 +33,6 @@ export default function SkillEditor({ renderKey, entityId }: Props): JSX.Element
 	const [updateSkill, updateResult] = useUpdateSkillMutation();
 	const { isLoading, data: loadResult } = useGetSkillQuery(entityId ?? 0, { skip: Boolean(!entityId) });
 	const reduxDispatch = useAppDispatch();
-	const firstField = useRef<HTMLInputElement>();
-
-	useEffect(() => {
-		firstField.current?.focus();
-	}, []);
 
 	const handleClose = useCallback(() => {
 		reduxDispatch(globalDerender(renderKey));
@@ -95,53 +76,10 @@ export default function SkillEditor({ renderKey, entityId }: Props): JSX.Element
 					}}
 					enableReinitialize
 				>
-					{({ values, errors, touched, handleChange, handleBlur }) => (
-						<Form id="skillEditor">
-							{(isLoading || addResult.isLoading || updateResult.isLoading) && <Loader />}
-							<Stack sx={{ m: 2 }} spacing={2}>
-								<TextField
-									inputRef={firstField}
-									id="name"
-									name="name"
-									label="Name"
-									value={values.name}
-									onChange={handleChange}
-									onBlur={handleBlur}
-									error={touched.name && Boolean(errors.name)}
-									helperText={touched.name && errors.name}
-									required
-									autoFocus
-								/>
-								<TextField
-									id="keyAbility"
-									name="keyAbility"
-									label="Key ability"
-									select
-									value={values.keyAbility}
-									onChange={handleChange}
-									onBlur={handleBlur}
-									error={touched.keyAbility && Boolean(errors.keyAbility)}
-									helperText={touched.keyAbility && errors.keyAbility}
-									required
-								>
-									<MenuItem value="strength">STR</MenuItem>
-									<MenuItem value="dexterity">DEX</MenuItem>
-									<MenuItem value="constitution">CON</MenuItem>
-									<MenuItem value="intelligence">INT</MenuItem>
-									<MenuItem value="wisdom">WIS</MenuItem>
-									<MenuItem value="charisma">CHA</MenuItem>
-								</TextField>
-								<FormControlLabel
-									control={
-										<Switch color="primary" id="untrained" name="untrained" checked={values.untrained} onChange={handleChange} />
-									}
-									label="Untrained"
-									labelPlacement="top"
-									sx={{ alignItems: 'flex-start' }}
-								/>
-							</Stack>
-						</Form>
-					)}
+					<Form id="skillEditor">
+						{(isLoading || addResult.isLoading || updateResult.isLoading) && <Loader />}
+						<SkillEditorContent />
+					</Form>
 				</Formik>
 			</DialogContent>
 			<DialogActions>

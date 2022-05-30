@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-import { Grid, MenuItem, TextField, Typography } from '@mui/material';
+import { Avatar, Grid, MenuItem, TextField, Typography } from '@mui/material';
 import { useFormikContext } from 'formik';
 import map from 'lodash/map';
 
@@ -21,7 +21,7 @@ export default function Attributes(): JSX.Element {
 
 	return (
 		<Grid container spacing={2}>
-			<Grid item xs={8}>
+			<Grid item xs={2}>
 				<TextField
 					inputRef={firstField}
 					id="name"
@@ -38,6 +38,23 @@ export default function Attributes(): JSX.Element {
 					helperText={touched.name && errors.name}
 					required
 				/>
+			</Grid>
+			<Grid item xs={5}>
+				<TextField
+					id="image"
+					name="image"
+					label="Image URL"
+					value={values.image}
+					onChange={handleChange}
+					onBlur={handleBlur}
+					error={touched.image && Boolean(errors.image)}
+					helperText={touched.image && errors.image}
+					required
+				/>
+			</Grid>
+
+			<Grid item xs={1}>
+				<Avatar src={values.image} />
 			</Grid>
 			<Grid item xs={2}>
 				<TextField

@@ -14,7 +14,7 @@ function MasterData() {
 							justifyContent: 'center',
 							alignItems: 'center',
 							height: 200,
-							backgroundColor: theme.palette.text.secondary,
+							backgroundColor: theme.palette.secondary.light,
 							color: theme.palette.text.primary,
 							borderRadius: 3
 						})}
@@ -33,7 +33,7 @@ function MasterData() {
 							justifyContent: 'center',
 							alignItems: 'center',
 							height: 200,
-							backgroundColor: theme.palette.text.secondary,
+							backgroundColor: theme.palette.secondary.light,
 							color: theme.palette.text.primary,
 							borderRadius: 3
 						})}

@@ -14,7 +14,7 @@ interface Props {
 	savingThrow: keyof SavingThrowModifiers;
 }
 
-function SaveCard({ character, savingThrow }: Props): JSX.Element {
+function SavingThrowCard({ character, savingThrow }: Props): JSX.Element {
 	const savingThrowModifier = useMemo(() => getSavingThrowModifier(character, savingThrow), [character, savingThrow]);
 
 	return (
@@ -29,4 +29,4 @@ function SaveCard({ character, savingThrow }: Props): JSX.Element {
 	);
 }
 
-export default SaveCard;
+export default SavingThrowCard;

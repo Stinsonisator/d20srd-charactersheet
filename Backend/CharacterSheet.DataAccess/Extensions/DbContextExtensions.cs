@@ -20,11 +20,11 @@ public static class DbContextExtensions
             
             List<TChild> currentItems = await db.Set<TParent>().AsNoTracking().Where(e => e.Id == parent.Id).SelectMany(itemSelector).ToListAsync();
             IEnumerable<TChild> newItemsList = newItems.ToList();
-            foreach (TChild entity in currentItems.Except(newItemsList, getKey))
+            foreach (TChild entity in currentItems.ExceptCustom(newItemsList, getKey))
             {
                 db.Entry(entity).State = EntityState.Deleted;
             }
-            foreach (TChild entity in newItemsList.Except(currentItems, getKey))
+            foreach (TChild entity in newItemsList.ExceptCustom(currentItems, getKey))
             {
                 db.Entry(entity).State = EntityState.Added;
             }
@@ -45,12 +45,12 @@ public static class DbContextExtensions
                 .ToListAsync().ConfigureAwait(false);
 
             IEnumerable<TEntity> newItemsList = newItems.ToList();
-            foreach (TEntity entity in currentItems.Except(newItemsList, e => e.Id))
+            foreach (TEntity entity in currentItems.ExceptCustom(newItemsList, e => e.Id))
             {
                 db.Entry(entity).State = EntityState.Deleted;
             }
 
-            foreach (TEntity entity in newItemsList.Except(currentItems, e => e.Id))
+            foreach (TEntity entity in newItemsList.ExceptCustom(currentItems, e => e.Id))
             {
                 db.Entry(entity).State = EntityState.Added;
             }
@@ -65,7 +65,7 @@ public static class DbContextExtensions
         }
     }
     
-    private static IEnumerable<T> Except<T, TKey>(this IEnumerable<T> items, IEnumerable<T> other, Func<T, TKey> getKeyFunc)
+    public static IEnumerable<T> ExceptCustom<T, TKey>(this IEnumerable<T> items, IEnumerable<T> other, Func<T, TKey> getKeyFunc)
     {
         return items
             .GroupJoin(other, getKeyFunc, getKeyFunc, (item, tempItems) => new { item, tempItems })

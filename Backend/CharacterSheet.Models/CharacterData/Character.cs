@@ -37,6 +37,10 @@ public class Character
     public short Wisdom { get; set; }
 
     public short Charisma { get; set; }
+    
+    public int LethalDamage { get; set; }
+    
+    public int NonlethalDamage { get; set; }
 
 	public IEnumerable<CharacterSkill> Skills { get; set; }
 

@@ -4,6 +4,7 @@ import findLast from 'lodash/findLast';
 import orderBy from 'lodash/orderBy';
 import reduce from 'lodash/reduce';
 import some from 'lodash/some';
+import sumBy from 'lodash/sumBy';
 
 import { Abilities, Ability } from '../types/Ability';
 import { SavingThrowModifiers } from '../types/BusinessRule';
@@ -84,6 +85,10 @@ export function getAbilityCode(ability: Ability): string {
 		case 'charisma':
 			return 'CHA';
 	}
+}
+
+export function getMaxHp(character: Character): number {
+	return sumBy(character.levels, 'hp') + getAbilityModifier(character, 'constitution') * character.levels.length;
 }
 
 function getPointBuyPoints(abilityScore: number): number {

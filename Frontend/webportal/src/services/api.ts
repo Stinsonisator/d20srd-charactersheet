@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import merge from 'lodash/merge';
 
 import { Character } from '../types/Character';
 import { CharacterClass } from '../types/CharacterClass';
@@ -30,6 +31,33 @@ export const characterSheetApi = createApi({
 				body: charachter
 			}),
 			invalidatesTags: [{ type: 'Characters', id: 'LIST' }]
+		}),
+		updateCharacter: builder.mutation<Character, Character>({
+			query: (character) => ({
+				url: `characters/${character.id}`,
+				method: 'PUT',
+				body: character
+			}),
+			invalidatesTags: (_result, _error, arg) => [{ type: 'Characters', id: arg.id }]
+		}),
+		partialUpdateCharacter: builder.mutation<void, Pick<Character, 'id'> & Partial<Character>>({
+			query: (charachter) => ({
+				url: `characters/${charachter.id}`,
+				method: 'PATCH',
+				body: charachter
+			}),
+			async onQueryStarted({ id, ...patchData }, { dispatch, queryFulfilled }) {
+				const patchResult = dispatch(
+					characterSheetApi.util.updateQueryData('getCharacter', id, (originalCharacter) => {
+						merge(originalCharacter, patchData);
+					})
+				);
+				try {
+					await queryFulfilled;
+				} catch {
+					patchResult.undo();
+				}
+			}
 		}),
 		deleteCharacter: builder.mutation<void, number>({
 			query: (id) => ({
@@ -113,6 +141,8 @@ export const {
 	useGetCharactersQuery,
 	useGetCharacterQuery,
 	useAddCharacterMutation,
+	useUpdateCharacterMutation,
+	usePartialUpdateCharacterMutation,
 	useDeleteCharacterMutation,
 	useGetSkillsQuery,
 	useGetSkillQuery,

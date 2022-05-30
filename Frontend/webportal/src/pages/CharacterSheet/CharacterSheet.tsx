@@ -1,15 +1,18 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { Alert, Avatar, Box, CircularProgress, GlobalStyles, Tab, Tabs, Typography } from '@mui/material';
+import { Alert, Avatar, Box, CircularProgress, GlobalStyles, Icon, IconButton, Tab, Tabs, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
-import sumBy from 'lodash/sumBy';
 
 import { useGetCharacterQuery, useGetSkillsQuery } from '../../services/api';
-import { getAbilityModifier } from '../../utils';
+import { globalRender } from '../../services/globalRenderSlice';
+import { getMaxHp } from '../../utils';
+import { useAppDispatch } from '../../utils/hooks';
 import Abilities from './Abilities';
-import Saves from './Saves';
+import DamagePopup from './DamagePopup';
+import HealPopup from './HealPopup';
+import SavingThrows from './SavingThrows';
 import Skills from './Skills';
 
 const globalStyles = (
@@ -27,8 +30,26 @@ const globalStyles = (
 export function CharacterSheet(): JSX.Element {
 	const { id } = useParams();
 	const [currentTab, setCurrentTab] = useState(0);
-	const { data: character, error: characterError, isLoading: characterIsLoading } = useGetCharacterQuery(id ? parseInt(id) : -1, { skip: !Boolean(id) });
+	const {
+		data: character,
+		error: characterError,
+		isLoading: characterIsLoading
+	} = useGetCharacterQuery(id ? parseInt(id) : -1, { skip: !Boolean(id) });
 	const { error: skillsError, isLoading: areSkillsLoading } = useGetSkillsQuery();
+	const reduxDispatch = useAppDispatch();
+
+	const maxHp = useMemo(() => {
+		if (character) return getMaxHp(character);
+		return 0;
+	}, [character]);
+
+	function showDamagePopup() {
+		reduxDispatch(globalRender({ key: 'damagePopup', component: <DamagePopup renderKey="damagePopup" character={character} /> }));
+	}
+
+	function showHealPopup() {
+		reduxDispatch(globalRender({ key: 'healPopup', component: <HealPopup renderKey="healPopup" character={character} /> }));
+	}
 
 	return (
 		<>
@@ -42,17 +63,39 @@ export function CharacterSheet(): JSX.Element {
 			{skillsError && <Alert severity="error">An error happened fetching the skills.</Alert>}
 			{character && (
 				<Stack spacing={1} sx={{ my: 1 }}>
-					<Grid container spacing={2} sx={(theme) => ({ backgroundColor: theme.palette.secondary.light, pb: 2, borderRadius: 2, color: theme.palette.secondary.contrastText })}>
+					<Grid
+						container
+						spacing={2}
+						sx={(theme) => ({
+							backgroundColor: theme.palette.secondary.light,
+							pb: 2,
+							borderRadius: 2,
+							color: theme.palette.secondary.contrastText
+						})}
+					>
 						<Grid item xs={1}>
-							<Avatar src="https://ih1.redbubble.net/image.846676006.1552/st,small,845x845-pad,1000x1000,f8f8f8.u3.jpg" />
+							<Avatar src={character.image} />
 						</Grid>
-						<Grid item xs={1} display="flex" alignItems="center">
+						<Grid item xs={2} md={1} display="flex" alignItems="center">
 							<Typography fontSize={25} fontWeight="bold">
 								{character.name}
 							</Typography>
 						</Grid>
-						<Grid item xs={2} display="flex" alignItems="center">
-							<Typography fontSize={25}>Max HP: {sumBy(character.levels, 'hp') + getAbilityModifier(character, 'constitution') * character.levels.length}</Typography>
+						<Grid item xs={4} display="flex" alignItems="center">
+							<Typography textAlign="center">Lethal: </Typography>
+							<Typography textAlign="center" fontSize={25} mr={1}>
+								{maxHp - character.lethalDamage}/{maxHp}
+							</Typography>
+							<Typography textAlign="center">Nonlethal: </Typography>
+							<Typography textAlign="center" fontSize={25}>
+								{maxHp - character.nonlethalDamage}/{maxHp}
+							</Typography>
+							<IconButton color="error" onClick={showDamagePopup}>
+								<Icon className="fa-skull-crossbones" />
+							</IconButton>
+							<IconButton color="success" onClick={showHealPopup}>
+								<Icon className="fa-hand-holding-medical" />
+							</IconButton>
 						</Grid>
 					</Grid>
 					<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -65,12 +108,12 @@ export function CharacterSheet(): JSX.Element {
 						{
 							{
 								0: (
-									<Grid container spacing={2} columns={4}>
-										<Grid item xs={4}>
+									<Grid container spacing={2} columns={6}>
+										<Grid item xs={6}>
 											<Abilities character={character} />
 										</Grid>
-										<Grid item xs={1}>
-											<Saves character={character} />
+										<Grid item xs={6} md={1}>
+											<SavingThrows character={character} />
 										</Grid>
 										<Grid item xs>
 											<Skills character={character} />

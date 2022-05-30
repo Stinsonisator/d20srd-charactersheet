@@ -19,7 +19,7 @@ function Skills({ character }: Props): JSX.Element {
 				<Typography>Skills</Typography>
 			</Box>
 			{skills && (
-				<Grid container spacing={1} columns={3}>
+				<Grid container spacing={1} columns={{ xs: 3, md: 4 }}>
 					{map(orderBy(skills, 'name'), (skill) => (
 						<Grid key={`skill_${skill.name}`} item xs={1}>
 							<SkillCard character={character} skill={skill} />

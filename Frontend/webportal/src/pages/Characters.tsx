@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import map from 'lodash/map';
 
+import CharacterEditor from '../components/CharacterEditor';
 import CharacterWizard from '../components/CharacterWizard';
 import { useDeleteCharacterMutation, useGetCharactersQuery } from '../services/api';
 import { globalRender } from '../services/globalRenderSlice';
@@ -34,8 +35,17 @@ export default function CharacterSheet(): JSX.Element {
 	function addCharacter(): void {
 		reduxDispatch(
 			globalRender({
-				key: 'test',
-				component: <CharacterWizard renderKey="test" />
+				key: 'characterWizard',
+				component: <CharacterWizard renderKey="characterWizard" />
+			})
+		);
+	}
+
+	function updateCharacter(entityId: number): void {
+		reduxDispatch(
+			globalRender({
+				key: 'characterEditor',
+				component: <CharacterEditor renderKey="characterEditor" entityId={entityId} />
 			})
 		);
 	}
@@ -49,18 +59,13 @@ export default function CharacterSheet(): JSX.Element {
 			)}
 			{error && <Alert severity="error">An error happened fetching the characters.</Alert>}
 			{data && (
-				<Grid container spacing={2} columns={{ xs: 3, md: 6, lg: 12 }}>
+				<Grid container spacing={2} columns={{ xs: 1, sm: 2, lg: 12 }}>
 					{map(data, (character) => (
-						<Grid key={`character_${character.id}`} item xs={3}>
+						<Grid key={`character_${character.id}`} item xs={1} md={3}>
 							<Box sx={{ position: 'relative' }}>
 								<Card sx={{ borderRadius: 3 }}>
 									<CardActionArea onClick={() => goToCharacterSheet(character.id)}>
-										<CardMedia
-											component="img"
-											height="240"
-											image="https://ih1.redbubble.net/image.846676006.1552/st,small,845x845-pad,1000x1000,f8f8f8.u3.jpg"
-											alt={character.name}
-										/>
+										<CardMedia component="img" height="240" image={character.image} alt={character.name} />
 										<CardContent>
 											<Typography gutterBottom variant="h5" component="div">
 												{character.name}
@@ -71,7 +76,7 @@ export default function CharacterSheet(): JSX.Element {
 										</CardContent>
 									</CardActionArea>
 									<CardActions sx={{ justifyContent: 'flex-end' }}>
-										<IconButton size="small">
+										<IconButton size="small" onClick={() => updateCharacter(character.id)}>
 											<Icon sx={{ fontSize: 14 }} color="primary" className="fa-pen-clip" />
 										</IconButton>
 										<IconButton size="small" onClick={() => deleteCharacter(character.id)}>
@@ -93,7 +98,7 @@ export default function CharacterSheet(): JSX.Element {
 							</Box>
 						</Grid>
 					))}
-					<Grid item xs={3}>
+					<Grid item xs={1} md={3}>
 						<Card sx={{ minHeight: 250, height: '100%' }}>
 							<CardActionArea sx={{ height: '100%' }} onClick={() => addCharacter()}>
 								<CardContent sx={{ display: 'flex', justifyContent: 'center' }}>

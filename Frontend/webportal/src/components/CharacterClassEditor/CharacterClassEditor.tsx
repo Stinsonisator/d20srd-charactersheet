@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton, Tab, Tabs } from '@mui/material';
 import { Form, Formik, FormikErrors } from 'formik';
+import map from 'lodash/map';
 
 import { useAddCharacterClassMutation, useGetCharacterClassQuery, useGetSkillsQuery, useUpdateCharacterClassMutation } from '../../services/api';
 import { globalDerender } from '../../services/globalRenderSlice';
@@ -10,7 +11,6 @@ import { useAppDispatch } from '../../utils/hooks';
 import Loader from '../Loader';
 import General from './General';
 import Traits from './Traits';
-import map from 'lodash/map';
 
 interface Props {
 	renderKey: string;
@@ -38,11 +38,6 @@ export default function CharacterClassEditor({ renderKey, entityId }: Props): JS
 	const [updateCharacterClass, updateResult] = useUpdateCharacterClassMutation();
 	const { isLoading, data: loadResult } = useGetCharacterClassQuery(entityId ?? 0, { skip: Boolean(!entityId) });
 	const reduxDispatch = useAppDispatch();
-	const firstField = useRef<HTMLInputElement>();
-
-	useEffect(() => {
-		firstField.current?.focus();
-	}, []);
 
 	const handleClose = useCallback(() => {
 		reduxDispatch(globalDerender(renderKey));

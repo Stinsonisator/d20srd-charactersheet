@@ -15,6 +15,7 @@ export interface Character {
 		feet: number;
 		inch: number;
 	};
+	image: string;
 	characterClassId: number;
 	characterClass?: CharacterClass;
 	strength: number;
@@ -23,6 +24,8 @@ export interface Character {
 	intelligence: number;
 	wisdom: number;
 	charisma: number;
+	lethalDamage: number;
+	nonlethalDamage: number;
 	skills: CharacterSkill[];
 	levels: CharacterLevel[];
 }

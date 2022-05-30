@@ -17,7 +17,7 @@ export default function General(): JSX.Element {
 	const firstField = useRef<HTMLInputElement>();
 
 	useEffect(() => {
-		firstField.current?.focus();
+		firstField.current.focus();
 	}, []);
 
 	function onchangeSkillCheckBox(skill: Skill): void {
@@ -48,7 +48,6 @@ export default function General(): JSX.Element {
 			</Grid>
 			<Grid item xs={6}>
 				<TextField
-					inputRef={firstField}
 					id="startingHp"
 					name="startingHp"
 					label="Starting HP"
@@ -59,12 +58,14 @@ export default function General(): JSX.Element {
 					error={touched.startingHp && Boolean(errors.startingHp)}
 					helperText={touched.startingHp && errors.startingHp}
 					required
-					autoFocus
 				/>
 			</Grid>
 			{map(orderBy(skillData, 'name'), (skill) => (
 				<Grid key={`skill_${skill.id}`} item xs={3}>
-					<FormControlLabel label={skill.name} control={<Checkbox checked={some(values.classSkills, { skillId: skill.id })} onChange={() => onchangeSkillCheckBox(skill)} />} />
+					<FormControlLabel
+						label={skill.name}
+						control={<Checkbox checked={some(values.classSkills, { skillId: skill.id })} onChange={() => onchangeSkillCheckBox(skill)} />}
+					/>
 				</Grid>
 			))}
 		</Grid>
