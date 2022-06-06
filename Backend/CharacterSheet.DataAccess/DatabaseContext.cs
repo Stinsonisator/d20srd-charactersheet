@@ -2,6 +2,7 @@
 using System.Reflection;
 using CharacterSheet.Models.CharacterData;
 using CharacterSheet.Models.MasterData;
+using CharacterSheet.Models.Security;
 using Microsoft.EntityFrameworkCore;
 
 namespace CharacterSheet.DataAccess;
@@ -12,6 +13,8 @@ public class DatabaseContext : DbContext
         : base(options)
     {
     }
+
+    public DbSet<User> Users { get; set; }
     
     public DbSet<Skill> Skills { get; set; }
 

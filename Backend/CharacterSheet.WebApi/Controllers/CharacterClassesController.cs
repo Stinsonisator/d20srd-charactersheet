@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using CharacterSheet.DataAccess;
 using CharacterSheet.DataAccess.Extensions;
 using CharacterSheet.Models.MasterData;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,7 @@ namespace CharacterSheet.WebApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class CharacterClassesController : ControllerBase
 {
     private readonly DatabaseContext _databaseContext;
@@ -67,14 +69,14 @@ public class CharacterClassesController : ControllerBase
     [HttpDelete("{id:long}")]
     public async Task<IActionResult> Delete([FromRoute] long id)
     {
-        /*CharacterClass character = await _databaseContext.CharacterClasses.FindAsync(id);
+        CharacterClass character = await _databaseContext.CharacterClasses.FindAsync(id);
         if (character == null)
         {
             return NotFound();
         }
 
         _databaseContext.CharacterClasses.Remove(character);
-        await _databaseContext.SaveChangesAsync();*/
+        await _databaseContext.SaveChangesAsync();
 
         return Ok();
     }

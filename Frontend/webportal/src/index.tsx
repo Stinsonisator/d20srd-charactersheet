@@ -1,16 +1,30 @@
 import React from 'react';
 
+import { Auth0Provider } from '@auth0/auth0-react';
+import { ThemeProvider } from '@mui/material';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 
 import App from './App';
 import { store } from './services/store';
+import theme from './services/theme';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
 	<React.StrictMode>
-		<Provider store={store}>
-			<App />
-		</Provider>
+		<Auth0Provider
+			domain={process.env.REACT_APP_AUTH0_DOMAIN}
+			clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
+			redirectUri={window.location.origin}
+			audience={process.env.REACT_APP_AUTH0_AUDIENCE}
+			useRefreshTokens
+			cacheLocation="localstorage"
+		>
+			<Provider store={store}>
+				<ThemeProvider theme={theme}>
+					<App />
+				</ThemeProvider>
+			</Provider>
+		</Auth0Provider>
 	</React.StrictMode>
 );

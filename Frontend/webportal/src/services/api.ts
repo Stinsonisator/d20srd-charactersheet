@@ -4,6 +4,7 @@ import merge from 'lodash/merge';
 import { Character } from '../types/Character';
 import { CharacterClass } from '../types/CharacterClass';
 import { Skill } from '../types/Skill';
+import { getAccessTokenSilently } from './authentication';
 
 function providesList<R extends { id: string | number }[], T extends string>(resultsWithIds: R | undefined, tagType: T) {
 	return resultsWithIds
@@ -13,7 +14,16 @@ function providesList<R extends { id: string | number }[], T extends string>(res
 
 export const characterSheetApi = createApi({
 	reducerPath: 'characterSheetApi',
-	baseQuery: fetchBaseQuery({ baseUrl: '/api/' }),
+	baseQuery: fetchBaseQuery({
+		baseUrl: '/api/',
+		prepareHeaders: async (headers) => {
+			const access_token = await getAccessTokenSilently({ scope: 'profile' });
+			if (access_token) {
+				headers.set('Authorization', `Bearer ${access_token}`);
+			}
+			return headers;
+		}
+	}),
 	tagTypes: ['Characters', 'Skills', 'CharacterClasses'],
 	endpoints: (builder) => ({
 		getCharacters: builder.query<Character[], void>({

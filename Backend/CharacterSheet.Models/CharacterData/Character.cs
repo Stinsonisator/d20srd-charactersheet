@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using CharacterSheet.Models.Enums;
 using CharacterSheet.Models.MasterData;
+using CharacterSheet.Models.Security;
 
 namespace CharacterSheet.Models.CharacterData;
 
@@ -9,7 +10,11 @@ public class Character
 {
     public long Id { get; set; }
 
-    [Required(AllowEmptyStrings = false)]
+    public long? UserId { get; set; }
+
+    public User user { get; set; }
+
+	[Required(AllowEmptyStrings = false)]
     public string Name { get; set; }
     
     public short Age { get; set; }

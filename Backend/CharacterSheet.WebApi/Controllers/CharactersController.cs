@@ -9,24 +9,30 @@ using CharacterSheet.DataAccess.Extensions;
 using CharacterSheet.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using CharacterSheet.Business.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CharacterSheet.WebApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class CharactersController : ControllerBase
 {
     private readonly DatabaseContext _databaseContext;
 
-    public CharactersController(DatabaseContext databaseContext)
+	private readonly ICharacterService _characterService;
+
+	public CharactersController(DatabaseContext databaseContext, ICharacterService characterService)
     {
         _databaseContext = databaseContext;
-    }
+		_characterService = characterService;
+	}
 
     [HttpGet]
     public async Task<IEnumerable<Character>> Get()
     {
-        return await _databaseContext.Characters.Include(c => c.CharacterClass).ToListAsync().ConfigureAwait(false);
+        return await _characterService.GetCharactersByUserId(long.Parse(User.Claims.First(c => c.Type == "internalUserId").Value)).ConfigureAwait(false);
     }
 
     [HttpGet("{id:long}")]
@@ -125,14 +131,14 @@ public class CharactersController : ControllerBase
     [HttpDelete("{id:long}")]
     public async Task<IActionResult> Delete([FromRoute] long id)
     {
-        /*Character character = await _databaseContext.Characters.FindAsync(id);
+        Character character = await _databaseContext.Characters.FindAsync(id);
         if (character == null)
         {
             return NotFound();
         }
 
         _databaseContext.Characters.Remove(character);
-        await _databaseContext.SaveChangesAsync();*/
+        await _databaseContext.SaveChangesAsync();
 
         return Ok();
     }

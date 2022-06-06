@@ -137,4 +137,4 @@ _NCrunch*
 .idea/
 
 CharacterSheet.WebApi/appsettings.Production.json
-CharagerSheet.WebApi/appsettings.Development.json
+CharacterSheet.WebApi/appsettings.Development.json
