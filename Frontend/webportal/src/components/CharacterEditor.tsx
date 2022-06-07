@@ -8,13 +8,14 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Icon from '@mui/material/Icon';
 import IconButton from '@mui/material/IconButton';
 import { Form, Formik } from 'formik';
+import filter from 'lodash/filter';
 
 import { useGetCharacterQuery, useGetSkillsQuery, useUpdateCharacterMutation } from '../services/api';
 import { globalDerender } from '../services/globalRenderSlice';
 import { Character } from '../types/Character';
 import { useAppDispatch } from '../utils/hooks';
 import Attributes from './CharacterWizard/Attributes';
-import SkillsForEditor from './CharacterWizard/SkillsForEditor';
+import Skills from './CharacterWizard/Skills';
 import Loader from './Loader';
 
 interface Props {
@@ -79,8 +80,13 @@ function CharacterEditor({ renderKey, entityId }: Props): JSX.Element {
 						}
 					}
 					enableReinitialize
-					onSubmit={(values: Character) => {
-						updateCharacter(values);
+					onSubmit={(character: Character) => {
+						updateCharacter({
+							...character,
+							skills: filter(character.skills, (skill) => {
+								return +skill.points > 0;
+							})
+						});
 					}}
 				>
 					<Form id="characterWizard">
@@ -96,7 +102,7 @@ function CharacterEditor({ renderKey, entityId }: Props): JSX.Element {
 								{
 									{
 										0: <Attributes />,
-										1: <SkillsForEditor character={loadResult} />
+										1: <Skills />
 									}[currentTab]
 								}
 							</>

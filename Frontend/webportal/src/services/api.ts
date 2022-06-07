@@ -17,7 +17,7 @@ export const characterSheetApi = createApi({
 	baseQuery: fetchBaseQuery({
 		baseUrl: '/api/',
 		prepareHeaders: async (headers) => {
-			const access_token = await getAccessTokenSilently({ scope: 'profile' });
+			const access_token = await getAccessTokenSilently();
 			if (access_token) {
 				headers.set('Authorization', `Bearer ${access_token}`);
 			}
