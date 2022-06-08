@@ -2,12 +2,12 @@ import { useEffect, useRef } from 'react';
 
 import { Avatar, Grid, MenuItem, TextField, Typography } from '@mui/material';
 import { useFormikContext } from 'formik';
+import find from 'lodash/find';
 import map from 'lodash/map';
 
-import { useGetCharacterClassesQuery } from '../../services/api';
-import { Character } from '../../types/Character';
-import { CharacterClass } from '../../types/CharacterClass';
-import { getTotalPointBuy } from '../../utils';
+import { useGetCharacterClassesQuery } from '../services/api';
+import { Character } from '../types/Character';
+import { getTotalPointBuy } from '../utils';
 import { AbilityRow } from './AbilityRow';
 
 export default function Attributes(): JSX.Element {
@@ -20,7 +20,7 @@ export default function Attributes(): JSX.Element {
 	}, []);
 
 	return (
-		<Grid container spacing={2}>
+		<Grid container mt={2} spacing={2}>
 			<Grid item xs={2}>
 				<TextField
 					inputRef={firstField}
@@ -62,7 +62,6 @@ export default function Attributes(): JSX.Element {
 					name="age"
 					label="Age"
 					type="number"
-					inputProps={{ min: 21, max: 26 }}
 					value={values.age}
 					onChange={handleChange}
 					onBlur={handleBlur}
@@ -111,18 +110,17 @@ export default function Attributes(): JSX.Element {
 				<TextField
 					label="Class"
 					select
-					value={values.characterClass}
+					value={values.characterClassId?.toString() || 0}
 					onChange={(event) => {
-						setFieldValue('characterClassId', (event.target.value as unknown as CharacterClass)?.id);
-						setFieldValue('characterClass', event.target.value);
+						setFieldValue('characterClassId', parseInt(event.target.value));
+						setFieldValue('characterClass', find(characterClasses, { id: parseInt(event.target.value) }));
 					}}
 					error={touched.characterClass && Boolean(errors.characterClass?.id)}
 					helperText={touched.characterClass && errors.characterClass?.id}
 					required
 				>
 					{map(characterClasses, (characterClass) => (
-						// eslint-disable-next-line @typescript-eslint/no-explicit-any
-						<MenuItem key={characterClass.id} value={characterClass as any}>
+						<MenuItem key={characterClass.id} value={characterClass.id.toString()}>
 							{characterClass.name}
 						</MenuItem>
 					))}
@@ -165,11 +163,7 @@ export default function Attributes(): JSX.Element {
 			<AbilityRow ability="wisdom" />
 			<AbilityRow ability="charisma" />
 			<Grid item xs={2}>
-				<Typography>Total point buy</Typography>
-			</Grid>
-			<Grid item xs={10} />
-			<Grid item xs={2}>
-				<Typography>{getTotalPointBuy(values)}</Typography>
+				<Typography>Total point buy: {getTotalPointBuy(values)}</Typography>
 			</Grid>
 		</Grid>
 	);

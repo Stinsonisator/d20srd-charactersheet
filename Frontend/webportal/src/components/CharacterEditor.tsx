@@ -14,9 +14,9 @@ import { useGetCharacterQuery, useGetSkillsQuery, useUpdateCharacterMutation } f
 import { globalDerender } from '../services/globalRenderSlice';
 import { Character } from '../types/Character';
 import { useAppDispatch } from '../utils/hooks';
-import Attributes from './CharacterWizard/Attributes';
-import Skills from './CharacterWizard/Skills';
+import Attributes from './Attributes';
 import Loader from './Loader';
+import Skills from './Skills';
 
 interface Props {
 	renderKey: string;

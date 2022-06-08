@@ -5,12 +5,12 @@ import { Form, Formik, FormikErrors } from 'formik';
 import filter from 'lodash/filter';
 import map from 'lodash/map';
 
-import { useAddCharacterMutation } from '../../services/api';
-import { globalDerender } from '../../services/globalRenderSlice';
-import { Character } from '../../types/Character';
-import { useAppDispatch } from '../../utils/hooks';
-import Loader from '../Loader';
+import { useAddCharacterMutation } from '../services/api';
+import { globalDerender } from '../services/globalRenderSlice';
+import { Character } from '../types/Character';
+import { useAppDispatch } from '../utils/hooks';
 import Attributes from './Attributes';
+import Loader from './Loader';
 import Skills from './Skills';
 
 interface Props {
@@ -35,8 +35,6 @@ function validate(values: Character): FormikErrors<Character> {
 	}
 	if (!values.age) {
 		errors.age = 'Required';
-	} else if (values.age < 21 || values.age > 26) {
-		errors.age = 'Between 21 and 26';
 	}
 	if (!values.gender) {
 		errors.gender = 'Required';

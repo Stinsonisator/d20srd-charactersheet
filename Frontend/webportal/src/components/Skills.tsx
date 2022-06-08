@@ -2,9 +2,9 @@ import { Grid, Typography } from '@mui/material';
 import map from 'lodash/map';
 import orderBy from 'lodash/orderBy';
 
-import { useGetSkillsQuery } from '../../services/api';
-import Loader from '../Loader';
-import SkillRow from '../SkillRow';
+import { useGetSkillsQuery } from '../services/api';
+import Loader from './Loader';
+import SkillRow from './SkillRow';
 
 function Skills() {
 	const { data, isLoading } = useGetSkillsQuery();

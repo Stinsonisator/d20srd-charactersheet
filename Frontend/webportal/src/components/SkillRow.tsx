@@ -34,25 +34,27 @@ function CharacterSkillRow({ skill }: Props): JSX.Element {
 	function onChangeCountAsClassSkill(checked: boolean) {
 		if (characterSkill) {
 			setFieldValue(`skills.${values.skills.indexOf(characterSkill)}.countAsClassSkill`, checked);
+		} else {
+			setFieldValue(`skills.${values.skills.length}`, {
+				characterId: values.id,
+				skillId: skill.id,
+				points: 0,
+				countAsClassSkill: checked
+			});
 		}
-		setFieldValue(`skills.${values.skills.length}`, {
-			characterId: values.id,
-			skillId: skill.id,
-			points: 0,
-			countAsClassSkill: checked
-		});
 	}
 
 	function onChangePoints(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
 		if (characterSkill) {
 			setFieldValue(`skills.${values.skills.indexOf(characterSkill)}.points`, parseInt(event.target.value));
+		} else {
+			setFieldValue(`skills.${values.skills.length}`, {
+				characterId: values.id,
+				skillId: skill.id,
+				points: parseInt(event.target.value),
+				countAsClassSkill: false
+			});
 		}
-		setFieldValue(`skills.${values.skills.length}`, {
-			characterId: values.id,
-			skillId: skill.id,
-			points: parseInt(event.target.value),
-			countAsClassSkill: false
-		});
 	}
 
 	return (

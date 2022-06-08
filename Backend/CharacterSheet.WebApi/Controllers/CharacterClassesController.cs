@@ -59,9 +59,9 @@ public class CharacterClassesController : ControllerBase
     [HttpPut("{id:long}")]
     public async Task<CharacterClass> Put([FromRoute] long id, [FromBody] CharacterClass characterClass)
     {
-        await _databaseContext.AddOrRemoveDifference(characterClass, cc => cc.ClassSkills, ccs => ccs.SkillId);
-        await _databaseContext.AddUpdateOrDelete(characterClass.Traits, cct => cct.CharacterClassId == characterClass.Id);
         _databaseContext.Entry(characterClass).State = EntityState.Modified;
+        await _databaseContext.AddUpdateOrRemove(characterClass, cc => cc.ClassSkills, ccs => ccs.SkillId).ConfigureAwait(false);
+        await _databaseContext.AddUpdateOrRemove(characterClass, cc => cc.Traits, t => t.Id, true).ConfigureAwait(false);
         await _databaseContext.SaveChangesAsync().ConfigureAwait(false);
         return characterClass;
     }

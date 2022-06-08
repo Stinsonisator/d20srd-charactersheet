@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using CharacterSheet.Models.Enums;
+using CharacterSheet.Models.Interfaces;
 using CharacterSheet.Models.MasterData;
 using CharacterSheet.Models.Security;
 
 namespace CharacterSheet.Models.CharacterData;
 
-public class Character
+public class Character: IEntity
 {
     public long Id { get; set; }
 

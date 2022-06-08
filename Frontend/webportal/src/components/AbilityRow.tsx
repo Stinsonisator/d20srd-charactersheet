@@ -1,10 +1,10 @@
 import { Grid, TextField, Typography } from '@mui/material';
 import { useFormikContext } from 'formik';
 
-import { Ability } from '../../types/Ability';
-import { Character } from '../../types/Character';
-import { displayModifier, getAbilityCode, getAbilityModifier, getAbilityScore } from '../../utils';
-import ReadOnlyField from '../ReadOnlyField';
+import { Ability } from '../types/Ability';
+import { Character } from '../types/Character';
+import { displayModifier, getAbilityCode, getAbilityModifier, getAbilityScore } from '../utils';
+import ReadOnlyField from './ReadOnlyField';
 
 interface Props {
 	ability: Ability;
