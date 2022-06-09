@@ -16,6 +16,8 @@ COPY Backend/CharacterSheet.Models/CharacterSheet.Models.csproj CharacterSheet.M
 RUN dotnet restore CharacterSheet.Models/CharacterSheet.Models.csproj
 COPY Backend/CharacterSheet.DataAccess/CharacterSheet.DataAccess.csproj CharacterSheet.DataAccess/
 RUN dotnet restore CharacterSheet.DataAccess/CharacterSheet.DataAccess.csproj
+COPY Backend/CharacterSheet.Business/CharacterSheet.Business.csproj CharacterSheet.Business/
+RUN dotnet restore CharacterSheet.Business/CharacterSheet.Business.csproj
 COPY Backend/CharacterSheet.WebApi/CharacterSheet.WebApi.csproj CharacterSheet.WebApi/
 RUN dotnet restore CharacterSheet.WebApi/CharacterSheet.WebApi.csproj
 
