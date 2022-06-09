@@ -17,5 +17,7 @@ namespace CharacterSheet.Business.Interfaces
 		Task Update(PartialCharacter partialCharacter);
         
 		Task Delete(long id);
+
+		Task<bool> IsAllowed(long id, long userId);
 	}
 }

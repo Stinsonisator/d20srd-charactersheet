@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 
-namespace CharacterSheet.WebApi.Controllers;
+namespace CharacterSheet.WebApi.Controllers.Base;
 
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public abstract class CharacterSheetControllerBase : ControllerBase
+public abstract class WebApiControllerBase : ControllerBase
 {
 }

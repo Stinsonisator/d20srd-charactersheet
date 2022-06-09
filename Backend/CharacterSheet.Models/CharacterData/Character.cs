@@ -13,7 +13,7 @@ public class Character: IEntity
 
     public long? UserId { get; set; }
 
-    public User user { get; set; }
+    public User User { get; set; }
 
 	[Required(AllowEmptyStrings = false)]
     public string Name { get; set; }

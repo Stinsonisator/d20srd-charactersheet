@@ -10,7 +10,7 @@ namespace CharacterSheet.DataAccess.Extensions;
 
 public static class DbContextExtensions
 {
-    public static async Task AddUpdateOrRemove<TParent, TChild, TKey>(this DbContext db, TParent parent, Expression<Func<TParent, IEnumerable<TChild>>> itemSelector, Func<TChild, TKey> getKey, bool performUpdate = false)
+    public static async Task SyncWithDatabase<TParent, TChild, TKey>(this DbContext db, TParent parent, Expression<Func<TParent, IEnumerable<TChild>>> itemSelector, Func<TChild, TKey> getKey, bool performUpdate = false)
         where TParent : class, IEntity
     {
         IEnumerable<TChild> newItems = itemSelector.Compile().Invoke(parent);
@@ -40,7 +40,7 @@ public static class DbContextExtensions
         }
     }
     
-    public static IEnumerable<T> Except<T, TKey>(this IEnumerable<T> items, IEnumerable<T> other, Func<T, TKey> getKeyFunc)
+    private static IEnumerable<T> Except<T, TKey>(this IEnumerable<T> items, IEnumerable<T> other, Func<T, TKey> getKeyFunc)
     {
         return items
             .GroupJoin(other, getKeyFunc, getKeyFunc, (item, tempItems) => new { item, tempItems })

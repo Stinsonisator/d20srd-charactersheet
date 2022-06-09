@@ -68,10 +68,15 @@ public class CharacterService : ICharacterService
             .Where(c => c.UserId == userId).ToListAsync().ConfigureAwait(false);
 	}
 
+	public async Task<bool> IsAllowed(long id, long userId)
+	{
+		return await _databaseContext.Characters.AnyAsync(c => c.Id == id && c.UserId == userId);
+	}
+
 	public async Task Update(Character character)
 	{        
         _databaseContext.Entry(character).State = EntityState.Modified;
-		await _databaseContext.AddUpdateOrRemove(character, c => c.Skills, s => s.SkillId, true).ConfigureAwait(false);
+		await _databaseContext.SyncWithDatabase(character, c => c.Skills, s => s.SkillId, true).ConfigureAwait(false);
 		await _databaseContext.SaveChangesAsync().ConfigureAwait(false);
 	}
 
