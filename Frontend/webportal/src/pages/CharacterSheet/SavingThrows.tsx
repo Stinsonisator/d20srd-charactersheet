@@ -1,6 +1,6 @@
-import { Box, Grid, Typography } from '@mui/material';
-import CharacterSheetSectionHeader from '../../components/CharacterSheetSectionHeader';
+import { Grid } from '@mui/material';
 
+import CharacterSheetSectionHeader from '../../components/CharacterSheetSectionHeader';
 import { Character } from '../../types/Character';
 import SavingThrowCard from './SavingThrowCard';
 

@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { Box, Button, capitalize, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton } from '@mui/material';
 import { Formik, FormikErrors } from 'formik';
@@ -9,38 +9,42 @@ import { Character } from '../../../types/Character';
 import { useAppDispatch } from '../../../utils/hooks';
 import MoneyPopupForm from './MoneyPopupForm';
 
-export type Money = Pick<Character, 'copper' | 'silver' | 'gold' | 'platinum'>;
+export type Coin = keyof Pick<Character, 'copper' | 'silver' | 'gold' | 'platinum'>;
 
 interface Props {
 	renderKey: string;
 	mutation: 'gain' | 'lose';
 	character: Character;
+	coin: Coin;
 }
 
-function validate(values: Money): FormikErrors<Money> {
-	const errors: FormikErrors<Money> = {};
+export interface Mutation {
+	amount: number;
+}
+
+function validate(values: Mutation): FormikErrors<Mutation> {
+	const errors: FormikErrors<Mutation> = {};
+
+	if (!values.amount) {
+		errors.amount = 'Required';
+	}
 
 	return errors;
 }
 
-function getMoneyUpdate(currentMoney: Money, moneyMutation: Money, mutation: 'gain' | 'lose'): Money {
-	if (mutation === 'gain') {
-		return {
-			copper: typeof moneyMutation.copper === 'number' ? (currentMoney.copper || 0) + (moneyMutation.copper || 0) : undefined,
-			silver: typeof moneyMutation.silver === 'number' ? (currentMoney.silver || 0) + (moneyMutation.silver || 0) : undefined,
-			gold: typeof moneyMutation.gold === 'number' ? (currentMoney.gold || 0) + (moneyMutation.gold || 0) : undefined,
-			platinum: typeof moneyMutation.platinum === 'number' ? (currentMoney.platinum || 0) + (moneyMutation.platinum || 0) : undefined
-		};
-	}
-}
-
-export default function MoneyPopup({ renderKey, mutation, character }: Props): JSX.Element {
-	const [update] = usePartialUpdateCharacterMutation();
+export default function MoneyPopup({ renderKey, mutation, character, coin }: Props): JSX.Element {
+	const [update, result] = usePartialUpdateCharacterMutation();
 	const reduxDispatch = useAppDispatch();
 
 	const handleClose = useCallback(() => {
 		reduxDispatch(globalDerender(renderKey));
 	}, [reduxDispatch, renderKey]);
+
+	useEffect(() => {
+		if (!result.isLoading && result.isSuccess) {
+			handleClose();
+		}
+	}, [handleClose, result.isLoading, result.isSuccess]);
 
 	return (
 		<Dialog onClose={handleClose} open fullWidth maxWidth="xs" PaperProps={{ sx: { position: 'fixed', top: 50 } }}>
@@ -57,17 +61,20 @@ export default function MoneyPopup({ renderKey, mutation, character }: Props): J
 			<DialogContent>
 				<Formik
 					initialValues={{
-						copper: null,
-						silver: null,
-						gold: null,
-						platinum: null
+						amount: null
 					}}
 					validate={validate}
-					onSubmit={(values: Money) => {
+					onSubmit={(values: Mutation) => {
 						handleClose();
+						let newAmount;
+						if (mutation === 'gain') {
+							newAmount = (character[coin] || 0) + values.amount;
+						} else if (mutation === 'lose' && character[coin] >= values.amount) {
+							newAmount = character[coin] - values.amount;
+						}
 						update({
 							id: character.id,
-							...getMoneyUpdate(character, values, mutation)
+							[coin]: newAmount
 						});
 					}}
 				>
