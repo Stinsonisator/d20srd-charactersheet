@@ -15,6 +15,7 @@ import { globalDerender } from '../services/globalRenderSlice';
 import { Character } from '../types/Character';
 import { useAppDispatch } from '../utils/hooks';
 import Attributes from './Attributes';
+import Inventory from './Inventory';
 import Loader from './Loader';
 import Skills from './Skills';
 
@@ -44,7 +45,7 @@ function CharacterEditor({ renderKey, entityId }: Props): JSX.Element {
 		<Dialog onClose={handleClose} open fullWidth maxWidth="lg" scroll="paper">
 			<DialogTitle sx={(theme) => ({ backgroundColor: theme.palette.primary.main, color: theme.palette.text.secondary })}>
 				<Box display="flex" alignItems="center">
-					<Box flexGrow={1}>Add new character</Box>
+					<Box flexGrow={1}>Edit {loadResult?.name}</Box>
 					<Box>
 						<IconButton onClick={handleClose}>
 							<Icon className="fa-times" sx={{ fontSize: 16, color: 'text.secondary' }} />
@@ -75,6 +76,10 @@ function CharacterEditor({ renderKey, entityId }: Props): JSX.Element {
 							charisma: 8,
 							lethalDamage: 0,
 							nonlethalDamage: 0,
+							copper: null,
+							silver: null,
+							gold: null,
+							platinum: null,
 							skills: [],
 							levels: []
 						}
@@ -95,6 +100,7 @@ function CharacterEditor({ renderKey, entityId }: Props): JSX.Element {
 							<Tabs value={currentTab} onChange={(_event, newValue) => setCurrentTab(newValue)}>
 								<Tab label="Attributes" />
 								<Tab label="Skills" />
+								<Tab label="Inventory" />
 							</Tabs>
 						</Box>
 						{!isLoading && (
@@ -102,7 +108,8 @@ function CharacterEditor({ renderKey, entityId }: Props): JSX.Element {
 								{
 									{
 										0: <Attributes />,
-										1: <Skills />
+										1: <Skills />,
+										2: <Inventory />
 									}[currentTab]
 								}
 							</>

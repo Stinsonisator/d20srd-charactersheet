@@ -10,6 +10,7 @@ import { globalDerender } from '../services/globalRenderSlice';
 import { Character } from '../types/Character';
 import { useAppDispatch } from '../utils/hooks';
 import Attributes from './Attributes';
+import Inventory from './Inventory';
 import Loader from './Loader';
 import Skills from './Skills';
 
@@ -21,7 +22,7 @@ const steps = [
 	{ label: 'Attributes', content: <Attributes /> },
 	{ label: 'Skills', content: <Skills /> },
 	{ label: 'Feats', content: <Box sx={{ m: 2 }}>Feats</Box> },
-	{ label: 'Equipment', content: <Box sx={{ m: 2 }}>Equipment</Box> }
+	{ label: 'Inventory', content: <Inventory /> }
 ];
 
 function validate(values: Character): FormikErrors<Character> {
@@ -116,6 +117,10 @@ export default function CharacterWizard({ renderKey }: Props): JSX.Element {
 						charisma: 8,
 						lethalDamage: 0,
 						nonlethalDamage: 0,
+						copper: null,
+						silver: null,
+						gold: null,
+						platinum: null,
 						skills: [],
 						levels: []
 					}}

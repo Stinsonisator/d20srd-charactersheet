@@ -94,11 +94,18 @@ public class CharacterService : ICharacterService
             if (characterPropInfo == null) continue;
             
             Type nonNullableType = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
-            var value = propertyInfo.GetValue(partialCharacter, null);
-            var safeValue = value == null ? null : Convert.ChangeType(value, nonNullableType);
-            characterPropInfo.SetValue(character, safeValue, null);
-            _databaseContext.Entry(character).Property(propertyInfo.Name).IsModified = true;
-        }
+            object value = propertyInfo.GetValue(partialCharacter, null);
+            object safeValue = value == null ? null : Convert.ChangeType(value, nonNullableType);
+            if ((propertyInfo.Name == "Copper" || propertyInfo.Name == "Silver" || propertyInfo.Name == "Gold" || propertyInfo.Name == "Platinum") && (int?)safeValue == 0)
+            {
+                characterPropInfo.SetValue(character, null, null);
+                _databaseContext.Entry(character).Property(characterPropInfo.Name).IsModified = true;
+            } 
+            else
+			{
+				characterPropInfo.SetValue(character, safeValue, null);
+			}
+		}
         
         await _databaseContext.SaveChangesAsync().ConfigureAwait(false);
 	}

@@ -1,4 +1,5 @@
 import { Box, Grid, Typography } from '@mui/material';
+import CharacterSheetSectionHeader from '../../components/CharacterSheetSectionHeader';
 
 import { Character } from '../../types/Character';
 import SavingThrowCard from './SavingThrowCard';
@@ -11,15 +12,7 @@ function SavingThrows({ character }: Props): JSX.Element {
 	return (
 		<Grid container spacing={2} columns={{ xs: 3, md: 1 }}>
 			<Grid item xs={3} md={1}>
-				<Box
-					py={1}
-					display="flex"
-					justifyContent="center"
-					borderRadius={2}
-					sx={(theme) => ({ backgroundColor: theme.palette.secondary.light })}
-				>
-					<Typography>Saves</Typography>
-				</Box>
+				<CharacterSheetSectionHeader title="Saves" />
 			</Grid>
 			<Grid item xs={1}>
 				<SavingThrowCard character={character} savingThrow="fortitude" />

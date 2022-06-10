@@ -59,7 +59,14 @@ export const characterSheetApi = createApi({
 			async onQueryStarted({ id, ...patchData }, { dispatch, queryFulfilled }) {
 				const patchResult = dispatch(
 					characterSheetApi.util.updateQueryData('getCharacter', id, (originalCharacter) => {
-						merge(originalCharacter, patchData);
+						const newPatchData = {
+							...patchData,
+							copper: patchData.copper === 0 ? null : patchData.copper,
+							silver: patchData.silver === 0 ? null : patchData.silver,
+							gold: patchData.gold === 0 ? null : patchData.gold,
+							platinum: patchData.platinum === 0 ? null : patchData.platinum
+						};
+						merge(originalCharacter, newPatchData);
 					})
 				);
 				try {

@@ -26,6 +26,10 @@ export interface Character {
 	charisma: number;
 	lethalDamage: number;
 	nonlethalDamage: number;
+	copper?: number;
+	silver?: number;
+	gold?: number;
+	platinum?: number;
 	skills: CharacterSkill[];
 	levels: CharacterLevel[];
 }

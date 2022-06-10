@@ -1,4 +1,4 @@
-import { Grid, TextField, Typography } from '@mui/material';
+import { Grid, TextField } from '@mui/material';
 import { useFormikContext } from 'formik';
 
 import { Ability } from '../types/Ability';
@@ -16,21 +16,19 @@ export function AbilityRow({ ability }: Props): JSX.Element {
 	return (
 		<>
 			<Grid item xs={2}>
-				<Typography>
-					<TextField
-						id={ability}
-						name={ability}
-						label={getAbilityCode(ability)}
-						type="number"
-						inputProps={{ min: 8, max: 18 }}
-						value={values[ability]}
-						onChange={handleChange}
-						onBlur={handleBlur}
-						error={touched[ability] && Boolean(errors[ability])}
-						helperText={touched[ability] && errors[ability]}
-						required
-					/>
-				</Typography>
+				<TextField
+					id={ability}
+					name={ability}
+					label={getAbilityCode(ability)}
+					type="number"
+					inputProps={{ min: 8, max: 18 }}
+					value={values[ability]}
+					onChange={handleChange}
+					onBlur={handleBlur}
+					error={touched[ability] && Boolean(errors[ability])}
+					helperText={touched[ability] && errors[ability]}
+					required
+				/>
 			</Grid>
 			<Grid item xs={2}>
 				<ReadOnlyField label="Final score" value={getAbilityScore(values, ability).toString()} />

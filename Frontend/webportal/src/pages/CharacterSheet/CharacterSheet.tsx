@@ -12,6 +12,7 @@ import { useAppDispatch } from '../../utils/hooks';
 import Abilities from './Abilities';
 import DamagePopup from './DamagePopup';
 import HealPopup from './HealPopup';
+import Money from './Money';
 import SavingThrows from './SavingThrows';
 import Skills from './Skills';
 
@@ -102,6 +103,7 @@ export function CharacterSheet(): JSX.Element {
 						<Tabs value={currentTab} onChange={(_event, newValue) => setCurrentTab(newValue)}>
 							<Tab label="Abilities, saves & skills" />
 							<Tab label="Combat stats" />
+							<Tab label="Inventory" />
 						</Tabs>
 					</Box>
 					<Box py={1}>
@@ -117,6 +119,13 @@ export function CharacterSheet(): JSX.Element {
 										</Grid>
 										<Grid item xs>
 											<Skills character={character} />
+										</Grid>
+									</Grid>
+								),
+								2: (
+									<Grid container columns={3}>
+										<Grid item xs={1}>
+											<Money character={character} />
 										</Grid>
 									</Grid>
 								)

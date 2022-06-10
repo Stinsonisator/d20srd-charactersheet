@@ -1,7 +1,8 @@
-import { Box, Grid, Stack, Typography } from '@mui/material';
+import { Grid, Stack } from '@mui/material';
 import map from 'lodash/map';
 import orderBy from 'lodash/orderBy';
 
+import CharacterSheetSectionHeader from '../../components/CharacterSheetSectionHeader';
 import { useGetSkillsQuery } from '../../services/api';
 import { Character } from '../../types/Character';
 import SkillCard from './SkillCard';
@@ -15,9 +16,7 @@ function Skills({ character }: Props): JSX.Element {
 
 	return (
 		<Stack spacing={2}>
-			<Box py={1} display="flex" justifyContent="center" borderRadius={2} sx={(theme) => ({ backgroundColor: theme.palette.secondary.light })}>
-				<Typography>Skills</Typography>
-			</Box>
+			<CharacterSheetSectionHeader title="Skills" />
 			{skills && (
 				<Grid container spacing={1} columns={{ xs: 3, md: 4 }}>
 					{map(orderBy(skills, 'name'), (skill) => (
