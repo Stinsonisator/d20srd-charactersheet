@@ -1,13 +1,16 @@
 import { useEffect, useRef } from 'react';
 
-import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { Form, useFormikContext } from 'formik';
+import { useFormikContext } from 'formik';
 
-import { Mutation } from './MoneyPopup';
+import { MoneyPopUpModel } from './MoneyPopup';
 
-function MoneyPopupForm() {
-	const { values, touched, errors, handleChange, handleBlur } = useFormikContext<Mutation>();
+interface Props {
+	modelField: keyof Pick<MoneyPopUpModel, 'toPay' | 'paying'>;
+}
+
+function MoneyPopupForm({ modelField }: Props) {
+	const { values, touched, errors, handleChange, handleBlur } = useFormikContext<MoneyPopUpModel>();
 	const firstField = useRef<HTMLInputElement>();
 
 	useEffect(() => {
@@ -15,22 +18,53 @@ function MoneyPopupForm() {
 	}, []);
 
 	return (
-		<Form id="moneyPopup">
-			<Stack sx={{ m: 2 }} spacing={2}>
-				<TextField
-					inputRef={firstField}
-					id="amount"
-					name="amount"
-					label="Amount"
-					type="number"
-					value={values.amount ?? ''}
-					onChange={handleChange}
-					onBlur={handleBlur}
-					error={touched.amount && Boolean(errors.amount)}
-					helperText={touched.amount && errors.amount}
-				/>
-			</Stack>
-		</Form>
+		<>
+			<TextField
+				inputRef={firstField}
+				id={`${modelField}.copper`}
+				name={`${modelField}.copper`}
+				label="Copper"
+				type="number"
+				value={values[modelField].copper ?? ''}
+				onChange={handleChange}
+				onBlur={handleBlur}
+				error={touched[modelField]?.copper && Boolean(errors[modelField]?.copper)}
+				helperText={touched[modelField]?.copper && errors[modelField]?.copper}
+			/>
+			<TextField
+				id={`${modelField}.silver`}
+				name={`${modelField}.silver`}
+				label="Silver"
+				type="number"
+				value={values[modelField].silver ?? ''}
+				onChange={handleChange}
+				onBlur={handleBlur}
+				error={touched[modelField]?.silver && Boolean(errors[modelField]?.silver)}
+				helperText={touched[modelField]?.silver && errors[modelField]?.silver}
+			/>
+			<TextField
+				id={`${modelField}.gold`}
+				name={`${modelField}.gold`}
+				label="Gold"
+				type="number"
+				value={values[modelField].gold ?? ''}
+				onChange={handleChange}
+				onBlur={handleBlur}
+				error={touched[modelField]?.gold && Boolean(errors[modelField]?.gold)}
+				helperText={touched[modelField]?.gold && errors[modelField]?.gold}
+			/>
+			<TextField
+				id={`${modelField}.platinum`}
+				name={`${modelField}.platinum`}
+				label="Platinum"
+				type="number"
+				value={values[modelField].platinum ?? ''}
+				onChange={handleChange}
+				onBlur={handleBlur}
+				error={touched[modelField]?.platinum && Boolean(errors[modelField]?.platinum)}
+				helperText={touched[modelField]?.platinum && errors[modelField]?.platinum}
+			/>
+		</>
 	);
 }
 

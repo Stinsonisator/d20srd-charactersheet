@@ -1,27 +1,25 @@
 import { useMemo } from 'react';
 
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Button, Stack, Typography } from '@mui/material';
 
-import ActionButton from '../../components/ActionButton';
 import CharacterSheetSectionHeader from '../../components/CharacterSheetSectionHeader';
 import { globalRender } from '../../services/globalRenderSlice';
-import { Character } from '../../types/Character';
+import { CoinPouch } from '../../types/Money';
 import { useAppDispatch } from '../../utils/hooks';
 import MoneyPopup from './MoneyPopup';
-import { Coin } from './MoneyPopup/MoneyPopup';
 
 interface Props {
-	character: Character;
+	character: CoinPouch;
 }
 
 function Money({ character }: Props): JSX.Element {
 	const reduxDispatch = useAppDispatch();
 
-	function mutateMoney(mutation: 'gain' | 'lose', coin: Coin): void {
+	function mutateMoney(mutation: 'gain' | 'lose'): void {
 		reduxDispatch(
 			globalRender({
 				key: 'mutateMoney',
-				component: <MoneyPopup renderKey="mutateMoney" mutation={mutation} character={character} coin={coin} />
+				component: <MoneyPopup renderKey="mutateMoney" mutation={mutation} coinPouch={character} />
 			})
 		);
 	}
@@ -34,30 +32,22 @@ function Money({ character }: Props): JSX.Element {
 	return (
 		<Stack spacing={1} sx={{ fontVariantNumeric: 'tabular-nums' }}>
 			<CharacterSheetSectionHeader title="Money" />
-			<Box display="flex" pr={8}>
-				<ActionButton color="success" onClick={() => mutateMoney('gain', 'copper')} iconClassName="fa-plus" />
-				<ActionButton color="error" onClick={() => mutateMoney('lose', 'copper')} iconClassName="fa-minus" />
+			<Box display="flex" px={8}>
 				<Typography>Copper</Typography>
 				<Box flexGrow={1} />
 				<Typography>{character.copper}</Typography>
 			</Box>
-			<Box display="flex" pr={8}>
-				<ActionButton color="success" onClick={() => mutateMoney('gain', 'silver')} iconClassName="fa-plus" />
-				<ActionButton color="error" onClick={() => mutateMoney('lose', 'silver')} iconClassName="fa-minus" />
+			<Box display="flex" px={8}>
 				<Typography>Silver</Typography>
 				<Box flexGrow={1} />
 				<Typography marginRight="10px">{character.silver}</Typography>
 			</Box>
-			<Box display="flex" pr={8}>
-				<ActionButton color="success" onClick={() => mutateMoney('gain', 'gold')} iconClassName="fa-plus" />
-				<ActionButton color="error" onClick={() => mutateMoney('lose', 'gold')} iconClassName="fa-minus" />
+			<Box display="flex" px={8}>
 				<Typography>Gold</Typography>
 				<Box flexGrow={1} />
 				<Typography marginRight="20px">{character.gold}</Typography>
 			</Box>
-			<Box display="flex" pr={8}>
-				<ActionButton color="success" onClick={() => mutateMoney('gain', 'platinum')} iconClassName="fa-plus" />
-				<ActionButton color="error" onClick={() => mutateMoney('lose', 'platinum')} iconClassName="fa-minus" />
+			<Box display="flex" px={8}>
 				<Typography>Platinum</Typography>
 				<Box flexGrow={1} />
 				<Typography marginRight="30px">{character.platinum}</Typography>
@@ -66,6 +56,14 @@ function Money({ character }: Props): JSX.Element {
 				<Typography>Total</Typography>
 				<Box flexGrow={1} />
 				<Typography marginRight="-2px">{total.toFixed(2)}</Typography>
+			</Box>
+			<Box display="flex" px={8} justifyContent="flex-end">
+				<Button color="error" variant="outlined" onClick={() => mutateMoney('lose')} sx={{ mr: 1 }}>
+					Lose
+				</Button>
+				<Button color="success" variant="contained" onClick={() => mutateMoney('gain')}>
+					Gain
+				</Button>
 			</Box>
 		</Stack>
 	);
