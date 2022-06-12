@@ -88,6 +88,10 @@ function CharacterEditor({ renderKey, entityId }: Props): JSX.Element {
 					onSubmit={(character: Character) => {
 						updateCharacter({
 							...character,
+							copper: character.copper?.toString() === '' ? null : character.copper,
+							silver: character.silver?.toString() === '' ? null : character.silver,
+							gold: character.gold?.toString() === '' ? null : character.gold,
+							platinum: character.platinum?.toString() === '' ? null : character.platinum,
 							skills: filter(character.skills, (skill) => {
 								return +skill.points > 0;
 							})

@@ -1,13 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { Box, Button, capitalize, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Icon, IconButton, Stack, Typography } from '@mui/material';
+import { Box, Button, capitalize, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Icon, IconButton, Typography } from '@mui/material';
 import { Form, Formik, FormikErrors } from 'formik';
 
 import { usePartialUpdateCharacterMutation } from '../../../services/api';
 import { globalDerender } from '../../../services/globalRenderSlice';
-import { Coin, CoinPouch } from '../../../types/Money';
+import { Coin, CoinPouch, Mutation } from '../../../types/Money';
 import { useAppDispatch } from '../../../utils/hooks';
-import MoneyPopupForm from './MoneyPopupForm';
+import { getTotalInCopper } from '../../../utils/money';
+import ActualAmountPayingForm from './ActualAmountPayingForm';
+import ActualMutationForm from './ActualMutationForm';
 
 interface Props {
 	renderKey: string;
@@ -15,22 +17,23 @@ interface Props {
 	coinPouch: CoinPouch;
 }
 
-export type Mutation = Partial<Pick<CoinPouch, 'copper' | 'silver' | 'gold' | 'platinum'>>;
-
 export interface MoneyPopUpModel {
-	toPay: Mutation;
-	paying: Mutation;
+	actualMutation: Mutation;
+	actualAmountPaying: Mutation;
 	change: Mutation;
 }
 
-function validate(values: MoneyPopUpModel): FormikErrors<Mutation> {
-	const errors: FormikErrors<Mutation> = {};
-
-	return errors;
+function setChangeError(coinPouch: CoinPouch, values: MoneyPopUpModel, errors: FormikErrors<MoneyPopUpModel>, coin: Coin) {
+	if (values.actualAmountPaying[coin] > coinPouch[coin]) {
+		if (!errors.actualAmountPaying) {
+			errors.actualAmountPaying = {};
+		}
+		errors.actualAmountPaying[coin] = `You don't have ${values.actualAmountPaying[coin]} ${coin}`;
+	}
 }
 
 export default function MoneyPopup({ renderKey, mutation, coinPouch }: Props): JSX.Element {
-	const [noExactChange, setNoExactChange] = useState(false);
+	const [hasExactChange, sethasExactChange] = useState(true);
 	const [update, result] = usePartialUpdateCharacterMutation();
 	const reduxDispatch = useAppDispatch();
 
@@ -43,6 +46,22 @@ export default function MoneyPopup({ renderKey, mutation, coinPouch }: Props): J
 			handleClose();
 		}
 	}, [handleClose, result.isLoading, result.isSuccess]);
+
+	function validate(values: MoneyPopUpModel): FormikErrors<MoneyPopUpModel> {
+		const errors: FormikErrors<MoneyPopUpModel> = {};
+		if (mutation === 'lose' && !hasExactChange) {
+			setChangeError(coinPouch, values, errors, 'copper');
+			setChangeError(coinPouch, values, errors, 'silver');
+			setChangeError(coinPouch, values, errors, 'gold');
+			setChangeError(coinPouch, values, errors, 'platinum');
+			if (getTotalInCopper(values.actualMutation) > getTotalInCopper(values.actualAmountPaying)) {
+				errors.change = {
+					copper: 'You are not paying enough'
+				};
+			}
+		}
+		return errors;
+	}
 
 	return (
 		<Dialog onClose={handleClose} open fullWidth maxWidth="sm" PaperProps={{ sx: { position: 'fixed', top: 50 } }}>
@@ -59,11 +78,13 @@ export default function MoneyPopup({ renderKey, mutation, coinPouch }: Props): J
 			<DialogContent>
 				<Formik
 					initialValues={{
-						toPay: {},
-						paying: {},
+						actualMutation: {},
+						actualAmountPaying: {},
 						change: {}
 					}}
 					validate={validate}
+					validateOnBlur
+					validateOnChange
 					onSubmit={(values: MoneyPopUpModel) => {
 						const newPouch = {
 							copper: coinPouch.copper,
@@ -73,15 +94,39 @@ export default function MoneyPopup({ renderKey, mutation, coinPouch }: Props): J
 						};
 						let performUpdate = false;
 						if (mutation === 'gain') {
-							for (const pouchKey in values.toPay) {
+							for (const pouchKey in values.actualMutation) {
 								const coin: Coin = pouchKey as Coin;
-								if (values.toPay[coin]) {
-									newPouch[coin] = (newPouch[coin] || 0) + values.toPay[coin];
+								if (values.actualMutation[coin]) {
+									newPouch[coin] = (newPouch[coin] || 0) + values.actualMutation[coin];
 								}
 							}
 							performUpdate = true;
-						} else if (mutation === 'lose') {
-							// TODO: lose
+						} else if (mutation === 'lose' && hasExactChange) {
+							let hasNeededCoins = true;
+							for (const pouchKey in values.actualMutation) {
+								const coin: Coin = pouchKey as Coin;
+								if ((newPouch[coin] || 0) < values.actualMutation[coin]) {
+									sethasExactChange(false);
+									hasNeededCoins = false;
+								} else if (values.actualMutation[coin]) {
+									newPouch[coin] = (newPouch[coin] || 0) - values.actualMutation[coin];
+								}
+							}
+							performUpdate = hasNeededCoins;
+						} else if (mutation === 'lose' && !hasExactChange) {
+							for (const pouchKey in values.actualAmountPaying) {
+								const coin: Coin = pouchKey as Coin;
+								if (values.actualAmountPaying[coin]) {
+									newPouch[coin] = (newPouch[coin] || 0) - values.actualAmountPaying[coin];
+								}
+							}
+							for (const pouchKey in values.change) {
+								const coin: Coin = pouchKey as Coin;
+								if (values.change[coin]) {
+									newPouch[coin] = (newPouch[coin] || 0) + values.change[coin];
+								}
+							}
+							performUpdate = true;
 						}
 						if (performUpdate) {
 							update({
@@ -92,7 +137,7 @@ export default function MoneyPopup({ renderKey, mutation, coinPouch }: Props): J
 					}}
 				>
 					<Form id="moneyPopup">
-						<Stack py={2} spacing={2}>
+						<Box py={2}>
 							{mutation === 'lose' && (
 								<>
 									<Typography>In your pouch you have:</Typography>
@@ -110,12 +155,17 @@ export default function MoneyPopup({ renderKey, mutation, coinPouch }: Props): J
 											<Typography>{coinPouch.platinum || 0} pp</Typography>
 										</Grid>
 									</Grid>
-									<Typography>You have to have lost: </Typography>
+									<Typography pt={2}>You have to have lost:</Typography>
 								</>
 							)}
-							<MoneyPopupForm modelField="toPay" />
-							{noExactChange && <MoneyPopupForm modelField="paying" />}
-						</Stack>
+							<ActualMutationForm />
+							{!hasExactChange && (
+								<>
+									<Typography pt={2}>You don't have exact change. What will you pay with?</Typography>
+									<ActualAmountPayingForm coinPouch={coinPouch} />
+								</>
+							)}
+						</Box>
 					</Form>
 				</Formik>
 			</DialogContent>
