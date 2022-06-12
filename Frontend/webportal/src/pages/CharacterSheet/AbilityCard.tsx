@@ -15,7 +15,9 @@ function AbilityCard({ character, ability }: Props): JSX.Element {
 	return (
 		<Paper sx={{ width: { xs: '100%', md: '60%' } }}>
 			<Box display="flex" flexDirection="column" alignItems="center">
-				<Typography fontSize={20}>{getAbilityCode(ability)}</Typography>
+				<Typography fontSize={20} whiteSpace="nowrap" textOverflow="ellipsis" overflow="hidden">
+					{getAbilityCode(ability)}
+				</Typography>
 				<Typography fontSize={40} width="100%" textAlign="center">
 					{displayModifier(getAbilityModifier(character, ability))}
 				</Typography>
