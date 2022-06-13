@@ -32,32 +32,32 @@ function Money({ character }: Props): JSX.Element {
 	return (
 		<Stack spacing={1} sx={{ fontVariantNumeric: 'tabular-nums' }}>
 			<CharacterSheetSectionHeader title="Money" />
-			<Box display="flex" px={8}>
+			<Box display="flex" px={2}>
 				<Typography>Copper</Typography>
 				<Box flexGrow={1} />
 				<Typography>{character.copper}</Typography>
 			</Box>
-			<Box display="flex" px={8}>
+			<Box display="flex" px={2}>
 				<Typography>Silver</Typography>
 				<Box flexGrow={1} />
 				<Typography marginRight="10px">{character.silver}</Typography>
 			</Box>
-			<Box display="flex" px={8}>
+			<Box display="flex" px={2}>
 				<Typography>Gold</Typography>
 				<Box flexGrow={1} />
 				<Typography marginRight="20px">{character.gold}</Typography>
 			</Box>
-			<Box display="flex" px={8}>
+			<Box display="flex" px={2}>
 				<Typography>Platinum</Typography>
 				<Box flexGrow={1} />
 				<Typography marginRight="30px">{character.platinum}</Typography>
 			</Box>
-			<Box display="flex" px={8} border="1px solid" borderRadius={1}>
+			<Box display="flex" px={2} border="1px solid" borderRadius={1}>
 				<Typography>Total</Typography>
 				<Box flexGrow={1} />
 				<Typography marginRight="-2px">{total.toFixed(2)}</Typography>
 			</Box>
-			<Box display="flex" px={8} justifyContent="flex-end">
+			<Box display="flex" px={2} justifyContent="flex-end">
 				<Button color="error" variant="outlined" onClick={() => mutateMoney('lose')} sx={{ mr: 1 }}>
 					Lose
 				</Button>

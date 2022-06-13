@@ -3,7 +3,7 @@ import { useFormikContext } from 'formik';
 
 import { Ability } from '../types/Ability';
 import { Character } from '../types/Character';
-import { displayModifier, getAbilityCode, getAbilityModifier, getAbilityScore } from '../utils';
+import { displayModifier, getAbilityCode, getAbilityModifierForCharacter, getAbilityScore } from '../utils';
 import ReadOnlyField from './ReadOnlyField';
 
 interface Props {
@@ -34,7 +34,7 @@ export function AbilityRow({ ability }: Props): JSX.Element {
 				<ReadOnlyField label="Final score" value={getAbilityScore(values, ability).toString()} />
 			</Grid>
 			<Grid item xs={2}>
-				<ReadOnlyField label="Modifier" value={displayModifier(getAbilityModifier(values, ability))} />
+				<ReadOnlyField label="Modifier" value={displayModifier(getAbilityModifierForCharacter(values, ability))} />
 			</Grid>
 			<Grid item xs={6} />
 		</>

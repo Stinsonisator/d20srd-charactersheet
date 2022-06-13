@@ -1,11 +1,11 @@
 import { Grid } from '@mui/material';
 
 import CharacterSheetSectionHeader from '../../components/CharacterSheetSectionHeader';
-import { Character } from '../../types/Character';
+import { CharacterSheetData } from '../../types/CharacterSheetData';
 import SavingThrowCard from './SavingThrowCard';
 
 interface Props {
-	character: Character;
+	character: CharacterSheetData;
 }
 
 function SavingThrows({ character }: Props): JSX.Element {

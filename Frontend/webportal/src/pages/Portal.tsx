@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { HashRouter, NavLink, Route, Routes } from 'react-router-dom';
 
-import { AppBar, Button, Container, GlobalStyles, Toolbar, Tooltip, Typography } from '@mui/material';
+import { useAuth0 } from '@auth0/auth0-react';
+import { AppBar, Avatar, Box, Button, Container, GlobalStyles, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@mui/material';
 import map from 'lodash/map';
 
 import { useAppSelector } from '../utils/hooks';
@@ -31,7 +32,10 @@ const globalStyles = (
 );
 
 function Portal() {
+	const { user, logout } = useAuth0();
+	const [userMenuOpen, setUserMenuOpen] = useState(false);
 	const globalComponents = useAppSelector((state) => state.globalComponents.components);
+	const userButtonRef = useRef<HTMLButtonElement>();
 
 	return (
 		<HashRouter>
@@ -52,6 +56,34 @@ function Portal() {
 					<Button component={NavLink} to="/masterdata" color="inherit">
 						Masterdata
 					</Button>
+					<Box flexGrow={1} />
+					<Box sx={{ flexGrow: 0 }}>
+						<Tooltip title="Open settings">
+							<IconButton ref={userButtonRef} onClick={() => setUserMenuOpen(true)}>
+								<Avatar alt={user.nickname} src={user.picture} />
+							</IconButton>
+						</Tooltip>
+						<Menu
+							sx={{ mt: '45px' }}
+							id="menu-appbar"
+							anchorEl={userButtonRef.current}
+							anchorOrigin={{
+								vertical: 'top',
+								horizontal: 'right'
+							}}
+							keepMounted
+							transformOrigin={{
+								vertical: 'top',
+								horizontal: 'right'
+							}}
+							open={userMenuOpen}
+							onClose={() => setUserMenuOpen(false)}
+						>
+							<MenuItem onClick={() => logout()}>
+								<Typography textAlign="center">Log out</Typography>
+							</MenuItem>
+						</Menu>
+					</Box>
 				</Toolbar>
 			</AppBar>
 			{map(globalComponents, (component, key) => (

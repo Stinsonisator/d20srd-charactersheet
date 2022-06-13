@@ -19,7 +19,7 @@ function SkillCard({ character, skill }: Props): JSX.Element {
 	return (
 		<Paper sx={{ width: '100%' }}>
 			<Box py={1} display="flex" flexDirection="row" justifyContent="space-around" sx={{ opacity: skillModifier !== null ? 1 : 0.3 }}>
-				<Typography pl={2} flexGrow={1}>
+				<Typography pl={2} flexGrow={1} whiteSpace="nowrap" textOverflow="ellipsis" overflow="hidden">
 					{skill.name}
 				</Typography>
 				<Typography width={40}>{skillModifier !== null ? displayModifier(skillModifier) : '/'}</Typography>

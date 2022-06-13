@@ -1,10 +1,10 @@
 import Grid from '@mui/material/Grid';
 
-import { Character } from '../../types/Character';
+import { CharacterSheetData } from '../../types/CharacterSheetData';
 import AbilityCard from './AbilityCard';
 
 interface Props {
-	character: Character;
+	character: CharacterSheetData;
 }
 
 function Abilities({ character }: Props): JSX.Element {

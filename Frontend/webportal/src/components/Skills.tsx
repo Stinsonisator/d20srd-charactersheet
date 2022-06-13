@@ -16,6 +16,9 @@ function Skills() {
 				<Grid item xs={2} sx={{ display: 'flex', alignItems: 'center' }}>
 					<Typography>Skill</Typography>
 				</Grid>
+				<Grid item xs={2} sx={{ display: 'flex', alignItems: 'center' }}>
+					<Typography>Ability</Typography>
+				</Grid>
 				<Grid item xs={1} sx={{ display: 'flex', alignItems: 'center' }}>
 					<Typography>Untrained</Typography>
 				</Grid>
@@ -28,11 +31,11 @@ function Skills() {
 				<Grid item xs={1} sx={{ display: 'flex', alignItems: 'center' }}>
 					<Typography>Class skill</Typography>
 				</Grid>
-				<Grid item xs={6} sx={{ display: 'flex', alignItems: 'center' }}>
+				<Grid item xs={4} sx={{ display: 'flex', alignItems: 'center' }}>
 					<Typography>Ranks</Typography>
 				</Grid>
 				{map(orderBy(data, 'name'), (skill) => (
-					<SkillRow skill={skill} />
+					<SkillRow key={`skill_${skill.id}`} skill={skill} />
 				))}
 			</Grid>
 		</>

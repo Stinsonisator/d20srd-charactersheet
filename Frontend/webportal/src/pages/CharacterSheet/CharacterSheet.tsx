@@ -8,6 +8,7 @@ import Stack from '@mui/material/Stack';
 import { useGetCharacterQuery, useGetSkillsQuery } from '../../services/api';
 import { globalRender } from '../../services/globalRenderSlice';
 import { getMaxHp } from '../../utils';
+import { calculateCharacterSheetData } from '../../utils/calculations';
 import { useAppDispatch } from '../../utils/hooks';
 import Abilities from './Abilities';
 import DamagePopup from './DamagePopup';
@@ -38,6 +39,11 @@ export function CharacterSheet(): JSX.Element {
 	} = useGetCharacterQuery(id ? parseInt(id) : -1, { skip: !Boolean(id) });
 	const { error: skillsError, isLoading: areSkillsLoading } = useGetSkillsQuery();
 	const reduxDispatch = useAppDispatch();
+
+	const characterSheetData = useMemo(() => {
+		if (character) return calculateCharacterSheetData(character);
+		return undefined;
+	}, [character]);
 
 	const maxHp = useMemo(() => {
 		if (character) return getMaxHp(character);
@@ -112,10 +118,10 @@ export function CharacterSheet(): JSX.Element {
 								0: (
 									<Grid container spacing={2} columns={6}>
 										<Grid item xs={6}>
-											<Abilities character={character} />
+											<Abilities character={characterSheetData} />
 										</Grid>
 										<Grid item xs={6} md={1}>
-											<SavingThrows character={character} />
+											<SavingThrows character={characterSheetData} />
 										</Grid>
 										<Grid item xs>
 											<Skills character={character} />

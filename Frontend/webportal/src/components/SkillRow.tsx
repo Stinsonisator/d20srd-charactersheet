@@ -7,7 +7,7 @@ import some from 'lodash/some';
 
 import { Character } from '../types/Character';
 import { Skill } from '../types/Skill';
-import { displayModifier, getAbilityModifier } from '../utils';
+import { displayModifier, getAbilityCode, getAbilityModifierForCharacter } from '../utils';
 
 interface Props {
 	skill: Skill;
@@ -19,7 +19,7 @@ function CharacterSkillRow({ skill }: Props): JSX.Element {
 	const classSkill = useMemo(() => some(values.characterClass.classSkills, { skillId: skill.id }), [skill.id, values.characterClass.classSkills]);
 
 	const abilityModifier = useMemo(() => {
-		return getAbilityModifier(values, skill.keyAbility);
+		return getAbilityModifierForCharacter(values, skill.keyAbility);
 	}, [skill.keyAbility, values]);
 
 	const characterSkill = useMemo(() => find(values.skills, { skillId: skill.id }), [skill.id, values.skills]);
@@ -62,6 +62,9 @@ function CharacterSkillRow({ skill }: Props): JSX.Element {
 			<Grid item xs={2} sx={{ display: 'flex', alignItems: 'center' }}>
 				<Typography>{skill.name}</Typography>
 			</Grid>
+			<Grid item xs={2} sx={{ display: 'flex', alignItems: 'center' }}>
+				<Typography>{getAbilityCode(skill.keyAbility)}</Typography>
+			</Grid>
 			<Grid item xs={1}>
 				<Checkbox checked={skill.untrained} />
 			</Grid>
@@ -78,7 +81,7 @@ function CharacterSkillRow({ skill }: Props): JSX.Element {
 					onChange={(_event, checked) => onChangeCountAsClassSkill(checked)}
 				/>
 			</Grid>
-			<Grid item xs={6} sx={{ display: 'flex', alignItems: 'center' }}>
+			<Grid item xs={4} sx={{ display: 'flex', alignItems: 'center' }}>
 				<TextField type="number" value={characterSkill?.points || null} onChange={onChangePoints} />
 			</Grid>
 		</>

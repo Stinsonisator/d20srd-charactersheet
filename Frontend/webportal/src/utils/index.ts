@@ -1,13 +1,10 @@
 import filter from 'lodash/filter';
 import find from 'lodash/find';
-import findLast from 'lodash/findLast';
-import orderBy from 'lodash/orderBy';
 import reduce from 'lodash/reduce';
 import some from 'lodash/some';
 import sumBy from 'lodash/sumBy';
 
 import { Abilities, Ability } from '../types/Ability';
-import { SavingThrowModifiers } from '../types/BusinessRule';
 import { Character } from '../types/Character';
 import { Skill } from '../types/Skill';
 
@@ -27,31 +24,9 @@ export function getAbilityScore(character: Character, ability: Ability): number 
 	return character[ability] + (bonus ?? 0);
 }
 
-export function getAbilityModifier(character: Character, ability: Ability): number {
+export function getAbilityModifierForCharacter(character: Character, ability: Ability): number {
 	const score = getAbilityScore(character, ability);
 	return Math.floor((score - 10) / 2);
-}
-
-export function getSavingThrowModifier(character: Character, savingThrow: keyof SavingThrowModifiers): number {
-	const savingThrowModifiers = findLast(
-		orderBy(character.characterClass?.traits, 'level'),
-		(trait) => trait.level <= (character.levels.length || 1) && 'fortitude' in trait.rule
-	)?.rule as SavingThrowModifiers;
-	let classBonus = 0;
-	if (savingThrowModifiers) {
-		classBonus = savingThrowModifiers[savingThrow];
-	}
-	let ability: Ability = 'constitution';
-	switch (savingThrow) {
-		case 'reflex':
-			ability = 'dexterity';
-			break;
-		case 'will':
-			ability = 'wisdom';
-			break;
-	}
-
-	return classBonus + getAbilityModifier(character, ability);
 }
 
 export function getSkillModifier(character: Character, skill: Skill): number {
@@ -60,7 +35,7 @@ export function getSkillModifier(character: Character, skill: Skill): number {
 		return null;
 	}
 
-	const abilityModifier = getAbilityModifier(character, skill.keyAbility);
+	const abilityModifier = getAbilityModifierForCharacter(character, skill.keyAbility);
 	let skillModifier = 0;
 	if (characterSkill?.countAsClassSkill || some(character.characterClass.classSkills, { skillId: skill.id })) {
 		skillModifier = characterSkill?.points ?? 0;
@@ -88,7 +63,7 @@ export function getAbilityCode(ability: Ability): string {
 }
 
 export function getMaxHp(character: Character): number {
-	return sumBy(character.levels, 'hp') + getAbilityModifier(character, 'constitution') * character.levels.length;
+	return sumBy(character.levels, 'hp') + getAbilityModifierForCharacter(character, 'constitution') * character.levels.length;
 }
 
 function getPointBuyPoints(abilityScore: number): number {
