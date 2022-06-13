@@ -75,7 +75,7 @@ function getSavingThrowModifier(
 		calculationSteps: [
 			{
 				value: abilityModifier,
-				description: `${capitalize(ability)} score`
+				description: `${capitalize(ability)} modifier`
 			}
 		]
 	};
