@@ -30,6 +30,9 @@ function Traits(): JSX.Element {
 						saveTrait={(newTrait) => {
 							if (!newTrait.id) {
 								newTrait.id = (minBy(values.traits, 'id')?.id ?? 0) - 1;
+								if (newTrait.id > 0) {
+									newTrait.id = -1;
+								}
 								arrayHelpers.push(newTrait);
 							} else {
 								arrayHelpers.replace(findIndex(values.traits, { id: newTrait.id }), newTrait);
