@@ -34,8 +34,11 @@ function CalculationResultPopover({ anchorRef, open, onClose, title, calculation
 				</Typography>
 				{map(calculationSteps, (step, index) => (
 					<Box key={`${title}_step_${index}`} display="flex" justifyContent="space-between">
-						<Typography mr={2}>{step.description}:</Typography>
-						<Typography>{step.value}</Typography>
+						<Typography>
+							{step.description}
+							{step.value !== undefined ? ':' : ''}
+						</Typography>
+						{step.value !== undefined && <Typography ml={2}>{step.value}</Typography>}
 					</Box>
 				))}
 			</Box>

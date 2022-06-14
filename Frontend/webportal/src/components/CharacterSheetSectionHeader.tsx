@@ -1,13 +1,26 @@
+import { ReactNode } from 'react';
+
 import { Box, Typography } from '@mui/material';
 
 interface Props {
-	title: string;
+	leftElement?: ReactNode;
+	title: ReactNode;
+	rightElement?: ReactNode;
 }
 
-function CharacterSheetSectionHeader({ title }: Props): JSX.Element {
+function CharacterSheetSectionHeader({ leftElement, title, rightElement }: Props): JSX.Element {
 	return (
-		<Box py={1} display="flex" justifyContent="center" borderRadius={2} sx={(theme) => ({ backgroundColor: theme.palette.secondary.light })}>
+		<Box
+			py={1}
+			px={2}
+			display="flex"
+			justifyContent="space-between"
+			borderRadius={2}
+			sx={(theme) => ({ backgroundColor: theme.palette.secondary.light })}
+		>
+			{leftElement || <Box />}
 			<Typography>{title}</Typography>
+			{rightElement || <Box />}
 		</Box>
 	);
 }

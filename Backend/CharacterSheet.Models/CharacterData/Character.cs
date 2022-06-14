@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Nodes;
 using CharacterSheet.Models.Enums;
 using CharacterSheet.Models.Interfaces;
 using CharacterSheet.Models.MasterData;
@@ -59,4 +60,6 @@ public class Character : IEntity
 	public IEnumerable<CharacterSkill> Skills { get; set; }
 
     public IEnumerable<CharacterLevel> Levels { get; set; }
+
+	public JsonObject CustomValues { get; set; }
 }

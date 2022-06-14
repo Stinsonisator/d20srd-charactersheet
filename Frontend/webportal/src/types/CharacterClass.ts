@@ -1,4 +1,4 @@
-import { AbilityAdjustment, BaseAttackBonus, SavingThrowModifiers } from './BusinessRule';
+import { AbilityAdjustment, BaseAttackBonus, FlatPointsPool, PowerPointsPool, SavingThrowModifiers } from './BusinessRule';
 import { Skill } from './Skill';
 
 export interface CharacterClassSkill {
@@ -8,7 +8,7 @@ export interface CharacterClassSkill {
 	skill?: Skill;
 }
 
-type TraitRule = AbilityAdjustment | BaseAttackBonus | SavingThrowModifiers;
+type TraitRule = AbilityAdjustment | BaseAttackBonus | SavingThrowModifiers | FlatPointsPool | PowerPointsPool;
 
 export interface CharacterClassTrait {
 	id: number;

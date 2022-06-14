@@ -1,13 +1,13 @@
 import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { Alert, Avatar, Box, CircularProgress, GlobalStyles, Icon, IconButton, Tab, Tabs, Typography } from '@mui/material';
+import { Alert, Avatar, Box, GlobalStyles, Icon, IconButton, Tab, Tabs, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 
+import Loader from '../../components/Loader';
 import { useGetCharacterQuery, useGetSkillsQuery } from '../../services/api';
 import { globalRender } from '../../services/globalRenderSlice';
-import { getMaxHp } from '../../utils';
 import { calculateCharacterSheetData } from '../../utils/calculations';
 import { useAppDispatch } from '../../utils/hooks';
 import Abilities from './Abilities';
@@ -16,6 +16,8 @@ import HealPopup from './HealPopup';
 import Money from './Money';
 import SavingThrows from './SavingThrows';
 import Skills from './Skills';
+import map from 'lodash/map';
+import PoolPopup from './PoolPopup';
 
 const globalStyles = (
 	<GlobalStyles
@@ -37,18 +39,13 @@ export function CharacterSheet(): JSX.Element {
 		error: characterError,
 		isLoading: characterIsLoading
 	} = useGetCharacterQuery(id ? parseInt(id) : -1, { skip: !Boolean(id) });
-	const { error: skillsError, isLoading: areSkillsLoading } = useGetSkillsQuery();
+	const { error: skillsError, isLoading: areSkillsLoading, isSuccess: skillsSuccesfullyLoaded, data: skills } = useGetSkillsQuery();
 	const reduxDispatch = useAppDispatch();
 
 	const characterSheetData = useMemo(() => {
-		if (character) return calculateCharacterSheetData(character);
+		if (character && skillsSuccesfullyLoaded) return calculateCharacterSheetData(character, skills);
 		return undefined;
-	}, [character]);
-
-	const maxHp = useMemo(() => {
-		if (character) return getMaxHp(character);
-		return 0;
-	}, [character]);
+	}, [character, skills, skillsSuccesfullyLoaded]);
 
 	function showDamagePopup() {
 		reduxDispatch(globalRender({ key: 'damagePopup', component: <DamagePopup renderKey="damagePopup" character={character} /> }));
@@ -58,17 +55,22 @@ export function CharacterSheet(): JSX.Element {
 		reduxDispatch(globalRender({ key: 'healPopup', component: <HealPopup renderKey="healPopup" character={character} /> }));
 	}
 
+	function showPoolPopup(poolName: string) {
+		reduxDispatch(
+			globalRender({
+				key: `poolPopUp_${poolName}`,
+				component: <PoolPopup renderKey={`poolPopUp_${poolName}`} character={character} poolName={poolName} />
+			})
+		);
+	}
+
 	return (
 		<>
 			{globalStyles}
-			{(characterIsLoading || areSkillsLoading) && (
-				<Box sx={{ display: 'flex', justifyContent: 'center' }}>
-					<CircularProgress />
-				</Box>
-			)}
+			{(characterIsLoading || areSkillsLoading) && <Loader />}
 			{characterError && <Alert severity="error">An error happened fetching the character.</Alert>}
 			{skillsError && <Alert severity="error">An error happened fetching the skills.</Alert>}
-			{character && (
+			{characterSheetData && (
 				<Stack spacing={1} sx={{ my: 1 }}>
 					<Grid
 						container
@@ -81,21 +83,21 @@ export function CharacterSheet(): JSX.Element {
 						})}
 					>
 						<Grid item xs={1}>
-							<Avatar src={character.image} />
+							<Avatar src={characterSheetData.image} />
 						</Grid>
 						<Grid item xs={2} md={1} display="flex" alignItems="center">
 							<Typography fontSize={25} fontWeight="bold">
-								{character.name}
+								{characterSheetData.name}
 							</Typography>
 						</Grid>
 						<Grid item xs={4} display="flex" alignItems="center">
 							<Typography textAlign="center">Lethal: </Typography>
 							<Typography textAlign="center" fontSize={25} mr={1}>
-								{maxHp - character.lethalDamage}/{maxHp}
+								{characterSheetData.maxHp - characterSheetData.lethalDamage}/{characterSheetData.maxHp}
 							</Typography>
 							<Typography textAlign="center">Nonlethal: </Typography>
 							<Typography textAlign="center" fontSize={25}>
-								{maxHp - character.nonlethalDamage}/{maxHp}
+								{characterSheetData.maxHp - characterSheetData.nonlethalDamage}/{characterSheetData.maxHp}
 							</Typography>
 							<IconButton color="error" onClick={showDamagePopup}>
 								<Icon className="fa-skull-crossbones" />
@@ -104,6 +106,24 @@ export function CharacterSheet(): JSX.Element {
 								<Icon className="fa-hand-holding-medical" />
 							</IconButton>
 						</Grid>
+						{map(characterSheetData.pools, (pool) => (
+							<Grid item xs={2} display="flex" alignItems="center">
+								<Typography textAlign="center">{pool.name}: </Typography>
+								<Typography textAlign="center" fontSize={25} mr={1}>
+									{pool.remaining}/{pool.total}
+								</Typography>
+								{pool.remaining >= pool.total && (
+									<IconButton color="error" onClick={() => showPoolPopup(pool.name)}>
+										<Icon className="fa-minus" />
+									</IconButton>
+								)}
+								{pool.remaining <= 0 && (
+									<IconButton color="success" onClick={() => showPoolPopup(pool.name)}>
+										<Icon className="fa-plus" />
+									</IconButton>
+								)}
+							</Grid>
+						))}
 					</Grid>
 					<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
 						<Tabs value={currentTab} onChange={(_event, newValue) => setCurrentTab(newValue)}>
@@ -124,7 +144,7 @@ export function CharacterSheet(): JSX.Element {
 											<SavingThrows character={characterSheetData} />
 										</Grid>
 										<Grid item xs>
-											<Skills character={character} />
+											<Skills character={characterSheetData} />
 										</Grid>
 									</Grid>
 								),

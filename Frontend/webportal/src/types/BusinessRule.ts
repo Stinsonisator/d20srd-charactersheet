@@ -14,3 +14,14 @@ export interface SavingThrowModifiers {
 	reflex: number;
 	will: number;
 }
+
+export interface FlatPointsPool {
+	poolName: string;
+	max: number;
+}
+
+export interface PowerPointsPool {
+	poolName: string;
+	base: number;
+	keyAbility: Ability;
+}

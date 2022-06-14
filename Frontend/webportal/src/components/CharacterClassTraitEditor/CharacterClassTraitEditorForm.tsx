@@ -6,9 +6,11 @@ import { useFormikContext } from 'formik';
 import { CharacterClassTrait } from '../../types/CharacterClass';
 import AbilityAdjustmentRule from './AbilityAdjustmentRule';
 import BaseAttackBonusRule from './BaseAttackBonusRule';
+import FlatPointsPoolRule from './FlatPointsPoolRule';
+import PowerPointsPoolRule from './PowerPointsPoolRule';
 import SavingThrowModifiersRule from './SavingThrowModifiersRule';
 
-function CharacterClassTraitEditorContent() {
+function CharacterClassTraitEditorForm() {
 	const { values, errors, touched, handleChange, handleBlur, setFieldValue } = useFormikContext<CharacterClassTrait>();
 	const firstField = useRef<HTMLInputElement>();
 
@@ -16,13 +18,19 @@ function CharacterClassTraitEditorContent() {
 		firstField.current?.focus();
 	}, []);
 
-	function getTraitType(traitToCheck: CharacterClassTrait): 'abilityAdjustment' | 'baseAttackBonus' | 'savingThrowModifiers' {
+	function getTraitType(
+		traitToCheck: CharacterClassTrait
+	): 'abilityAdjustment' | 'baseAttackBonus' | 'savingThrowModifiers' | 'flatPointsPool' | 'powerPointsPool' {
 		if ('ability' in traitToCheck.rule) {
 			return 'abilityAdjustment';
 		} else if ('baseAttackBonus' in traitToCheck.rule) {
 			return 'baseAttackBonus';
+		} else if ('fortitude' in traitToCheck.rule) {
+			return 'savingThrowModifiers';
+		} else if ('name' in traitToCheck.rule && 'max' in traitToCheck.rule) {
+			return 'flatPointsPool';
 		}
-		return 'savingThrowModifiers';
+		return 'powerPointsPool';
 	}
 
 	return (
@@ -83,6 +91,19 @@ function CharacterClassTraitEditorContent() {
 									will: 0
 								});
 								break;
+							case 'flatPointsPool':
+								setFieldValue('rule', {
+									name: '',
+									max: 0
+								});
+								break;
+							case 'powerPointsPool':
+								setFieldValue('rule', {
+									name: '',
+									base: 0,
+									keyAbility: 'intelligence'
+								});
+								break;
 						}
 					}}
 					required
@@ -90,17 +111,21 @@ function CharacterClassTraitEditorContent() {
 					<MenuItem value="abilityAdjustment">Ability adjustment</MenuItem>
 					<MenuItem value="baseAttackBonus">Base attack bonus</MenuItem>
 					<MenuItem value="savingThrowModifiers">Saving throw modifiers</MenuItem>
+					<MenuItem value="flatPointsPool">Flat points pool</MenuItem>
+					<MenuItem value="powerPointsPool">Power points pool</MenuItem>
 				</TextField>
 			</Grid>
 			{
 				{
 					abilityAdjustment: <AbilityAdjustmentRule />,
 					baseAttackBonus: <BaseAttackBonusRule />,
-					savingThrowModifiers: <SavingThrowModifiersRule />
+					savingThrowModifiers: <SavingThrowModifiersRule />,
+					flatPointsPool: <FlatPointsPoolRule />,
+					powerPointsPool: <PowerPointsPoolRule />
 				}[getTraitType(values)]
 			}
 		</Grid>
 	);
 }
 
-export default CharacterClassTraitEditorContent;
+export default CharacterClassTraitEditorForm;

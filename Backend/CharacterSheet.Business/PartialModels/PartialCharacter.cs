@@ -1,3 +1,5 @@
+using System.Text.Json.Nodes;
+
 namespace CharacterSheet.Business.Interfaces;
 
 public class PartialCharacter
@@ -15,4 +17,6 @@ public class PartialCharacter
     public int? Gold { get; set; }
 
     public int? Platinum { get; set; }
+
+    public JsonObject CustomValues { get; set; }
 }

@@ -12,9 +12,8 @@ import { Form, Formik, FormikErrors } from 'formik';
 import { useDispatch } from 'react-redux';
 
 import { globalDerender } from '../../services/globalRenderSlice';
-import { AbilityAdjustment } from '../../types/BusinessRule';
 import { CharacterClassTrait } from '../../types/CharacterClass';
-import CharacterClassTraitEditorContent from './CharacterClassTraitEditorContent';
+import CharacterClassTraitEditorForm from './CharacterClassTraitEditorForm';
 
 interface Props {
 	renderKey: string;
@@ -31,14 +30,6 @@ function validate(values: CharacterClassTrait): FormikErrors<CharacterClassTrait
 	}
 	if (!values.level) {
 		errors.level = 'Required';
-	}
-	if ('ability' in values.rule) {
-		if (!values.rule.ability) {
-			(errors.rule as FormikErrors<AbilityAdjustment>).ability = 'Required';
-		}
-		if (!values.rule.adjustment) {
-			(errors.rule as FormikErrors<AbilityAdjustment>).ability = 'Required';
-		}
 	}
 
 	return errors;
@@ -85,7 +76,7 @@ function CharacterClassTraitEditor({ renderKey, characterClassId, trait, saveTra
 					enableReinitialize
 				>
 					<Form id="traitEditor">
-						<CharacterClassTraitEditorContent />
+						<CharacterClassTraitEditorForm />
 					</Form>
 				</Formik>
 			</DialogContent>

@@ -32,6 +32,14 @@ export interface Character {
 	platinum?: number;
 	skills: CharacterSkill[];
 	levels: CharacterLevel[];
+	customValues?: CharacterCustomValues;
+}
+
+export interface CharacterCustomValues {
+	poolPointsUsed: {
+		poolName: string;
+		value: number;
+	}[];
 }
 
 export interface CharacterSkill {

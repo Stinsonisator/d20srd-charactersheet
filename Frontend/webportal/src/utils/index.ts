@@ -2,7 +2,6 @@ import filter from 'lodash/filter';
 import find from 'lodash/find';
 import reduce from 'lodash/reduce';
 import some from 'lodash/some';
-import sumBy from 'lodash/sumBy';
 
 import { Abilities, Ability } from '../types/Ability';
 import { Character } from '../types/Character';
@@ -60,10 +59,6 @@ export function getAbilityCode(ability: Ability): string {
 		case 'charisma':
 			return 'CHA';
 	}
-}
-
-export function getMaxHp(character: Character): number {
-	return sumBy(character.levels, 'hp') + getAbilityModifierForCharacter(character, 'constitution') * character.levels.length;
 }
 
 function getPointBuyPoints(abilityScore: number): number {

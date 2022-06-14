@@ -12,6 +12,7 @@ public class CharacterConfiguration : IEntityTypeConfiguration<Character>
     public void Configure(EntityTypeBuilder<Character> builder)
     {
         builder.Property(c => c.Race).HasConversion(new EnumToStringConverter<Race>());
+        builder.Property(c => c.CustomValues).HasColumnType("jsonb");
         builder.OwnsOne(c => c.Size);
     }
 }
