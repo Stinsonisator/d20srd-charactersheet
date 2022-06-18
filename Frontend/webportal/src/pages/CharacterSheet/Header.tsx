@@ -1,8 +1,11 @@
+import { useAuth0 } from '@auth0/auth0-react';
+import { Icon, IconButton } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import map from 'lodash/map';
 
+import { useGetCharacterQuery } from '../../services/api';
 import { globalRender } from '../../services/globalRenderSlice';
 import { Character } from '../../types/Character';
 import { CharacterSheetData } from '../../types/CharacterSheetData';
@@ -16,6 +19,8 @@ interface Props {
 }
 
 function Header({ character, characterSheetData }: Props): JSX.Element {
+	const { refetch } = useGetCharacterQuery(character.id);
+	const { user } = useAuth0();
 	const reduxDispatch = useAppDispatch();
 
 	function showHitPointPopup() {
@@ -41,7 +46,14 @@ function Header({ character, characterSheetData }: Props): JSX.Element {
 					{characterSheetData.name}
 				</Typography>
 			</Grid>
-			<Grid item xs={2} display="flex" alignItems="center" onClick={showHitPointPopup} sx={{ cursor: 'pointer' }}>
+			<Grid
+				item
+				xs={2}
+				display="flex"
+				alignItems="center"
+				onClick={character.user.userId === user.sub ? showHitPointPopup : undefined}
+				sx={character.user.userId === user.sub ? { cursor: 'pointer' } : undefined}
+			>
 				<Grid container columns={2} boxShadow={3} justifyContent="center">
 					<Grid
 						item
@@ -55,7 +67,7 @@ function Header({ character, characterSheetData }: Props): JSX.Element {
 							Hit points
 						</Typography>
 					</Grid>
-					<Grid item xs={1} pt={0} pb="1px">
+					<Grid item xs={1} pb="1px">
 						<Grid container columns={5} alignItems="center" justifyContent="center" pl={1} pt="3px">
 							<Grid item xs={2}>
 								<Typography fontSize={11} textAlign="center">
@@ -94,7 +106,13 @@ function Header({ character, characterSheetData }: Props): JSX.Element {
 				</Grid>
 			</Grid>
 			{map(characterSheetData.pools, (pool) => (
-				<Grid key={`pool_${pool.name}`} item xs={2} onClick={() => showPoolPopup(pool.name)} sx={{ cursor: 'pointer' }}>
+				<Grid
+					key={`pool_${pool.name}`}
+					item
+					xs={2}
+					onClick={character.user.userId === user.sub ? () => showPoolPopup(pool.name) : undefined}
+					sx={character.user.userId === user.sub ? { cursor: 'pointer' } : undefined}
+				>
 					<Grid container columns={2} boxShadow={3} justifyContent="center" alignItems="center">
 						<Grid
 							item
@@ -128,6 +146,11 @@ function Header({ character, characterSheetData }: Props): JSX.Element {
 					</Grid>
 				</Grid>
 			))}
+			<Grid xs display="flex" justifyContent="flex-end" alignItems="center">
+				<IconButton color="primary" onClick={refetch}>
+					<Icon className="fa-rotate" />
+				</IconButton>
+			</Grid>
 		</Grid>
 	);
 }

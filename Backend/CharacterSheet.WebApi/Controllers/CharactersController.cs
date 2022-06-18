@@ -23,8 +23,7 @@ public class CharactersController : WebApiControllerBase
 	[HttpGet]
 	public async Task<IEnumerable<Character>> Get()
 	{
-		long userId = long.Parse(User.Claims.First(c => c.Type == "internalUserId").Value);
-		return await _characterService.GetCharactersByUserId(userId).ConfigureAwait(false);
+		return await _characterService.GetCharacters().ConfigureAwait(false);
 	}
 
 	[HttpGet("{id:long}")]

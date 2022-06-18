@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
+import { useAuth0 } from '@auth0/auth0-react';
 import {
 	Alert,
 	Box,
@@ -23,6 +24,7 @@ import { globalRender } from '../services/globalRenderSlice';
 import { useAppDispatch } from '../utils/hooks';
 
 export default function CharacterSheet(): JSX.Element {
+	const { user } = useAuth0();
 	const { data, error, isLoading } = useGetCharactersQuery();
 	const [deleteCharacter, result] = useDeleteCharacterMutation();
 	const navigate = useNavigate();
@@ -61,9 +63,9 @@ export default function CharacterSheet(): JSX.Element {
 			{data && (
 				<Grid container spacing={2} columns={{ xs: 1, sm: 2, lg: 12 }}>
 					{map(data, (character) => (
-						<Grid key={`character_${character.id}`} item xs={1} md={3}>
-							<Box sx={{ position: 'relative' }}>
-								<Card sx={{ borderRadius: 3 }}>
+						<Grid key={`character_${character.id}`} item xs={1} md={3} display="flex">
+							<Box sx={{ position: 'relative', flexGrow: 1 }}>
+								<Card sx={{ borderRadius: 3, height: '100%' }}>
 									<CardActionArea onClick={() => goToCharacterSheet(character.id)}>
 										<CardMedia component="img" height="240" image={character.image} alt={character.name} />
 										<CardContent>
@@ -75,14 +77,16 @@ export default function CharacterSheet(): JSX.Element {
 											</Typography>
 										</CardContent>
 									</CardActionArea>
-									<CardActions sx={{ justifyContent: 'flex-end' }}>
-										<IconButton size="small" onClick={() => updateCharacter(character.id)}>
-											<Icon sx={{ fontSize: 14 }} color="primary" className="fa-pen-clip" />
-										</IconButton>
-										<IconButton size="small" onClick={() => deleteCharacter(character.id)}>
-											<Icon sx={{ fontSize: 14 }} color="primary" className="fa-trash" />
-										</IconButton>
-									</CardActions>
+									{character.user.userId === user.sub && (
+										<CardActions sx={{ justifyContent: 'flex-end' }}>
+											<IconButton size="small" onClick={() => updateCharacter(character.id)}>
+												<Icon sx={{ fontSize: 14 }} color="primary" className="fa-pen-clip" />
+											</IconButton>
+											<IconButton size="small" onClick={() => deleteCharacter(character.id)}>
+												<Icon sx={{ fontSize: 14 }} color="primary" className="fa-trash" />
+											</IconButton>
+										</CardActions>
+									)}
 								</Card>
 								{result.isLoading && (
 									<CircularProgress

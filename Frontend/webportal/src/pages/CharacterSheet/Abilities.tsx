@@ -9,7 +9,7 @@ interface Props {
 
 function Abilities({ character }: Props): JSX.Element {
 	return (
-		<Grid container spacing={2} justifyContent="space-around">
+		<Grid container spacing={2} columns={{ xs: 6, sm: 12 }} justifyContent="space-around">
 			<Grid item xs={2} display="flex" justifyContent="center">
 				<AbilityCard character={character} ability="strength" />
 			</Grid>

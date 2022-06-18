@@ -33,6 +33,10 @@ export interface Character {
 	skills: CharacterSkill[];
 	levels: CharacterLevel[];
 	customValues?: CharacterCustomValues;
+	user?: {
+		id: number;
+		userId: string;
+	};
 }
 
 export interface CharacterCustomValues {

@@ -57,6 +57,7 @@ public class CharacterService : ICharacterService
             .Include(c => c.Skills)
             .ThenInclude(c => c.Skill)
             .Include(c => c.Levels)
+            .Include(c => c.User)
             .FirstOrDefaultAsync(c => c.Id == id)
             .ConfigureAwait(false);
 	}
@@ -68,9 +69,17 @@ public class CharacterService : ICharacterService
             .Where(c => c.UserId == userId).ToListAsync().ConfigureAwait(false);
 	}
 
+    public async Task<IEnumerable<Character>> GetCharacters()
+	{
+		return await _databaseContext.Characters
+            .Include(c => c.CharacterClass)
+            .Include(c => c.User)
+            .ToListAsync().ConfigureAwait(false);
+	}
+
 	public async Task<bool> IsAllowed(long id, long userId)
 	{
-		return await _databaseContext.Characters.AnyAsync(c => c.Id == id && c.UserId == userId);
+		return await _databaseContext.Characters.AnyAsync(c => c.Id == id && c.UserId == userId).ConfigureAwait(false);
 	}
 
 	public async Task Update(Character character)

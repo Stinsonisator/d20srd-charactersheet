@@ -32,7 +32,7 @@ export function CharacterSheet(): JSX.Element {
 	const {
 		data: character,
 		error: characterError,
-		isLoading: characterIsLoading
+		isFetching: characterIsLoading
 	} = useGetCharacterQuery(id ? parseInt(id) : -1, { skip: !Boolean(id) });
 	const { error: skillsError, isLoading: areSkillsLoading, isSuccess: skillsSuccesfullyLoaded, data: skills } = useGetSkillsQuery();
 

@@ -4,7 +4,7 @@ import { Grid, Icon, Stack, Typography } from '@mui/material';
 
 function MasterData() {
 	return (
-		<Grid container spacing={2} columns={{ xs: 2, md: 6, lg: 12 }}>
+		<Grid container spacing={2} columns={{ xs: 2, sm: 6, md: 12 }}>
 			<Grid item xs={2}>
 				<Link to={'/masterdata/skills'} style={{ textDecoration: 'none' }}>
 					<Stack

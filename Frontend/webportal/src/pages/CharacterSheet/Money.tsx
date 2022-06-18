@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 
+import { useAuth0 } from '@auth0/auth0-react';
 import { Box, Button, Stack, Typography } from '@mui/material';
 
 import CharacterSheetSectionHeader from '../../components/CharacterSheetSectionHeader';
@@ -9,10 +10,11 @@ import { useAppDispatch } from '../../utils/hooks';
 import MoneyPopup from './MoneyPopup';
 
 interface Props {
-	character: CoinPouch;
+	character: CoinPouch & { user?: { userId: string } };
 }
 
 function Money({ character }: Props): JSX.Element {
+	const { user } = useAuth0();
 	const reduxDispatch = useAppDispatch();
 
 	function mutateMoney(mutation: 'gain' | 'lose'): void {
@@ -57,14 +59,16 @@ function Money({ character }: Props): JSX.Element {
 				<Box flexGrow={1} />
 				<Typography marginRight="-2px">{total.toFixed(2)}</Typography>
 			</Box>
-			<Box display="flex" px={2} justifyContent="flex-end">
-				<Button color="error" variant="outlined" onClick={() => mutateMoney('lose')} sx={{ mr: 1 }}>
-					Lose
-				</Button>
-				<Button color="success" variant="contained" onClick={() => mutateMoney('gain')}>
-					Gain
-				</Button>
-			</Box>
+			{character.user.userId === user.sub && (
+				<Box display="flex" px={2} justifyContent="flex-end">
+					<Button color="error" variant="outlined" onClick={() => mutateMoney('lose')} sx={{ mr: 1 }}>
+						Lose
+					</Button>
+					<Button color="success" variant="contained" onClick={() => mutateMoney('gain')}>
+						Gain
+					</Button>
+				</Box>
+			)}
 		</Stack>
 	);
 }

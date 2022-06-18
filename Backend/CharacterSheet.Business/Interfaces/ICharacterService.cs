@@ -7,6 +7,7 @@ namespace CharacterSheet.Business.Interfaces
     public interface ICharacterService
     {
         Task<IEnumerable<Character>> GetCharactersByUserId(long userId);
+		Task<IEnumerable<Character>> GetCharacters();
 
 		Task<Character> Get(long id);
 
