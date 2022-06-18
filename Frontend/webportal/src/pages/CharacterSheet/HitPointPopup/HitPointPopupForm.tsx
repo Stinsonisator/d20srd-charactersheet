@@ -11,7 +11,7 @@ function HitPointPopupForm() {
 
 	return (
 		<Stack m={2} spacing={1} alignItems="center">
-			<ToggleButtonGroup value={values.mutation} exclusive onChange={(event, value) => setFieldValue('mutation', value)} sx={{ mb: 1 }}>
+			<ToggleButtonGroup value={values.mutation} exclusive onChange={(_event, value) => setFieldValue('mutation', value)} sx={{ mb: 1 }}>
 				<ToggleButton value="damage" color="error">
 					Damage
 				</ToggleButton>

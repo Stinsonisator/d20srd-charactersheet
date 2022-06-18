@@ -32,16 +32,7 @@ function Header({ character, characterSheetData }: Props): JSX.Element {
 	}
 
 	return (
-		<Grid
-			container
-			spacing={1}
-			borderRadius={2}
-			pb={1}
-			sx={(theme) => ({
-				backgroundColor: theme.palette.secondary.light,
-				color: theme.palette.secondary.contrastText
-			})}
-		>
+		<Grid container spacing={1} borderRadius={2} pb={1}>
 			<Grid item xs={1} display="flex" alignItems="center" justifyContent="center">
 				<Avatar src={characterSheetData.image} />
 			</Grid>
@@ -51,8 +42,15 @@ function Header({ character, characterSheetData }: Props): JSX.Element {
 				</Typography>
 			</Grid>
 			<Grid item xs={2} display="flex" alignItems="center" onClick={showHitPointPopup} sx={{ cursor: 'pointer' }}>
-				<Grid container columns={2} borderRadius={2} border="1px solid" justifyContent="center">
-					<Grid item xs={2} borderBottom="1px solid">
+				<Grid container columns={2} boxShadow={3} justifyContent="center">
+					<Grid
+						item
+						xs={2}
+						borderBottom="1px solid"
+						sx={(theme) => ({
+							borderBottomColor: theme.palette.secondary.main
+						})}
+					>
 						<Typography textAlign="center" fontSize={10}>
 							Hit points
 						</Typography>
@@ -60,48 +58,71 @@ function Header({ character, characterSheetData }: Props): JSX.Element {
 					<Grid item xs={1} pt={0} pb="1px">
 						<Grid container columns={5} alignItems="center" justifyContent="center" pl={1} pt="3px">
 							<Grid item xs={2}>
-								<Typography fontSize={12} textAlign="center">
+								<Typography fontSize={11} textAlign="center">
 									L
 								</Typography>
 							</Grid>
 							<Grid item xs={3}>
-								<Typography fontSize={12} textAlign="center">
+								<Typography fontSize={11} textAlign="center">
 									{characterSheetData.maxHp - characterSheetData.lethalDamage}
 								</Typography>
 							</Grid>
 							<Grid item xs={2}>
-								<Typography fontSize={12} textAlign="center">
+								<Typography fontSize={11} textAlign="center">
 									NL
 								</Typography>
 							</Grid>
 							<Grid item xs={3}>
-								<Typography fontSize={12} textAlign="center">
+								<Typography fontSize={11} textAlign="center">
 									{characterSheetData.maxHp - characterSheetData.nonlethalDamage}
 								</Typography>
 							</Grid>
 						</Grid>
 					</Grid>
-					<Grid item xs={1} borderLeft="1px solid" pl={1}>
-						<Typography fontSize={25}>{characterSheetData.maxHp}</Typography>
+					<Grid
+						item
+						xs={1}
+						borderLeft="1px solid"
+						sx={(theme) => ({
+							borderLeftColor: theme.palette.secondary.main
+						})}
+					>
+						<Typography fontSize={25} textAlign="center">
+							{characterSheetData.maxHp}
+						</Typography>
 					</Grid>
 				</Grid>
 			</Grid>
 			{map(characterSheetData.pools, (pool) => (
-				<Grid item xs={2} onClick={() => showPoolPopup(pool.name)} sx={{ cursor: 'pointer' }}>
-					<Grid container columns={2} border="1px solid" borderRadius={2} justifyContent="center" alignItems="center">
-						<Grid item xs={2} borderBottom="1px solid">
+				<Grid key={`pool_${pool.name}`} item xs={2} onClick={() => showPoolPopup(pool.name)} sx={{ cursor: 'pointer' }}>
+					<Grid container columns={2} boxShadow={3} justifyContent="center" alignItems="center">
+						<Grid
+							item
+							xs={2}
+							borderBottom="1px solid"
+							sx={(theme) => ({
+								borderBottomColor: theme.palette.secondary.main
+							})}
+						>
 							<Typography textAlign="center" fontSize={10}>
 								{pool.name}
 							</Typography>
 						</Grid>
-						<Grid item xs={1} borderRight="1px solid">
+						<Grid
+							item
+							xs={1}
+							borderRight="1px solid"
+							sx={(theme) => ({
+								borderRightColor: theme.palette.secondary.main
+							})}
+						>
 							<Typography fontSize={25} textAlign="center">
 								{pool.remaining}
 							</Typography>
 						</Grid>
 						<Grid item xs={1}>
 							<Typography fontSize={25} textAlign="center">
-								{pool.remaining}
+								{pool.total}
 							</Typography>
 						</Grid>
 					</Grid>

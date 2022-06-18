@@ -192,7 +192,7 @@ function getPointPool(trait: CharacterClassTrait, character: CharacterSheetData)
 		if ('max' in trait.rule) {
 			return {
 				name: trait.rule.poolName,
-				remaining: remaining || trait.rule.max,
+				remaining: trait.rule.max - remaining || trait.rule.max,
 				total: trait.rule.max
 			};
 		} else if ('base' in trait.rule) {
@@ -203,7 +203,7 @@ function getPointPool(trait: CharacterClassTrait, character: CharacterSheetData)
 			total += trait.rule.base;
 			return {
 				name: trait.rule.poolName,
-				remaining: remaining || total,
+				remaining: total - remaining || total,
 				total
 			};
 		}

@@ -1,7 +1,9 @@
 import { useCallback } from 'react';
 
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton } from '@mui/material';
 import { Formik, FormikErrors } from 'formik';
+import cloneDeep from 'lodash/cloneDeep';
+import find from 'lodash/find';
 
 import { usePartialUpdateCharacterMutation } from '../../../services/api';
 import { globalDerender } from '../../../services/globalRenderSlice';
@@ -9,7 +11,7 @@ import { Character } from '../../../types/Character';
 import { useAppDispatch } from '../../../utils/hooks';
 import PoolPopupForm from './PoolPopupForm';
 
-export type Heal = { amount?: number };
+export type UsedPoints = { amount?: number; mutation: 'increase' | 'decrease' };
 
 interface Props {
 	renderKey: string;
@@ -17,8 +19,8 @@ interface Props {
 	poolName: string;
 }
 
-function validate(values: Heal): FormikErrors<Heal> {
-	const errors: FormikErrors<Heal> = {};
+function validate(values: UsedPoints): FormikErrors<UsedPoints> {
+	const errors: FormikErrors<UsedPoints> = {};
 
 	if (!values.amount) {
 		errors.amount = 'Required';
@@ -48,21 +50,38 @@ export default function HealPopup({ renderKey, character, poolName }: Props): JS
 				</Box>
 			</DialogTitle>
 			<DialogContent>
-				{/* <Formik
-					initialValues={{}}
+				<Formik
+					initialValues={{ mutation: 'decrease' }}
 					validate={validate}
-					onSubmit={(values: Heal) => {
+					onSubmit={(values: UsedPoints) => {
 						handleClose();
+						let newCustomValues = cloneDeep(character.customValues);
+						if (!newCustomValues) {
+							newCustomValues = {
+								poolPointsUsed: []
+							};
+						}
+						if (!newCustomValues.poolPointsUsed) {
+							newCustomValues.poolPointsUsed = [];
+							newCustomValues.poolPointsUsed.push({ poolName, value: values.amount });
+						} else {
+							const poolPointsUsed = find(newCustomValues.poolPointsUsed, { poolName });
+							if (!poolPointsUsed) {
+								newCustomValues.poolPointsUsed.push({ poolName, value: values.amount });
+							} else if (values.mutation === 'decrease') {
+								poolPointsUsed.value += values.amount;
+							} else {
+								poolPointsUsed.value = Math.max(poolPointsUsed.value - values.amount, 0);
+							}
+						}
 						update({
 							id: character.id,
-							lethalDamage: character.lethalDamage > 0 ? Math.max(character.lethalDamage - values.amount, 0) : undefined,
-							nonlethalDamage: character.nonlethalDamage > 0 ? Math.max(character.nonlethalDamage - values.amount, 0) : undefined
+							customValues: newCustomValues
 						});
 					}}
 				>
 					<PoolPopupForm />
-				</Formik> */}
-				<Typography pt={2}>This does not work yet!</Typography>
+				</Formik>
 			</DialogContent>
 			<DialogActions>
 				<Button onClick={handleClose} variant="outlined">
