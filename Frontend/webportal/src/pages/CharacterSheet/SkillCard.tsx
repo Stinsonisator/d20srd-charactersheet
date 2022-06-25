@@ -24,7 +24,10 @@ function SkillCard({ skill }: Props): JSX.Element {
 				display="flex"
 				flexDirection="row"
 				justifyContent="space-around"
-				sx={{ opacity: skill.modifier.value !== null ? 1 : 0.3 }}
+				sx={(theme) => ({
+					opacity: skill.modifier.value !== null ? 1 : 0.3,
+					color: skill.modifier.conditionalValue ? theme.palette.warning.dark : undefined
+				})}
 				onClick={() => setShowDetails(true)}
 			>
 				<Typography pl={2} flexGrow={1} whiteSpace="nowrap" textOverflow="ellipsis" overflow="hidden">
@@ -38,6 +41,8 @@ function SkillCard({ skill }: Props): JSX.Element {
 				onClose={() => setShowDetails(false)}
 				title={skill.name}
 				calculationSteps={skill.modifier.calculationSteps}
+				conditionalValue={skill.modifier.conditionalValue}
+				conditionalcalculationSteps={skill.modifier.conditionalCalculationSteps}
 			/>
 		</Paper>
 	);

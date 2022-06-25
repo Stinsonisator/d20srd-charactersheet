@@ -14,7 +14,7 @@ import { Ability } from '../types/Ability';
 import { SavingThrowModifiers } from '../types/BusinessRule';
 import { Character, CharacterSkill } from '../types/Character';
 import { CharacterClassTrait } from '../types/CharacterClass';
-import { CalculationResult, CharacterSheetData, CharacterSheetPool } from '../types/CharacterSheetData';
+import { CalculationResult, CharacterSheetData, CharacterSheetPool, SkillCalculationResult } from '../types/CharacterSheetData';
 import { Skill } from '../types/Skill';
 
 export function calculateCharacterSheetData(character: Character, skills: Skill[]): CharacterSheetData {
@@ -128,7 +128,7 @@ function getSavingThrowModifier(character: CharacterSheetData, savingThrow: keyo
 	return result;
 }
 
-function getSkillModifier(character: CharacterSheetData, characterSkills: CharacterSkill[], skill: Skill): CalculationResult {
+function getSkillModifier(character: CharacterSheetData, characterSkills: CharacterSkill[], skill: Skill): SkillCalculationResult {
 	const characterSkill = find(characterSkills, { skillId: skill.id });
 	if (!skill.untrained && (!characterSkill || characterSkill.points <= 0)) {
 		return {
@@ -138,19 +138,21 @@ function getSkillModifier(character: CharacterSheetData, characterSkills: Charac
 					value: undefined,
 					description: 'Untrained not allowed'
 				}
-			]
+			],
+			conditionalCalculationSteps: []
 		};
 	}
 	const abilityModifier = getAbilityModifier(character.abilities[skill.keyAbility].value);
 
-	const result: CalculationResult = {
+	const result: SkillCalculationResult = {
 		value: abilityModifier,
 		calculationSteps: [
 			{
 				value: abilityModifier,
 				description: `${capitalize(skill.keyAbility)} modifier`
 			}
-		]
+		],
+		conditionalCalculationSteps: []
 	};
 
 	if (characterSkill && characterSkill.points) {
@@ -171,6 +173,24 @@ function getSkillModifier(character: CharacterSheetData, characterSkills: Charac
 		});
 	}
 
+	each(orderBy(skill.incomingSkillSyngergies, 'isConditional'), (skillSynergy) => {
+		const sourceCharacterSkill = find(characterSkills, { skillId: skillSynergy.sourceSkillId });
+		console.log(skillSynergy);
+		if (sourceCharacterSkill && sourceCharacterSkill.points >= 5 && !skillSynergy.isConditional) {
+			result.value += 2;
+			result.calculationSteps.push({
+				value: 2,
+				description: `Skill synergy with ${skillSynergy.sourceSkill.name}`
+			});
+		} else if (sourceCharacterSkill && sourceCharacterSkill.points >= 5 && skillSynergy.isConditional) {
+			if (result.value !== result.conditionalValue) result.conditionalValue = result.value + 2;
+			result.conditionalCalculationSteps.push({
+				value: 2,
+				description: `Skill synergy with ${skillSynergy.sourceSkill.name}`,
+				condition: skillSynergy.conditionDescription
+			});
+		}
+	});
 	return result;
 }
 

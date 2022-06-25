@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using CharacterSheet.Business.Interfaces;
 using CharacterSheet.Business;
 using Microsoft.AspNetCore.Authentication;
+using SkillSheet.Business;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,6 +63,7 @@ builder.Services.AddResponseCompression(options =>
 builder.Services.AddTransient<IClaimsTransformation, CustomClaimsTransformation>();
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<ICharacterService, CharacterService>();
 
 var app = builder.Build();

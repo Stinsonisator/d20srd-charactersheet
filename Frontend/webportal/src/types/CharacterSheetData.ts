@@ -8,14 +8,23 @@ export interface CalculationStep {
 	value: CalculationValue;
 }
 
+export interface ConditionalCalculationStep extends CalculationStep {
+	condition: string;
+}
+
 export interface CalculationResult {
 	value: CalculationValue;
 	calculationSteps: CalculationStep[];
 }
 
+export interface SkillCalculationResult extends CalculationResult {
+	conditionalValue?: CalculationValue;
+	conditionalCalculationSteps: ConditionalCalculationStep[];
+}
+
 export interface CharacterSheetSkill {
 	name: string;
-	modifier: CalculationResult;
+	modifier: SkillCalculationResult;
 }
 
 export interface CharacterSheetPool {

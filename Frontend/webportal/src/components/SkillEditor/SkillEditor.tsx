@@ -1,6 +1,6 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton } from '@mui/material';
+import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton, Tab, Tabs } from '@mui/material';
 import { Form, Formik, FormikErrors } from 'formik';
 
 import { useAddSkillMutation, useGetSkillQuery, useUpdateSkillMutation } from '../../services/api';
@@ -9,6 +9,7 @@ import { Skill } from '../../types/Skill';
 import { useAppDispatch } from '../../utils/hooks';
 import Loader from '../Loader';
 import SkillEditorContent from './SkillEditorContent';
+import Synergies from './Synergies';
 
 interface Props {
 	renderKey: string;
@@ -29,6 +30,7 @@ function validate(values: Skill): FormikErrors<Skill> {
 }
 
 export default function SkillEditor({ renderKey, entityId }: Props): JSX.Element {
+	const [currentTab, setCurrentTab] = useState(0);
 	const [addSkill, addResult] = useAddSkillMutation();
 	const [updateSkill, updateResult] = useUpdateSkillMutation();
 	const { isLoading, data: loadResult } = useGetSkillQuery(entityId ?? 0, { skip: Boolean(!entityId) });
@@ -43,6 +45,10 @@ export default function SkillEditor({ renderKey, entityId }: Props): JSX.Element
 			handleClose();
 		}
 	}, [handleClose, addResult.isLoading, addResult.isSuccess, updateResult.isLoading, updateResult.isSuccess]);
+
+	function changeCurrentTab(_event: React.SyntheticEvent, newValue: number) {
+		setCurrentTab(newValue);
+	}
 
 	return (
 		<Dialog onClose={handleClose} open fullWidth maxWidth="lg">
@@ -63,7 +69,8 @@ export default function SkillEditor({ renderKey, entityId }: Props): JSX.Element
 							id: 0,
 							name: '',
 							keyAbility: 'strength',
-							untrained: true
+							untrained: true,
+							outgoingSkillSyngergies: []
 						}
 					}
 					validate={validate}
@@ -78,7 +85,18 @@ export default function SkillEditor({ renderKey, entityId }: Props): JSX.Element
 				>
 					<Form id="skillEditor">
 						{(isLoading || addResult.isLoading || updateResult.isLoading) && <Loader />}
-						<SkillEditorContent />
+						<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+							<Tabs value={currentTab} onChange={changeCurrentTab}>
+								<Tab label="General" />
+								<Tab label="Synergies" />
+							</Tabs>
+						</Box>
+						{
+							{
+								0: <SkillEditorContent />,
+								1: <Synergies />
+							}[currentTab]
+						}
 					</Form>
 				</Formik>
 			</DialogContent>

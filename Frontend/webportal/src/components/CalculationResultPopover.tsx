@@ -1,9 +1,10 @@
-import { MutableRefObject } from 'react';
+import { Fragment, MutableRefObject } from 'react';
 
 import { Box, capitalize, Popover, Typography } from '@mui/material';
 import map from 'lodash/map';
 
-import { CalculationStep } from '../types/CharacterSheetData';
+import { CalculationStep, ConditionalCalculationStep } from '../types/CharacterSheetData';
+import { displayModifier } from '../utils';
 
 interface Props {
 	anchorRef: MutableRefObject<Element>;
@@ -11,9 +12,19 @@ interface Props {
 	onClose: (event: Record<string, unknown>, reason: 'backdropClick' | 'escapeKeyDown') => void;
 	title: string;
 	calculationSteps: CalculationStep[];
+	conditionalValue?: number;
+	conditionalcalculationSteps?: ConditionalCalculationStep[];
 }
 
-function CalculationResultPopover({ anchorRef, open, onClose, title, calculationSteps }: Props): JSX.Element {
+function CalculationResultPopover({
+	anchorRef,
+	open,
+	onClose,
+	title,
+	calculationSteps,
+	conditionalValue,
+	conditionalcalculationSteps
+}: Props): JSX.Element {
 	return (
 		<Popover
 			anchorEl={anchorRef.current}
@@ -41,6 +52,26 @@ function CalculationResultPopover({ anchorRef, open, onClose, title, calculation
 						{step.value !== undefined && <Typography ml={2}>{step.value}</Typography>}
 					</Box>
 				))}
+				{conditionalValue && (
+					<>
+						<Box display="flex" justifyContent="space-between" mt={2} sx={(theme) => ({ color: theme.palette.warning.dark })}>
+							<Typography>Conditional modifier:</Typography>
+							<Typography>{displayModifier(conditionalValue)}</Typography>
+						</Box>
+						{map(conditionalcalculationSteps, (conditionalStep, index) => (
+							<Fragment key={`${title}_conditionalstep_${index}`}>
+								<Box display="flex" justifyContent="space-between" mt={index > 0 && 1}>
+									<Typography>
+										{conditionalStep.description}
+										{conditionalStep.value !== undefined ? ':' : ''}
+									</Typography>
+									{conditionalStep.value !== undefined && <Typography ml={2}>{conditionalStep.value}</Typography>}
+								</Box>
+								<Typography ml={1}>{conditionalStep.condition}</Typography>
+							</Fragment>
+						))}
+					</>
+				)}
 			</Box>
 		</Popover>
 	);
