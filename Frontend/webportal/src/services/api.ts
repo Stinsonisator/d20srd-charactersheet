@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import merge from 'lodash/merge';
 
-import { Character } from '../types/Character';
+import { Character, CharacterLevel } from '../types/Character';
 import { CharacterClass } from '../types/CharacterClass';
 import { Skill } from '../types/Skill';
 import { getAccessTokenSilently } from './authentication';
@@ -83,6 +83,14 @@ export const characterSheetApi = createApi({
 			}),
 			invalidatesTags: (_result, _error, id) => [{ type: 'Characters', id }]
 		}),
+		addCharacterLevel: builder.mutation<CharacterLevel, CharacterLevel>({
+			query: (characterLevel) => ({
+				url: `characters/${characterLevel.characterId}/levels`,
+				method: 'POST',
+				body: characterLevel
+			}),
+			invalidatesTags: (result) => [{ type: 'Characters', id: result.characterId }]
+		}),
 		getSkills: builder.query<Skill[], void>({
 			query: () => 'skills',
 			providesTags: (result) => providesList(result, 'Skills')
@@ -161,6 +169,7 @@ export const {
 	useUpdateCharacterMutation,
 	usePartialUpdateCharacterMutation,
 	useDeleteCharacterMutation,
+	useAddCharacterLevelMutation,
 	useGetSkillsQuery,
 	useGetSkillQuery,
 	useAddSkillMutation,

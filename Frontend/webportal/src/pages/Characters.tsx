@@ -19,6 +19,7 @@ import map from 'lodash/map';
 
 import CharacterEditor from '../components/CharacterEditor';
 import CharacterWizard from '../components/CharacterWizard';
+import LevelUp from '../components/LevelUp';
 import { useDeleteCharacterMutation, useGetCharactersQuery } from '../services/api';
 import { globalRender } from '../services/globalRenderSlice';
 import { useAppDispatch } from '../utils/hooks';
@@ -52,6 +53,15 @@ export default function CharacterSheet(): JSX.Element {
 		);
 	}
 
+	function levelUp(entityId: number): void {
+		reduxDispatch(
+			globalRender({
+				key: 'levelUp',
+				component: <LevelUp renderKey="levelUp" entityId={entityId} />
+			})
+		);
+	}
+
 	return (
 		<>
 			{isLoading && (
@@ -79,6 +89,9 @@ export default function CharacterSheet(): JSX.Element {
 									</CardActionArea>
 									{character.user.userId === user.sub && (
 										<CardActions sx={{ justifyContent: 'flex-end' }}>
+											<IconButton size="small" onClick={() => levelUp(character.id)}>
+												<Icon sx={{ fontSize: 14 }} color="primary" className="fa-arrow-up" />
+											</IconButton>
 											<IconButton size="small" onClick={() => updateCharacter(character.id)}>
 												<Icon sx={{ fontSize: 14 }} color="primary" className="fa-pen-clip" />
 											</IconButton>

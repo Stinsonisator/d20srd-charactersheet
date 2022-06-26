@@ -7,6 +7,7 @@ using CharacterSheet.WebApi.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 using CharacterSheet.Business.Interfaces;
 using CharacterSheet.WebApi.MiddleWare;
+using CharacterSheet.DataAccess;
 
 namespace CharacterSheet.WebApi.Controllers;
 
@@ -14,10 +15,12 @@ namespace CharacterSheet.WebApi.Controllers;
 public class CharactersController : WebApiControllerBase
 {
 	private readonly ICharacterService _characterService;
+	private readonly DatabaseContext _databaseContext;
 
-	public CharactersController(ICharacterService characterService)
+	public CharactersController(ICharacterService characterService, DatabaseContext databaseContext)
 	{
 		_characterService = characterService;
+		_databaseContext = databaseContext;
 	}
 
 	[HttpGet]
@@ -75,5 +78,13 @@ public class CharactersController : WebApiControllerBase
 		}
 
 		return Ok();
+	}
+
+	[HttpPost("{id:long}/levels")]
+	public async Task<CharacterLevel> Levelup([FromBody] CharacterLevel characterLevel)
+	{
+		_databaseContext.Add(characterLevel);
+		await _databaseContext.SaveChangesAsync();
+		return characterLevel;
 	}
 }
