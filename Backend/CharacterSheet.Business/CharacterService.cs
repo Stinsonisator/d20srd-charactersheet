@@ -113,6 +113,7 @@ public class CharacterService : ICharacterService
 			else
 			{
 				characterPropInfo.SetValue(character, safeValue, null);
+				_databaseContext.Entry(character).Property(characterPropInfo.Name).IsModified = true;
 			}
 		}
 

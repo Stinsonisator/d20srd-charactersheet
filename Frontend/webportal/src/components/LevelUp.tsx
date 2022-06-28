@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -29,6 +29,12 @@ function LevelUp({ renderKey, entityId }: Props) {
 	const handleClose = useCallback(() => {
 		reduxDispatch(globalDerender(renderKey));
 	}, [reduxDispatch, renderKey]);
+
+	useEffect(() => {
+		if (!result.isLoading && result.isSuccess) {
+			handleClose();
+		}
+	}, [handleClose, result.isLoading, result.isSuccess]);
 
 	return (
 		<>

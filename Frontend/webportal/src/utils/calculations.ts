@@ -175,7 +175,6 @@ function getSkillModifier(character: CharacterSheetData, characterSkills: Charac
 
 	each(orderBy(skill.incomingSkillSyngergies, 'isConditional'), (skillSynergy) => {
 		const sourceCharacterSkill = find(characterSkills, { skillId: skillSynergy.sourceSkillId });
-		console.log(skillSynergy);
 		if (sourceCharacterSkill && sourceCharacterSkill.points >= 5 && !skillSynergy.isConditional) {
 			result.value += 2;
 			result.calculationSteps.push({
